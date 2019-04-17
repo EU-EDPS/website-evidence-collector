@@ -45,6 +45,21 @@ const fs = require('fs');
     console.log("Cookie (JS): ", cookieJS);
     console.log(stack.slice(1,3)); // remove reference to Document.set (0) and keep two more elements (until 3)
   });
+
+  // track incoming traffic for HTTP cookies
+  page.on('response', response => {
+    const req = response.request();
+    // console.log(req.method(), response.status(), req.url());
+
+    let cookieHTTP = response._headers['set-cookie'];
+    if(cookieHTTP) {
+      console.log("Cookie (HTTP): " + cookieHTTP);
+      let stack = [{
+        filenName: req.url(),
+        source: `set in request for ${req.url()} (HTTP)`,
+      }];
+      console.log(stack);
+    }
   });
 
   const url = process.argv[2];
