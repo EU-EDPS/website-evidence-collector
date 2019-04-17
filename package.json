@@ -1,0 +1,27 @@
+{
+  "name": "website-evidence-collector",
+  "version": "0.0.1",
+  "description": "automation of website evidence collection for storage and transfer of personal data based on puppeteer",
+  "main": "website-evidence-collector.js",
+  "dependencies": {
+    "puppeteer": "^1.11.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "start": "node ./website-evidence-collector.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "privacy",
+    "tracking",
+    "website",
+    "data",
+    "protection",
+    "personal",
+    "data",
+    "GDPR",
+    "puppeteer"
+  ],
+  "author": "Robert Riemann <robert.riemann@edps.europa.eu>",
+  "license": "EUPL-1.2"
+}
