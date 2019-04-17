@@ -23,8 +23,22 @@ const fs = require('fs');
   // https://chromedevtools.github.io/devtools-protocol/tot/Page#method-addScriptToEvaluateOnNewDocument
   await page.evaluateOnNewDocument(stackTraceHelper);
 
-  const cookieHelper = fs.readFileSync('./cookie-helper.js', 'utf8');
-  await page.evaluateOnNewDocument(cookieHelper);
+  await page.evaluateOnNewDocument(() => {
+    origDescriptor = Object.getOwnPropertyDescriptor(Document.prototype, 'cookie');
+    Object.defineProperty(document, 'cookie', {
+      get() {
+        return origDescriptor.get.call(this);
+      },
+      set(value) {
+        var stack = StackTrace.getSync({offline: true});
+        window.report_cookie_set(value, stack);
+
+        return origDescriptor.set.call(this, value);
+      },
+      enumerable: true,
+      configurable: true
+    });
+  });
 
   // https://www.stacktracejs.com/#!/docs/stacktrace-js
   await page.exposeFunction('report_cookie_set', (value, stack) => {
