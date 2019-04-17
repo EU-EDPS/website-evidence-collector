@@ -41,10 +41,10 @@ const fs = require('fs');
   });
 
   // https://www.stacktracejs.com/#!/docs/stacktrace-js
-  await page.exposeFunction('report_cookie_set', (value, stack) => {
-    console.log("Cookie: ", value);
-    stack.shift(); // remove reference to Document.set
-    console.log(stack);
+  await page.exposeFunction('report_cookie_set', (cookieJS, stack) => {
+    console.log("Cookie (JS): ", cookieJS);
+    console.log(stack.slice(1,3)); // remove reference to Document.set (0) and keep two more elements (until 3)
+  });
   });
 
   const url = process.argv[2];
