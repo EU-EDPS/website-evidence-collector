@@ -1,77 +1,44 @@
+// change global directory with npm config edit
+// install puppeteer globally with npm save -g puppeteer
+// link puppeteer locally with npm link puppeteer
+
 const puppeteer = require('puppeteer');
-
-const detailedDiff = require("deep-object-diff").detailedDiff;
-
-const _ = require('lodash');
-
-// const cookieParse = require('cookie').parse;
+const fs = require('fs');
 
 (async() => {
   const browser = await puppeteer.launch({
-    executablePath: '/home/rriemann/lib/node_modules/puppeteer/.local-chromium/linux-609904/chrome-linux/chrome',
+    // headless: false,
   });
   const page = await browser.newPage();
+  await page.setViewport({
+    width: 1280,
+    height: 800
+  });
+  await page.bringToFront();
 
-  var cookies = {};
-  var cookiesByURL = {};
+  page.on('console', msg => console.log('PAGE LOG: ', msg.text()));
 
-  // https://github.com/jasonLaster/cdp-pause-points/blob/9260aafda97ebe975fc6d9a03979c8866ebd4b0e/pause-points.js#L66
-  const client = await page.target().createCDPSession();
-  await client.send('Debugger.enable');
+  // inject stacktraceJS https://www.stacktracejs.com/
+  const stackTraceHelper = fs.readFileSync(require.resolve('stacktrace-js/dist/stacktrace.js'), 'utf8');
+  // https://chromedevtools.github.io/devtools-protocol/tot/Page#method-addScriptToEvaluateOnNewDocument
+  await page.evaluateOnNewDocument(stackTraceHelper);
 
-  // https://github.com/GoogleChrome/puppeteer/issues/313#issuecomment-322939468
-  page.on('response', async(response) => {
-    const req = response.request();
-    console.log(req.method(), response.status(), req.url());
-    // console.log(response._headers['Set-Cookie']);
-    // console.log(response._headers);
-    let httpCookie = response._headers['set-cookie'];
-    console.log("COOKIE: " + httpCookie);
-    if(httpCookie) {
-      // cookieName = httpCookie.match(/^[^=]+/)[0];
-      // Object.keys(cookieParse(httpCookie))
-      httpCookie.split("\n").forEach( cookieValue => {
-        cookieName = cookieValue.match(/^[^=]+/)[0]
-        if(Array.isArray(cookiesByURL[cookieName])) {
-          cookiesByURL[cookieName].push(req.url());
-        } else {
-          cookiesByURL[cookieName] = [req.url()];
-        }
-      });
-    }
+  const cookieHelper = fs.readFileSync('./cookie-helper.js', 'utf8');
+  await page.evaluateOnNewDocument(cookieHelper);
+
+  // https://www.stacktracejs.com/#!/docs/stacktrace-js
+  await page.exposeFunction('report_cookie_set', (value, stack) => {
+    console.log("Cookie: ", value);
+    stack.shift(); // remove reference to Document.set
+    console.log(stack);
   });
 
-  // track cookies
-  var processCookies = async function(script) {
-    console.log("Script: " + script.url);
-    // example from https://stackoverflow.com/a/50290081/1407622
-    let currentCookies = _.cloneDeep(cookies);
-    let newCookies = await client.send('Network.getAllCookies');
-
-    let diff = detailedDiff(currentCookies, newCookies['cookies']);
-
-    // focus on added and updated
-    (Object.values(diff['added']).concat(Object.values(diff['updated']))).forEach( cookie => {
-      if(Array.isArray(cookiesByURL[cookie['name']])) {
-        cookiesByURL[cookie['name']].push(script.url);
-      } else {
-        cookiesByURL[cookie['name']] = [script.url];
-      }
-    });
-
-    cookies = newCookies['cookies'];
-  }
-
-  client.on("Debugger.scriptParsed", processCookies)
-
   const url = process.argv[2];
-  await page.goto(url, {waitUntil : 'networkidle2', timeout: 0 });
+  await page.goto(url, {waitUntil : 'networkidle2' });
 
-  cookies = await page._client.send('Network.getAllCookies');
-
-  console.log(cookiesByURL)
-
-  console.log(cookies);
+  // example from https://stackoverflow.com/a/50290081/1407622
+  // Here we can get all of the cookies
+  console.log(await page._client.send('Network.getAllCookies'));
 
   // await page.screenshot({path: 'example.png'});
 

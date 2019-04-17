@@ -1,5 +1,7 @@
 ## HEAD
 
+  * feature: change cookie placement locator mechanism to use injections and stacktrace.js instead of Debugger.scriptParsed for improved accuracy
+
 ## 0.1.0 / 2019-04-17
 
   * Birthday!
