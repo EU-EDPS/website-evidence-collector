@@ -1,9 +1,11 @@
 {
   "name": "website-evidence-collector",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "automation of website evidence collection for storage and transfer of personal data based on puppeteer",
   "main": "website-evidence-collector.js",
   "dependencies": {
+    "deep-object-diff": "^1.1.0",
+    "lodash": "^4.17.11",
     "puppeteer": "^1.11.0"
   },
   "devDependencies": {},
