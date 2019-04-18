@@ -19,6 +19,7 @@ To start the collection for e.g. <https://example.com>, open the terminal, navig
 ## Resources for Developers
 
 - puppeteer sandbox online: <https://puppeteersandbox.com/>
+- opensource puppeteer sandbox: <https://github.com/ebidel/try-puppeteer>, online at <https://try-puppeteer.appspot.com/>
 - puppeteer API documentation: <https://pptr.dev/>
 - puppeteer examples: <https://github.com/checkly/puppeteer-examples>
 - puppeteer with chrome-as-a-service: <https://github.com/joelgriffith/browserless>
