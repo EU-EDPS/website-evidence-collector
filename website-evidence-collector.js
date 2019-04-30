@@ -1,3 +1,5 @@
+// jshint esversion: 8
+
 // change global directory with npm config edit
 // install puppeteer globally with npm save -g puppeteer
 // link puppeteer locally with npm link puppeteer
