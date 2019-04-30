@@ -69,7 +69,21 @@ const fs = require('fs');
 
   // example from https://stackoverflow.com/a/50290081/1407622
   // Here we can get all of the cookies
-  console.log(await page._client.send('Network.getAllCookies'));
+  const cookies = await page._client.send('Network.getAllCookies');
+  const links = await page.evaluate( () => {
+    return [].map.call(document.querySelectorAll('a[href]'), a => {
+      return {
+        href: a.href,
+        inner_text: a.innerText,
+        inner_html: a.innerHTML,
+      };
+    });
+  });
+
+  console.log({
+    cookies: cookies.cookies,
+    links: links,
+  });
 
   // await page.screenshot({path: 'example.png'});
 
