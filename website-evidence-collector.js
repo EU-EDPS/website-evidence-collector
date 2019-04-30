@@ -80,10 +80,10 @@ const fs = require('fs');
     });
   });
 
-  console.log({
+  console.dir({
     cookies: cookies.cookies,
     links: links,
-  });
+  }, {'maxArrayLength': null});
 
   // await page.screenshot({path: 'example.png'});
 
