@@ -41,12 +41,31 @@ const fs = require('fs');
       enumerable: true,
       configurable: true
     });
+
+    // inject storage set recorder
+    //
+    origDescriptorLS = Object.getOwnPropertyDescriptor(window, 'localStorage');
+    Object.defineProperty(window, 'localStorage', {
+      setItem(value) {
+        var stack = StackTrace.getSync({offline: true});
+        window.report_localstorage_set(value, stack);
+
+        return origDescriptorLS.setItem.call(this, value);
+      },
+      enumerable: true,
+      configurable: true
+    });
   });
 
   // https://www.stacktracejs.com/#!/docs/stacktrace-js
   await page.exposeFunction('report_cookie_set', (cookieJS, stack) => {
     console.log("Cookie (JS): ", cookieJS);
     console.log(stack.slice(1,3)); // remove reference to Document.set (0) and keep two more elements (until 3)
+  });
+
+  await page.exposeFunction('report_localstorage_set', (localStorageItem, stack) => {
+    cosole.log("LocalStorage: ", localStorageItem);
+    console.log(stack.slice(1,3));
   });
 
   // track incoming traffic for HTTP cookies
