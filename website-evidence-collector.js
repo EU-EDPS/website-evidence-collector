@@ -43,18 +43,39 @@ const fs = require('fs');
     });
 
     // inject storage set recorder
-    //
-    origDescriptorLS = Object.getOwnPropertyDescriptor(window, 'localStorage');
+    // https://stackoverflow.com/a/49043643/1407622
     Object.defineProperty(window, 'localStorage', {
-      setItem(value) {
-        var stack = StackTrace.getSync({offline: true});
-        window.report_localstorage_set(value, stack);
-
-        return origDescriptorLS.setItem.call(this, value);
-      },
+      configurable: true,
       enumerable: true,
-      configurable: true
+      value: new Proxy(localStorage, {
+        set: function (ls, prop, value) {
+          //console.log(`direct assignment: ${prop} = ${value}`);
+          var stack = StackTrace.getSync({offline: true});
+          window.report_localstorage_set(prop, value, stack);
+          ls[prop] = value;
+          return true;
+        },
+        get: function(ls, prop) {
+          // The only property access we care about is setItem. We pass
+          // anything else back without complaint. But using the proxy
+          // fouls 'this', setting it to this {set: fn(), get: fn()}
+          // object.
+          if (prop !== 'setItem') {
+            if (typeof ls[prop] === 'function') {
+              return ls[prop].bind(ls);
+            } else {
+              return ls[prop];
+            }
+          }
+          // too many false positives TODO
+          // var stack = StackTrace.getSync({offline: true});
+          // window.report_localstorage_set(prop, undefined, stack);
+          return ls[prop].bind(ls);
+        }
+      })
     });
+
+
   });
 
   // https://www.stacktracejs.com/#!/docs/stacktrace-js
@@ -63,8 +84,8 @@ const fs = require('fs');
     console.log(stack.slice(1,3)); // remove reference to Document.set (0) and keep two more elements (until 3)
   });
 
-  await page.exposeFunction('report_localstorage_set', (localStorageItem, stack) => {
-    cosole.log("LocalStorage: ", localStorageItem);
+  await page.exposeFunction('report_localstorage_set', (localStorageItemKey, localStorageItemValue, stack) => {
+    console.log("LocalStorage: ", localStorageItemKey, localStorageItemValue);
     console.log(stack.slice(1,3));
   });
 
