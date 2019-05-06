@@ -5,6 +5,7 @@
 // link puppeteer locally with npm link puppeteer
 
 const puppeteer = require('puppeteer');
+const PuppeteerHar = require('puppeteer-har');
 const fs = require('fs');
 
 (async() => {
@@ -65,6 +66,14 @@ const fs = require('fs');
   });
 
   const url = process.argv[2];
+
+  // recording har file if 2nd commandline argument is set
+  const harFile = process.argv[3]; // is undefined if not set
+  const har = new PuppeteerHar(page);
+  if(harFile) {
+    await har.start({ path: harFile });
+  }
+
   await page.goto(url, {waitUntil : 'networkidle2' });
 
   // example from https://stackoverflow.com/a/50290081/1407622
@@ -87,5 +96,6 @@ const fs = require('fs');
 
   // await page.screenshot({path: 'example.png'});
 
+  await har.stop();
   await browser.close();
 })();

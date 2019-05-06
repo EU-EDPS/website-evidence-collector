@@ -5,6 +5,7 @@
   "main": "website-evidence-collector.js",
   "dependencies": {
     "puppeteer": "^1.11.0",
+    "puppeteer-har": "github:jasonm/puppeteer-har",
     "stacktrace-js": "^2.0.0"
   },
   "devDependencies": {},
