@@ -96,6 +96,7 @@ const fs = require('fs');
 
   // await page.screenshot({path: 'example.png'});
 
-  await har.stop();
+  if(harFile) await har.stop();
+  
   await browser.close();
 })();
