@@ -43,7 +43,7 @@ const fs = require('fs');
     });
 
     // inject storage set recorder
-    // https://stackoverflow.com/a/49043643/1407622
+    // https://stackoverflow.com/a/49093643/1407622
     Object.defineProperty(window, 'localStorage', {
       configurable: true,
       enumerable: true,
