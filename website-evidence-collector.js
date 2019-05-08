@@ -67,10 +67,12 @@ const fs = require('fs');
               return ls[prop];
             }
           }
-          // too many false positives TODO
-          // var stack = StackTrace.getSync({offline: true});
-          // window.report_localstorage_set(prop, undefined, stack);
-          return ls[prop].bind(ls);
+          return (...args) => {
+            var stack = StackTrace.getSync({offline: true});
+            console.log(args);
+            window.report_localstorage_set(args[0], args[1], stack);
+            ls.setItem.apply(ls, args);
+          };
         }
       })
     });
