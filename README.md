@@ -16,6 +16,10 @@ The tool *Website Evidence Collector* (WEC) automates the website evidence colle
 
 To start the collection for e.g. <https://example.com>, open the terminal, navigate to the folder `website-evidence-collector` and run `npm start -- https://example.com`.
 
+## TODO List
+
+- fix bugs in HAR creation, see <https://github.com/Everettss/puppeteer-har/issues>
+
 ## Resources for Developers
 
 - puppeteer sandbox online: <https://puppeteersandbox.com/>
