@@ -33,8 +33,9 @@ const fs = require('fs');
         return origDescriptor.get.call(this);
       },
       set(value) {
-        var stack = StackTrace.getSync({offline: true});
-        window.report_cookie_set(value, stack);
+        // https://www.stacktracejs.com/#!/docs/stacktrace-js
+        let stack = StackTrace.getSync({offline: true});
+        window.reportEvent("setJSCookie", stack, value);
 
         return origDescriptor.set.call(this, value);
       },
@@ -50,8 +51,10 @@ const fs = require('fs');
       value: new Proxy(localStorage, {
         set: function (ls, prop, value) {
           //console.log(`direct assignment: ${prop} = ${value}`);
-          var stack = StackTrace.getSync({offline: true});
-          window.report_localstorage_set(prop, value, stack);
+          let stack = StackTrace.getSync({offline: true});
+          let hash = {};
+          hash[prop] = JSON.parse(value);
+          window.reportEvent("setLocalStorage", stack, hash);
           ls[prop] = value;
           return true;
         },
@@ -68,9 +71,10 @@ const fs = require('fs');
             }
           }
           return (...args) => {
-            var stack = StackTrace.getSync({offline: true});
-            console.log(args);
-            window.report_localstorage_set(args[0], args[1], stack);
+            let stack = StackTrace.getSync({offline: true});
+            let hash = {};
+            hash[args[0]] = JSON.parse(args[1]);
+            window.reportEvent("setLocalStorage", stack, hash);
             ls.setItem.apply(ls, args);
           };
         }
@@ -80,15 +84,14 @@ const fs = require('fs');
 
   });
 
-  // https://www.stacktracejs.com/#!/docs/stacktrace-js
-  await page.exposeFunction('report_cookie_set', (cookieJS, stack) => {
-    console.log("Cookie (JS): ", cookieJS);
-    console.log(stack.slice(1,3)); // remove reference to Document.set (0) and keep two more elements (until 3)
-  });
+  var reportedEvents = [];
 
-  await page.exposeFunction('report_localstorage_set', (localStorageItemKey, localStorageItemValue, stack) => {
-    console.log("LocalStorage: ", localStorageItemKey, localStorageItemValue);
-    console.log(stack.slice(1,3));
+  await page.exposeFunction('reportEvent', (type, stack, data) => {
+    reportedEvents.push({
+      type: type,
+      stack: stack.slice(1,3), // remove reference to Document.set (0) and keep two more elements (until 3)
+      data: data,
+    });
   });
 
   // track incoming traffic for HTTP cookies
@@ -98,12 +101,16 @@ const fs = require('fs');
 
     let cookieHTTP = response._headers['set-cookie'];
     if(cookieHTTP) {
-      console.log("Cookie (HTTP): " + cookieHTTP);
+      let data = "Cookie (HTTP): " + cookieHTTP;
       let stack = [{
         filenName: req.url(),
         source: `set in request for ${req.url()} (HTTP)`,
       }];
-      console.log(stack);
+      reportedEvents.push({
+        type: "setHTTPCookie",
+        stack: stack,
+        data: data,
+      });
     }
   });
 
@@ -131,14 +138,16 @@ const fs = require('fs');
     });
   });
 
-  console.dir({
-    cookies: cookies.cookies,
-    links: links,
-  }, {'maxArrayLength': null});
+  // console.dir({
+  //   cookies: cookies.cookies,
+  //   links: links,
+  // }, {'maxArrayLength': null});
 
   // await page.screenshot({path: 'example.png'});
 
   if(harFile) await har.stop();
-  
+
   await browser.close();
+
+  console.dir(reportedEvents, {maxArrayLength: null, depth: null});
 })();
