@@ -4,9 +4,11 @@
   "description": "automation of website evidence collection for storage and transfer of personal data based on puppeteer",
   "main": "website-evidence-collector.js",
   "dependencies": {
+    "@cliqz/adblocker": "^0.9.1",
     "puppeteer": "^1.11.0",
     "puppeteer-har": "github:jasonm/puppeteer-har",
     "stacktrace-js": "^2.0.0",
+    "tldts": "^4.0.6",
     "tough-cookie": "^3.0.1"
   },
   "devDependencies": {},
