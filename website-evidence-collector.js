@@ -7,7 +7,7 @@
 const puppeteer = require('puppeteer');
 const PuppeteerHar = require('puppeteer-har');
 const fs = require('fs');
-const setCookieParser = require('set-cookie-parser');
+const cookieParser = require('tough-cookie').Cookie;
 
 (async() => {
   const browser = await puppeteer.launch({
@@ -36,7 +36,7 @@ const setCookieParser = require('set-cookie-parser');
       set(value) {
         // https://www.stacktracejs.com/#!/docs/stacktrace-js
         let stack = StackTrace.getSync({offline: true});
-        window.reportEvent("setJSCookie", stack, value);
+        window.reportEvent("Cookie.JS", stack, value);
 
         return origDescriptor.set.call(this, value);
       },
@@ -55,7 +55,7 @@ const setCookieParser = require('set-cookie-parser');
           let stack = StackTrace.getSync({offline: true});
           let hash = {};
           hash[prop] = JSON.parse(value);
-          window.reportEvent("setLocalStorage", stack, hash);
+          window.reportEvent("Storage.LocalStorage", stack, hash);
           ls[prop] = value;
           return true;
         },
@@ -92,10 +92,9 @@ const setCookieParser = require('set-cookie-parser');
       ts: new Date(),
     };
     switch(type) {
-      case 'setJSCookie':
-      case 'setHTTPCookie':
-        event.data = setCookieParser.parse(data);
+      case 'Cookie.JS':
         event.raw = data;
+        event.data = [cookieParser.parse(data)];
         break;
       default:
         event.data = data;
@@ -113,13 +112,14 @@ const setCookieParser = require('set-cookie-parser');
     if(cookieHTTP) {
       let stack = [{
         filenName: req.url(),
-        source: `set in request for ${req.url()} (HTTP)`,
+        source: `set in Set-Cookie HTTP response header for ${req.url()}`,
       }];
       let splitCookieHeaders = cookieHTTP.split("\n");
-      let data = setCookieParser.parse(splitCookieHeaders);
+      let data = splitCookieHeaders.map(cookieParser.parse);
       reportedEvents.push({
-        type: "setHTTPCookie",
+        type: "Cookie.HTTP",
         stack: stack,
+        ts: new Date(),
         raw: cookieHTTP,
         data: data,
       });
