@@ -6,6 +6,7 @@
   "dependencies": {
     "puppeteer": "^1.11.0",
     "puppeteer-har": "github:jasonm/puppeteer-har",
+    "set-cookie-parser": "^2.3.5",
     "stacktrace-js": "^2.0.0"
   },
   "devDependencies": {},

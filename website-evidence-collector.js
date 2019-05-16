@@ -7,6 +7,7 @@
 const puppeteer = require('puppeteer');
 const PuppeteerHar = require('puppeteer-har');
 const fs = require('fs');
+const setCookieParser = require('set-cookie-parser');
 
 (async() => {
   const browser = await puppeteer.launch({
@@ -80,18 +81,27 @@ const fs = require('fs');
         }
       })
     });
-
-
   });
 
   var reportedEvents = [];
 
   await page.exposeFunction('reportEvent', (type, stack, data) => {
-    reportedEvents.push({
+    let event = {
       type: type,
       stack: stack.slice(1,3), // remove reference to Document.set (0) and keep two more elements (until 3)
-      data: data,
-    });
+      ts: new Date(),
+    };
+    switch(type) {
+      case 'setJSCookie':
+      case 'setHTTPCookie':
+        event.data = setCookieParser.parse(data);
+        event.raw = data;
+        break;
+      default:
+        event.data = data;
+    }
+
+    reportedEvents.push(event);
   });
 
   // track incoming traffic for HTTP cookies
@@ -101,14 +111,16 @@ const fs = require('fs');
 
     let cookieHTTP = response._headers['set-cookie'];
     if(cookieHTTP) {
-      let data = "Cookie (HTTP): " + cookieHTTP;
       let stack = [{
         filenName: req.url(),
         source: `set in request for ${req.url()} (HTTP)`,
       }];
+      let splitCookieHeaders = cookieHTTP.split("\n");
+      let data = setCookieParser.parse(splitCookieHeaders);
       reportedEvents.push({
         type: "setHTTPCookie",
         stack: stack,
+        raw: cookieHTTP,
         data: data,
       });
     }
