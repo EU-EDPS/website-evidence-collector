@@ -203,7 +203,47 @@ const typesMapping = {
     await har.start({ path: harFile });
   }
 
+  // recording websockets
+  // https://stackoverflow.com/a/54110660/1407622
+  var webSocketLog = {}
+  const client = page._client;
+
+  client.on('Network.webSocketCreated', ({requestId, url}) => {
+    if(!webSocketLog[requestId]) {
+      webSocketLog[requestId] = {
+        ts: new Date(),
+        url: url,
+        messages: [],
+      };
+    }
+    console.log('Network.webSocketCreated', requestId, url);
+  });
+
+  client.on('Network.webSocketClosed', ({requestId, timestamp}) => {
+    console.log('Network.webSocketClosed', requestId, timestamp);
+  });
+
+  client.on('Network.webSocketFrameSent', ({requestId, timestamp, response}) => {
+    webSocketLog[requestId].messages.push({
+      ts: timestamp,
+      io: '>',
+      m: response.payloadData.split("\n").map(safeJSONParse),
+    });
+    console.log('Network.webSocketFrameSent', requestId, timestamp, response.payloadData);
+  });
+
+  client.on('Network.webSocketFrameReceived', ({requestId, timestamp, response}) => {
+    webSocketLog[requestId].messages.push({
+      ts: timestamp,
+      io: '<',
+      m: response.payloadData.split("\n").map(safeJSONParse),
+    });
+    console.log('Network.webSocketFrameReceived', requestId, timestamp, response.payloadData);
+  });
+
   await page.goto(url, {waitUntil : 'networkidle2' });
+
+  await page.waitFor(3000); // wait 3 seconds
 
   // example from https://stackoverflow.com/a/50290081/1407622
   // Here we can get all of the cookies
