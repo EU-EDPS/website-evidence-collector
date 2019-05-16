@@ -15,6 +15,13 @@ const cookieParser = require('tough-cookie').Cookie;
 
 const { FiltersEngine, NetworkFilter, makeRequest } = require('@cliqz/adblocker');
 const { parse } = require('tldts');
+const safeJSONParse = (obj) => {
+  try {
+    return JSON.parse(obj);
+  } catch(e) {
+    return obj;
+  }
+};
 
 // setup easyprivacy matching
 // https://github.com/cliqz-oss/adblocker/issues/123
@@ -86,7 +93,7 @@ const typesMapping = {
           //console.log(`direct assignment: ${prop} = ${value}`);
           let stack = StackTrace.getSync({offline: true});
           let hash = {};
-          hash[prop] = JSON.parse(value);
+          hash[prop] = safeJSONParse(value);
           window.reportEvent("Storage.LocalStorage", stack, hash);
           ls[prop] = value;
           return true;
@@ -106,7 +113,7 @@ const typesMapping = {
           return (...args) => {
             let stack = StackTrace.getSync({offline: true});
             let hash = {};
-            hash[args[0]] = JSON.parse(args[1]);
+            hash[args[0]] = safeJSONParse(args[1]);
             window.reportEvent("Storage.LocalStorage", stack, hash);
             ls.setItem.apply(ls, args);
           };
