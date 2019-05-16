@@ -5,6 +5,8 @@
 // link puppeteer locally with npm link puppeteer
 
 const UserAgent = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3617.0 Safari/537.36";
+const WindowWidth = 1680;
+const WindowHeight = 927; // quite arbitrary
 
 const puppeteer = require('puppeteer');
 const PuppeteerHar = require('puppeteer-har');
@@ -38,14 +40,15 @@ const typesMapping = {
   const browser = await puppeteer.launch({
     // headless: false,
     args: [
-      `--user-agent="${UserAgent}"`
+      `--user-agent="${UserAgent}"`,
+      `--window-size=${WindowWidth},${WindowHeight}`
     ],
   });
 
   const page = await browser.newPage();
   await page.setViewport({
-    width: 1280,
-    height: 800
+    width: WindowWidth,
+    height: WindowHeight,
   });
   await page.bringToFront();
 
