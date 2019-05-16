@@ -75,7 +75,7 @@ const cookieParser = require('tough-cookie').Cookie;
             let stack = StackTrace.getSync({offline: true});
             let hash = {};
             hash[args[0]] = JSON.parse(args[1]);
-            window.reportEvent("setLocalStorage", stack, hash);
+            window.reportEvent("Storage.LocalStorage", stack, hash);
             ls.setItem.apply(ls, args);
           };
         }
