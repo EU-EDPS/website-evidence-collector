@@ -5,13 +5,16 @@
 // link puppeteer locally with npm link puppeteer
 
 const UserAgent = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3617.0 Safari/537.36";
-const WindowWidth = 1680;
-const WindowHeight = 927; // quite arbitrary
+const WindowSize = {
+  width: 1680,
+  height: 927, // quite arbitrary
+};
 
 const puppeteer = require('puppeteer');
 const PuppeteerHar = require('puppeteer-har');
 const fs = require('fs');
 const cookieParser = require('tough-cookie').Cookie;
+const { page_setup } = require('./lib/page-setup');
 
 const { FiltersEngine, NetworkFilter, makeRequest } = require('@cliqz/adblocker');
 const { parse } = require('tldts');
@@ -52,79 +55,13 @@ const typesMapping = {
     // headless: false,
     args: [
       `--user-agent="${UserAgent}"`,
-      `--window-size=${WindowWidth},${WindowHeight}`
+      `--window-size=${WindowSize.width},${WindowSize.height}`
     ],
   });
 
   const page = await browser.newPage();
-  await page.setViewport({
-    width: WindowWidth,
-    height: WindowHeight,
-  });
-  await page.bringToFront();
 
-  page.on('console', msg => console.log('PAGE LOG: ', msg.text()));
-
-  // inject stacktraceJS https://www.stacktracejs.com/
-  const stackTraceHelper = fs.readFileSync(require.resolve('stacktrace-js/dist/stacktrace.js'), 'utf8');
-  // https://chromedevtools.github.io/devtools-protocol/tot/Page#method-addScriptToEvaluateOnNewDocument
-  await page.evaluateOnNewDocument(stackTraceHelper);
-
-  await page.evaluateOnNewDocument(() => {
-    origDescriptor = Object.getOwnPropertyDescriptor(Document.prototype, 'cookie');
-    Object.defineProperty(document, 'cookie', {
-      get() {
-        return origDescriptor.get.call(this);
-      },
-      set(value) {
-        // https://www.stacktracejs.com/#!/docs/stacktrace-js
-        let stack = StackTrace.getSync({offline: true});
-        window.reportEvent("Cookie.JS", stack, value);
-
-        return origDescriptor.set.call(this, value);
-      },
-      enumerable: true,
-      configurable: true
-    });
-
-    // inject storage set recorder
-    // https://stackoverflow.com/a/49093643/1407622
-    Object.defineProperty(window, 'localStorage', {
-      configurable: true,
-      enumerable: true,
-      value: new Proxy(localStorage, {
-        set: function (ls, prop, value) {
-          //console.log(`direct assignment: ${prop} = ${value}`);
-          let stack = StackTrace.getSync({offline: true});
-          let hash = {};
-          hash[prop] = safeJSONParse(value);
-          window.reportEvent("Storage.LocalStorage", stack, hash);
-          ls[prop] = value;
-          return true;
-        },
-        get: function(ls, prop) {
-          // The only property access we care about is setItem. We pass
-          // anything else back without complaint. But using the proxy
-          // fouls 'this', setting it to this {set: fn(), get: fn()}
-          // object.
-          if (prop !== 'setItem') {
-            if (typeof ls[prop] === 'function') {
-              return ls[prop].bind(ls);
-            } else {
-              return ls[prop];
-            }
-          }
-          return (...args) => {
-            let stack = StackTrace.getSync({offline: true});
-            let hash = {};
-            hash[args[0]] = safeJSONParse(args[1]);
-            window.reportEvent("Storage.LocalStorage", stack, hash);
-            ls.setItem.apply(ls, args);
-          };
-        }
-      })
-    });
-  });
+  await page_setup(page, WindowSize);
 
   var reportedEvents = [];
 
