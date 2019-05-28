@@ -226,7 +226,7 @@ const typesMapping = {
   client.on('Network.webSocketFrameSent', ({requestId, timestamp, response}) => {
     webSocketLog[requestId].messages.push({
       ts: timestamp,
-      io: '>',
+      io: 'out',
       m: response.payloadData.split("\n").map(safeJSONParse),
     });
     console.log('Network.webSocketFrameSent', requestId, timestamp, response.payloadData);
@@ -235,7 +235,7 @@ const typesMapping = {
   client.on('Network.webSocketFrameReceived', ({requestId, timestamp, response}) => {
     webSocketLog[requestId].messages.push({
       ts: timestamp,
-      io: '<',
+      io: 'in',
       m: response.payloadData.split("\n").map(safeJSONParse),
     });
     console.log('Network.webSocketFrameReceived', requestId, timestamp, response.payloadData);
