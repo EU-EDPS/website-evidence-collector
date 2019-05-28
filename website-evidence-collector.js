@@ -42,12 +42,8 @@ const { setup_websocket_recording } = require('./lib/setup-websocket-recording')
 
   const url = process.argv[2];
 
-  // recording har file if 2nd commandline argument is set
-  const harFile = process.argv[3]; // is undefined if not set
   const har = new PuppeteerHar(page);
-  if(harFile) {
-    await har.start({ path: harFile });
-  }
+  await har.start({ path: 'requests.har' });
 
   let webSocketLog = setup_websocket_recording(page);
 
@@ -77,13 +73,13 @@ const { setup_websocket_recording } = require('./lib/setup-websocket-recording')
 
   // await page.screenshot({path: 'example.png'});
 
-  if(harFile) await har.stop();
+  await har.stop();
 
   await browser.close();
 
   // reporting
   fs.writeFileSync('websockets-log.json', JSON.stringify(webSocketLog, null, 2));
-  
+
 
   // console.dir(reportedEvents, {maxArrayLength: null, depth: null});
 })();
