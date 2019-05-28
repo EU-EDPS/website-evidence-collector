@@ -5,6 +5,7 @@
 # Logs
 logs
 *.log
+*.ndjson
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
