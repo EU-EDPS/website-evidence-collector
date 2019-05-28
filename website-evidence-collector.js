@@ -1,9 +1,5 @@
 // jshint esversion: 8
 
-// change global directory with npm config edit
-// install puppeteer globally with npm save -g puppeteer
-// link puppeteer locally with npm link puppeteer
-
 const UserAgent = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3617.0 Safari/537.36";
 const WindowSize = {
   width: 1680,
