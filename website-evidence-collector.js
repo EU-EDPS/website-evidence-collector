@@ -25,7 +25,11 @@ const safeJSONParse = (obj) => {
 
 // setup easyprivacy matching
 // https://github.com/cliqz-oss/adblocker/issues/123
-let filtersEngine = FiltersEngine.parse(fs.readFileSync('assets/easyprivacy.txt', 'utf8'), {loadCosmeticFilters: false});
+let filtersEngines = {
+  'easyprivacy.txt': FiltersEngine.parse(fs.readFileSync('assets/easyprivacy.txt', 'utf8'), {loadCosmeticFilters: false}),
+  'fanboy-annoyance.txt': FiltersEngine.parse(fs.readFileSync('assets/fanboy-annoyance.txt', 'utf8'), {loadCosmeticFilters: false}),
+};
+
 const typesMapping = {
   document: 'main_frame',
   eventsource: 'other',
@@ -171,29 +175,31 @@ const typesMapping = {
   // await page.setRequestInterception(true);
   page.on('request', (request) => {
     let ts = new Date();
-    const {
-      match, // `true` if there is a match
-      redirect, // data url to redirect to if any
-      exception, // instance of NetworkFilter exception if any
-      filter, // instance of NetworkFilter which matched
-    } = filtersEngine.match(makeRequest({
-      sourceUrl: request.frame().url(),
-      type: typesMapping[request.resourceType()],
-      url: request.url(),
-    }, parse));
-    if(match) {
-      // console.log("easyprivacy: " + request.url());
-      let stack = [{
-        filenName: request.frame().url(),
-        source: `requested from ${request.frame().url()} and matched with easyprivacy.txt filter ${filter}`,
-      }];
-      reportedEvents.push({
-        type: "Request.Tracking",
-        stack: stack,
-        ts: ts,
-        data: request.url(),
-      });
-    }
+    Object.entries(filtersEngines).forEach(([listName, filtersEngine]) => {
+      const {
+        match, // `true` if there is a match
+        redirect, // data url to redirect to if any
+        exception, // instance of NetworkFilter exception if any
+        filter, // instance of NetworkFilter which matched
+      } = filtersEngine.match(makeRequest({
+        sourceUrl: request.frame().url(),
+        type: typesMapping[request.resourceType()],
+        url: request.url(),
+      }, parse));
+      if(match) {
+        // console.log("easyprivacy: " + request.url());
+        let stack = [{
+          filenName: request.frame().url(),
+          source: `requested from ${request.frame().url()} and matched with ${listName} filter ${filter}`,
+        }];
+        reportedEvents.push({
+          type: "Request.Tracking",
+          stack: stack,
+          ts: ts,
+          data: request.url(),
+        });
+      }
+    });
   });
 
   // recording har file if 2nd commandline argument is set
