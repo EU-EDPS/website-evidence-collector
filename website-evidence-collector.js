@@ -1,4 +1,50 @@
+#!/usr/bin/env node
 // jshint esversion: 8
+
+var argv = require('yargs')
+  .scriptName('website-evidence-collector.js')
+  .usage('Usage: $0 <command> <URI> [options]')
+  .command('inspect-page', 'Gather evidence when browsing one webpage')
+  .example('$0 inspect-page https://example.com/about -b https://example.com')
+  .demandCommand(2) // ask for command and for inspection url
+  .alias('m', 'max')
+  .nargs('m', 1)
+  .describe('m', 'Sets maximum number of random links for browsing')
+  .number('m')
+
+  // seeding is apparently not supported TODO
+  // .alias('s', 'seed')
+  // .nargs('s', 1)
+  // .describe('s', 'Sets seed for random choice of links for browsing')
+  // .number('m')
+
+  .alias('b', 'base')
+  .nargs('b', 1)
+  .describe('b', 'Sets the bounds for first-party links and pages')
+  .array('b')
+
+  .alias('l', 'browse-link')
+  .nargs('l', 1)
+  .describe('l', 'Adds URI to list of links for browsing')
+  .array('l')
+
+  .describe('headless', 'Hides the browser window')
+  .boolean('headless')
+  .default('headless', true)
+
+  .describe('lang', 'Change the browser language')
+  .default('lang', 'en')
+
+  .help('h')
+  .alias('h', 'help')
+  .epilog('Copyright European Union 2019, licensed under EUPL-1.2 (see LICENSE.txt)')
+  .argv;
+
+const uri_ins = argv.uri;
+
+console.log(uri_ins)
+
+process.exit();
 
 const UserAgent = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3617.0 Safari/537.36";
 const WindowSize = {
@@ -14,6 +60,9 @@ const logger = require('./lib/logger');
 const { setup_cookie_recording } = require('./lib/setup-cookie-recording');
 const { setup_beacon_recording } = require('./lib/setup-beacon-recording');
 const { setup_websocket_recording } = require('./lib/setup-websocket-recording');
+
+var output = {};
+
 
 (async() => {
   const browser = await puppeteer.launch({
@@ -33,19 +82,17 @@ const { setup_websocket_recording } = require('./lib/setup-websocket-recording')
 
   page.on('console', msg => logger.log('debug', msg.text(), {type: 'browser.console'}));
 
+  // setup tracking
   await setup_cookie_recording(page);
   setup_beacon_recording(page);
-
-  const url = process.argv[2];
+  let webSocketLog = setup_websocket_recording(page);
 
   const har = new PuppeteerHar(page);
   await har.start({ path: 'requests.har' });
 
-  let webSocketLog = setup_websocket_recording(page);
+  logger.log('info', `browsing now to ${uri_ins}`, {type: 'browser'});
 
-  logger.log('info', `browsing now to ${url}`, {type: 'browser'});
-
-  await page.goto(url, {waitUntil : 'networkidle2' });
+  await page.goto(uri_ins, {waitUntil : 'networkidle2' });
 
   await page.waitFor(3000); // wait 3 seconds
 

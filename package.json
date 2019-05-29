@@ -10,7 +10,8 @@
     "stacktrace-js": "^2.0.0",
     "tldts": "^4.0.6",
     "tough-cookie": "^3.0.1",
-    "winston": "^3.2.1"
+    "winston": "^3.2.1",
+    "yargs": "^13.2.4"
   },
   "devDependencies": {
     "pino-pretty": "^3.1.0"
