@@ -17,7 +17,7 @@
     "pino-pretty": "^3.1.0"
   },
   "scripts": {
-    "start": "node ./website-evidence-collector.js",
+    "start": "node ./collect.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "pretty-print": "node node_modules/.bin/pino-pretty --timestampKey timestamp --messageKey type --ignore stack,raw"
   },

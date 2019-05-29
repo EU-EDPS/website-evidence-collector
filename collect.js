@@ -2,11 +2,10 @@
 // jshint esversion: 8
 
 var argv = require('yargs')
-  .scriptName('website-evidence-collector.js')
-  .usage('Usage: $0 <command> <URI> [options]')
-  .command('inspect-page', 'Gather evidence when browsing one webpage')
-  .example('$0 inspect-page https://example.com/about -b https://example.com')
-  .demandCommand(2) // ask for command and for inspection url
+  .scriptName('collect.js')
+  .usage('Usage: $0 <URI> [options]')
+  .example('$0 https://example.com/about -b example.com -b cdn.ex.com')
+  .demandCommand(1) // ask for command and for inspection url
   .alias('m', 'max')
   .nargs('m', 1)
   .describe('m', 'Sets maximum number of random links for browsing')
@@ -20,7 +19,7 @@ var argv = require('yargs')
 
   .alias('b', 'base')
   .nargs('b', 1)
-  .describe('b', 'Sets the bounds for first-party links and pages')
+  .describe('b', 'First-party hosts for links and pages')
   .array('b')
 
   .alias('l', 'browse-link')
@@ -32,6 +31,10 @@ var argv = require('yargs')
   .boolean('headless')
   .default('headless', true)
 
+  .describe('mime-check', 'Excludes non-HTML pages from browsing')
+  .boolean('mime-check')
+  .default('mime-check', true)
+
   .describe('lang', 'Change the browser language')
   .default('lang', 'en')
 
@@ -40,11 +43,7 @@ var argv = require('yargs')
   .epilog('Copyright European Union 2019, licensed under EUPL-1.2 (see LICENSE.txt)')
   .argv;
 
-const uri_ins = argv.uri;
-
-console.log(uri_ins)
-
-process.exit();
+const uri_ins = argv._[0];
 
 const UserAgent = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3617.0 Safari/537.36";
 const WindowSize = {
@@ -62,7 +61,6 @@ const { setup_beacon_recording } = require('./lib/setup-beacon-recording');
 const { setup_websocket_recording } = require('./lib/setup-websocket-recording');
 
 var output = {};
-
 
 (async() => {
   const browser = await puppeteer.launch({
