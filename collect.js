@@ -1,11 +1,12 @@
 #!/usr/bin/env node
 // jshint esversion: 8
 
-var argv = require('yargs')
+var argv = require('yargs') // TODO use rather option('o', hash) syntax and define default top-level command
   .scriptName('collect.js')
   .usage('Usage: $0 <URI> [options]')
   .example('$0 https://example.com/about -b example.com -b cdn.ex.com')
-  .demandCommand(1) // ask for command and for inspection url
+  // top-level default command, see https://github.com/yargs/yargs/blob/master/docs/advanced.md#default-commands
+  .demandCommand(1, 'An URI for inspection is mendatory.') // ask for command and for inspection url
   .alias('m', 'max')
   .nargs('m', 1)
   .describe('m', 'Sets maximum number of random links for browsing')
@@ -43,8 +44,6 @@ var argv = require('yargs')
   .epilog('Copyright European Union 2019, licensed under EUPL-1.2 (see LICENSE.txt)')
   .argv;
 
-const uri_ins = argv._[0];
-
 const UserAgent = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3617.0 Safari/537.36";
 const WindowSize = {
   width: 1680,
@@ -54,28 +53,65 @@ const WindowSize = {
 const puppeteer = require('puppeteer');
 const PuppeteerHar = require('puppeteer-har');
 const fs = require('fs');
+const os = require('os');
+const url = require('url');
 
 const logger = require('./lib/logger');
 const { setup_cookie_recording } = require('./lib/setup-cookie-recording');
 const { setup_beacon_recording } = require('./lib/setup-beacon-recording');
 const { setup_websocket_recording } = require('./lib/setup-websocket-recording');
 
-var output = {};
+
+
+const uri_ins = argv._[0];
+const uri_ins_host = url.parse(uri_ins).hostname;
+var uri_bases = [].concat(argv.b || []);
+if (!uri_ins.match(/\bwww\./)) {
+  uri_bases.push(`www.${uri_ins_host}`);
+}
 
 (async() => {
   const browser = await puppeteer.launch({
-    // headless: false,
+    headless: argv.headless,
+    defaultViewport: {
+      width: WindowSize.width,
+      height: WindowSize.height,
+    },
     args: [
       `--user-agent="${UserAgent}"`,
       `--window-size=${WindowSize.width},${WindowSize.height}`
     ],
   });
 
+  output = {
+    uri_ins: uri_ins,
+    uri_ref: argv.b && argv.b[0] || uri_ins,
+    uri_dest: undefined,
+    uri_redirects: undefined,
+    // The key difference between url.host and url.hostname is that url.hostname
+    // does not include the port.
+    host: uri_ins_host,
+    uri_bases: uri_bases,
+    script: {
+      host: os.hostname(),
+      version: {
+        npm: require('./package.json').version,
+        commit: undefined,
+      },
+      cmd_args: process.argv.slice(2).join(' '),
+      node_version: process.version,
+    },
+    browser: {
+      name: "Chromium",
+      version: browser.version(),
+      platform: {
+        name: os.type(),
+        version: os.release(),
+      },
+    },
+  };
+
   const page = await browser.newPage();
-  await page.setViewport({
-    width: WindowSize.width,
-    height: WindowSize.height,
-  });
   await page.bringToFront();
 
   page.on('console', msg => logger.log('debug', msg.text(), {type: 'browser.console'}));
@@ -90,7 +126,10 @@ var output = {};
 
   logger.log('info', `browsing now to ${uri_ins}`, {type: 'browser'});
 
-  await page.goto(uri_ins, {waitUntil : 'networkidle2' });
+  let page_response = await page.goto(uri_ins, {waitUntil : 'networkidle2' });
+  output.uri_redirects = page_response.request().redirectChain().map(req => {return req.url()});
+
+  output.uri_dest = output.uri_redirects
 
   await page.waitFor(3000); // wait 3 seconds
 
@@ -120,6 +159,8 @@ var output = {};
 
   // reporting
   fs.writeFileSync('websockets-log.json', JSON.stringify(webSocketLog, null, 2));
+
+  console.log(output);
 
 
   // console.dir(reportedEvents, {maxArrayLength: null, depth: null});

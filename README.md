@@ -30,6 +30,12 @@ To start the collection for e.g. <https://example.com>, open the terminal, navig
 - stacktrace.js documentation: <https://www.stacktracejs.com/#!/docs/stacktrace-js>
 - Chrome DevTools Protocol Documentation: <https://chromedevtools.github.io/devtools-protocol/>
 
+Use of Hooks for restructuring source code:
+
+- https://www.npmjs.com/package/before-after-hook
+- https://www.npmjs.com/package/promised-hooks
+- https://www.npmjs.com/package/grappling-hook
+
 ## Contributors
 
 - Robert Riemann (European Data Protection Supervisor, initial author)
