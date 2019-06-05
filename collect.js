@@ -78,7 +78,7 @@ if (!uri_ins.match(/\bwww\./)) {
       height: WindowSize.height,
     },
     args: [
-      `--user-agent="${UserAgent}"`,
+      `--user-agent=${UserAgent}`,
       `--window-size=${WindowSize.width},${WindowSize.height}`
     ],
   });
@@ -103,7 +103,8 @@ if (!uri_ins.match(/\bwww\./)) {
     },
     browser: {
       name: "Chromium",
-      version: browser.version(),
+      version: await browser.version(),
+      user_agent: await browser.userAgent(),
       platform: {
         name: os.type(),
         version: os.release(),
