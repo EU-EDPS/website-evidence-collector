@@ -110,6 +110,7 @@ if (!uri_ins.match(/\bwww\./)) {
         version: os.release(),
       },
     },
+    start_time: new Date(),
   };
 
   const page = await browser.newPage();
