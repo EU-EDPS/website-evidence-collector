@@ -5,6 +5,7 @@
   "main": "website-evidence-collector.js",
   "dependencies": {
     "@cliqz/adblocker": "^0.9.1",
+    "js-yaml": "^3.13.1",
     "puppeteer": "^1.11.0",
     "puppeteer-har": "github:rriemann/puppeteer-har#1f8d9041e2d651e5be8bb7ed08f14b2e51cce875",
     "stacktrace-js": "^2.0.0",

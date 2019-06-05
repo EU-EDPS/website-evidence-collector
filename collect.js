@@ -32,6 +32,20 @@ var argv = require('yargs') // TODO use rather option('o', hash) syntax and defi
   .boolean('headless')
   .default('headless', true)
 
+  .alias('y', 'yaml')
+  .describe('y', 'Filename to output YAML (`-` for STDOUT)')
+  .nargs('y', 1)
+
+  .alias('j', 'json')
+  .describe('j', 'Filename to output JSON (`-` for STDOUT)')
+  .nargs('j', 1)
+  // .default('j', '-')
+
+  .alias('s', 'save-screenshots')
+  .describe('s', 'Save screenshots as top.png, bottom.png and full.png')
+  .boolean('s')
+  .default('s', 0)
+
   .describe('mime-check', 'Excludes non-HTML pages from browsing')
   .boolean('mime-check')
   .default('mime-check', true)
@@ -55,6 +69,7 @@ const PuppeteerHar = require('puppeteer-har');
 const fs = require('fs');
 const os = require('os');
 const url = require('url');
+const yaml = require('js-yaml');
 
 const logger = require('./lib/logger');
 const { setup_cookie_recording } = require('./lib/setup-cookie-recording');
@@ -86,8 +101,8 @@ if (!uri_ins.match(/\bwww\./)) {
   output = {
     uri_ins: uri_ins,
     uri_ref: argv.b && argv.b[0] || uri_ins,
-    uri_dest: undefined,
-    uri_redirects: undefined,
+    uri_dest: null,
+    uri_redirects: null,
     // The key difference between url.host and url.hostname is that url.hostname
     // does not include the port.
     host: uri_ins_host,
@@ -96,7 +111,7 @@ if (!uri_ins.match(/\bwww\./)) {
       host: os.hostname(),
       version: {
         npm: require('./package.json').version,
-        commit: undefined,
+        commit: null,
       },
       cmd_args: process.argv.slice(2).join(' '),
       node_version: process.version,
@@ -111,6 +126,10 @@ if (!uri_ins.match(/\bwww\./)) {
       },
     },
     start_time: new Date(),
+    end_time: null,
+    webpage: {
+      screenshots: null
+    }
   };
 
   const page = await browser.newPage();
@@ -162,8 +181,24 @@ if (!uri_ins.match(/\bwww\./)) {
   // reporting
   fs.writeFileSync('websockets-log.json', JSON.stringify(webSocketLog, null, 2));
 
-  console.log(output);
+  if (argv.yaml) {
+    let yaml_dump = yaml.safeDump(output);
+    if (argv.yaml == '-') {
+      console.log(yaml_dump);
+    } else {
+      fs.writeFileSync(argv.yaml, yaml_dump);
+    }
+  }
 
+  if (argv.json) {
+    let json_dump = JSON.stringify(webSocketLog, null, 2);
+    if (argv.json == '-') {
+      // console.log(output);
+      console.dir(output, {maxArrayLength: null, depth: null});
+    } else {
+      fs.writeFileSync(argv.json, json_dump);
+    }
+  }
 
   // console.dir(reportedEvents, {maxArrayLength: null, depth: null});
 })();
