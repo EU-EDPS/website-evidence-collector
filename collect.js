@@ -32,19 +32,20 @@ var argv = require('yargs') // TODO use rather option('o', hash) syntax and defi
   .boolean('headless')
   .default('headless', true)
 
+  .alias('o', 'output')
+  .describe('o', 'Output folder')
+  // .nargs('o', 1)
+  .default('o', './output')
+
   .alias('y', 'yaml')
-  .describe('y', 'Filename to output YAML (`-` for STDOUT)')
-  .nargs('y', 1)
+  .describe('y', 'Output YAML to STDOUT')
+  .boolean('y')
+  .default('y', false)
 
   .alias('j', 'json')
-  .describe('j', 'Filename to output JSON (`-` for STDOUT)')
-  .nargs('j', 1)
-  // .default('j', '-')
-
-  .alias('s', 'save-screenshots')
-  .describe('s', 'Save screenshots as top.png, bottom.png and full.png')
-  .boolean('s')
-  .default('s', 0)
+  .describe('j', 'Output JSON to STDOUT')
+  .boolean('j')
+  .default('j', false)
 
   .describe('mime-check', 'Excludes non-HTML pages from browsing')
   .boolean('mime-check')
@@ -70,6 +71,7 @@ const fs = require('fs');
 const os = require('os');
 const url = require('url');
 const yaml = require('js-yaml');
+const path = require('path');
 
 const logger = require('./lib/logger');
 const { setup_cookie_recording } = require('./lib/setup-cookie-recording');
@@ -86,12 +88,17 @@ if (!uri_ins.match(/\bwww\./)) {
 }
 
 (async() => {
+  if (argv.output && !fs.existsSync(argv.output)) {
+    fs.mkdirSync(argv.output);
+  }
+
   const browser = await puppeteer.launch({
     headless: argv.headless,
     defaultViewport: {
       width: WindowSize.width,
       height: WindowSize.height,
     },
+    userDataDir: argv.output || undefined,
     args: [
       `--user-agent=${UserAgent}`,
       `--window-size=${WindowSize.width},${WindowSize.height}`
@@ -143,7 +150,7 @@ if (!uri_ins.match(/\bwww\./)) {
   let webSocketLog = setup_websocket_recording(page);
 
   const har = new PuppeteerHar(page);
-  await har.start({ path: 'requests.har' });
+  await har.start({ path: argv.output ? path.join(argv.output, 'requests.har') : undefined });
 
   logger.log('info', `browsing now to ${uri_ins}`, {type: 'browser'});
 
@@ -172,7 +179,14 @@ if (!uri_ins.match(/\bwww\./)) {
   //   links: links,
   // }, {'maxArrayLength': null});
 
-  // await page.screenshot({path: 'example.png'});
+  if (argv.output) {
+    await page.screenshot({path: path.join(argv.output, 'screenshot-full.png'), fullPage: true});
+    await page.screenshot({path: path.join(argv.output, 'screenshot-top.png')});
+    await page.evaluate( () => {
+      window.scrollTo(0,document.body.scrollHeight);
+    });
+    await page.screenshot({path: path.join(argv.output, 'screenshot-bottom.png')});
+  }
 
   await har.stop();
 
@@ -181,24 +195,34 @@ if (!uri_ins.match(/\bwww\./)) {
   // reporting
   fs.writeFileSync('websockets-log.json', JSON.stringify(webSocketLog, null, 2));
 
-  if (argv.yaml) {
+  if(argv.output || argv.yaml) {
     let yaml_dump = yaml.safeDump(output);
-    if (argv.yaml == '-') {
+
+    if (argv.yaml) {
       console.log(yaml_dump);
-    } else {
-      fs.writeFileSync(argv.yaml, yaml_dump);
+    }
+
+    if (argv.output) {
+      fs.writeFileSync(path.join(argv.output, 'inspection.yml'), yaml_dump);
     }
   }
 
-  if (argv.json) {
-    let json_dump = JSON.stringify(webSocketLog, null, 2);
-    if (argv.json == '-') {
+  if (argv.output || argv.json) {
+    if (argv.json) {
       // console.log(output);
       console.dir(output, {maxArrayLength: null, depth: null});
-    } else {
-      fs.writeFileSync(argv.json, json_dump);
+    }
+
+    if (argv.output) {
+      let json_dump = JSON.stringify(webSocketLog, null, 2);
+      fs.writeFileSync(path.join(argv.output, 'inspection.json'), json_dump);
     }
   }
 
   // console.dir(reportedEvents, {maxArrayLength: null, depth: null});
+  if (argv.output) {
+    let reportedEvents = 
+    let json_dump = JSON.stringify(reportedEvents, null, 2);
+    fs.writeFileSync(path.join(argv.output, 'events.json'), json_dump);
+  }
 })();
