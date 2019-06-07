@@ -190,7 +190,7 @@ var refs_regexp = new RegExp(`\\b(${uri_refs_stripped.join('|')})\\b`, 'i');
     event.data.forEach( cookie => {
       cookie.log = {
         stack: event.stack,
-        type: event.type,
+        // type: event.type,
         timestamp: event.timestamp,
       };
     });
@@ -208,9 +208,30 @@ var refs_regexp = new RegExp(`\\b(${uri_refs_stripped.join('|')})\\b`, 'i');
     }
   });
 
+  output.cookies = cookies;
+
   if (argv.output) {
     let yaml_dump = yaml.safeDump(cookies, {noRefs: true});
     fs.writeFileSync(path.join(argv.output, 'cookies.yml'), yaml_dump);
+  }
+
+  let beacons_from_events = flatten(event_data.filter( (event) => {
+    return event.type.startsWith('Request.Tracking');
+  }).map( event => {
+    return Object.assign({}, event.data, {
+      log: {
+        stack: event.stack,
+        // type: event.type,
+        timestamp: event.timestamp,
+      }
+    });
+  }));
+
+  output.beacons = beacons_from_events;
+
+  if (argv.output) {
+    let yaml_dump = yaml.safeDump(beacons_from_events, {noRefs: true});
+    fs.writeFileSync(path.join(argv.output, 'beacons.yml'), yaml_dump);
   }
 
   if(argv.output || argv.yaml) {
