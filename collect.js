@@ -129,7 +129,15 @@ var refs_regexp = new RegExp(`\\b(${uri_refs_stripped.join('|')})\\b`, 'i');
 
   output.webpage.links = groupBy(links, (link) => {
     return isFirstParty(refs_regexp, link.href) ? 'first_party' : 'third_party';
-  })
+  });
+
+  let social_platforms = yaml.safeLoad(fs.readFileSync('./social-media-platforms.yml', 'utf8')).map((platform) => {
+    return escapeRegExp(platform);
+  });
+  let social_platforms_regexp = new RegExp(`\\b(${social_platforms.join('|')})\\b`, 'i');
+  output.webpage.links.social = links.filter( (link) => {
+    return link.href.match(social_platforms_regexp);
+  });
 
   // console.dir({
   //   cookies: cookies.cookies,
