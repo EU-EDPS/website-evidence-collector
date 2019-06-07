@@ -135,6 +135,8 @@ if (!uri_ins.match(/\bwww\./)) {
 
   await browser.close();
 
+  output.end_time = new Date();
+
   // reporting
   fs.writeFileSync('websockets-log.json', JSON.stringify(webSocketLog, null, 2));
 
