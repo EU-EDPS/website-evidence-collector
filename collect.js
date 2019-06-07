@@ -102,7 +102,7 @@ if (!uri_ins.match(/\bwww\./)) {
 
   output.uri_dest = page.url();
 
-  await page.waitFor(3000); // wait 3 seconds
+  await page.waitFor(argv.sleep); // in ms
 
   // example from https://stackoverflow.com/a/50290081/1407622
   // Here we can get all of the cookies
