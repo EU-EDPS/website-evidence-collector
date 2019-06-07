@@ -79,9 +79,7 @@ if (!uri_ins.match(/\bwww\./)) {
     },
     start_time: new Date(),
     end_time: null,
-    webpage: {
-      screenshots: null
-    }
+    webpage: {},
   };
 
   const page = await browser.newPage();
