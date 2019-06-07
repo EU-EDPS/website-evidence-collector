@@ -163,7 +163,7 @@ var refs_regexp = new RegExp(`\\b(${uri_refs_stripped.join('|')})\\b`, 'i');
   fs.writeFileSync('websockets-log.json', JSON.stringify(webSocketLog, null, 2));
 
   if(argv.output || argv.yaml) {
-    let yaml_dump = yaml.safeDump(output);
+    let yaml_dump = yaml.safeDump(output, {noRefs: true});
 
     if (argv.yaml) {
       console.log(yaml_dump);
