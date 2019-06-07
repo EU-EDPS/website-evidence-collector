@@ -100,7 +100,7 @@ if (!uri_ins.match(/\bwww\./)) {
   let page_response = await page.goto(uri_ins, {waitUntil : 'networkidle2' });
   output.uri_redirects = page_response.request().redirectChain().map(req => {return req.url()});
 
-  output.uri_dest = output.uri_redirects
+  output.uri_dest = page.url();
 
   await page.waitFor(3000); // wait 3 seconds
 
