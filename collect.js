@@ -106,7 +106,7 @@ var refs_regexp = new RegExp(`\\b(${uri_refs_stripped.join('|')})\\b`, 'i');
 
   logger.log('info', `browsing now to ${uri_ins}`, {type: 'Browser'});
 
-  let page_response = await page.goto(uri_ins, {waitUntil : 'networkidle2' });
+  let page_response = await page.goto(uri_ins, {timeout: 0, waitUntil : 'networkidle2' });
   output.uri_redirects = page_response.request().redirectChain().map(req => {return req.url()});
 
   output.uri_dest = page.url();
@@ -227,10 +227,27 @@ var refs_regexp = new RegExp(`\\b(${uri_refs_stripped.join('|')})\\b`, 'i');
     });
   }));
 
-  output.beacons = beacons_from_events;
+  // make now a summary for the beacons (one of every hostname+pathname and their occurance)
+  let beacons_from_events_grouped = groupBy(beacons_from_events, beacon => {
+    let url_parsed = url.parse(beacon.url);
+    return `${url_parsed.hostname}${url_parsed.pathname.replace(/\/$/,'')}`;
+  });
+
+  let beacons_summary = {};
+
+  Object.entries(beacons_from_events_grouped).forEach( beacon_group => {
+    console.log(beacon_group);
+    console.log(beacon_group.length);
+
+    return Object.assign({}, beacon_group[0], {
+      occurances: beacon_group.length,
+    });
+  });
+
+  output.beacons = beacons_summary;
 
   if (argv.output) {
-    let yaml_dump = yaml.safeDump(beacons_from_events, {noRefs: true});
+    let yaml_dump = yaml.safeDump(beacons_summary, {noRefs: true});
     fs.writeFileSync(path.join(argv.output, 'beacons.yml'), yaml_dump);
   }
 
