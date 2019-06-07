@@ -24,6 +24,7 @@ const { setup_beacon_recording } = require('./lib/setup-beacon-recording');
 const { setup_websocket_recording } = require('./lib/setup-websocket-recording');
 const escapeRegExp = require('lodash/escapeRegExp');
 const groupBy = require('lodash/groupBy');
+const flatten = require('lodash/flatten');
 
 const { isFirstParty } = require('./lib/tools');
 
@@ -93,7 +94,7 @@ var refs_regexp = new RegExp(`\\b(${uri_refs_stripped.join('|')})\\b`, 'i');
   const page = await browser.newPage();
   await page.bringToFront();
 
-  page.on('console', msg => logger.log('debug', msg.text(), {type: 'browser.console'}));
+  page.on('console', msg => logger.log('debug', msg.text(), {type: 'Browser.Console'}));
 
   // setup tracking
   await setup_cookie_recording(page);
@@ -103,7 +104,7 @@ var refs_regexp = new RegExp(`\\b(${uri_refs_stripped.join('|')})\\b`, 'i');
   const har = new PuppeteerHar(page);
   await har.start({ path: argv.output ? path.join(argv.output, 'requests.har') : undefined });
 
-  logger.log('info', `browsing now to ${uri_ins}`, {type: 'browser'});
+  logger.log('info', `browsing now to ${uri_ins}`, {type: 'Browser'});
 
   let page_response = await page.goto(uri_ins, {waitUntil : 'networkidle2' });
   output.uri_redirects = page_response.request().redirectChain().map(req => {return req.url()});
@@ -112,9 +113,6 @@ var refs_regexp = new RegExp(`\\b(${uri_refs_stripped.join('|')})\\b`, 'i');
 
   await page.waitFor(argv.sleep); // in ms
 
-  // example from https://stackoverflow.com/a/50290081/1407622
-  // Here we can get all of the cookies
-  const cookies = await page._client.send('Network.getAllCookies');
   const links = await page.evaluate( () => {
     return [].map.call(document.querySelectorAll('a[href]'), a => {
       return {
@@ -153,6 +151,15 @@ var refs_regexp = new RegExp(`\\b(${uri_refs_stripped.join('|')})\\b`, 'i');
     await page.screenshot({path: path.join(argv.output, 'screenshot-bottom.png')});
   }
 
+
+  // example from https://stackoverflow.com/a/50290081/1407622
+  // Here we can get all of the cookies
+  const cookies = (await page._client.send('Network.getAllCookies')).cookies.map( cookie => {
+    cookie.expiresUTC = new Date(cookie.expires * 1000);
+    cookie.expiresDays = Math.round((cookie.expiresUTC - output.start_time) / (10 * 60 * 60 * 24)) / 100;
+    return cookie;
+  });
+
   await har.stop();
 
   await browser.close();
@@ -162,6 +169,48 @@ var refs_regexp = new RegExp(`\\b(${uri_refs_stripped.join('|')})\\b`, 'i');
   // reporting
   if (argv.output) {
     fs.writeFileSync(path.join(argv.output, 'websockets-log.json'), JSON.stringify(webSocketLog, null, 2));
+  }
+  output.websockets = webSocketLog;
+
+  // analyse cookies and web beacons
+  let event_data = await new Promise( (resolve, reject) => {
+    logger.query({
+      start: 0,
+      order: 'desc',
+      limit: Infinity,
+    }, (err, results) => {
+      if (err) return reject(err);
+      return resolve(results.file);
+    });
+  });
+
+  let cookies_from_events = flatten(event_data.filter( (event) => {
+    return event.type.startsWith('Cookie');
+  }).map( event => {
+    event.data.forEach( cookie => {
+      cookie.log = {
+        stack: event.stack,
+        type: event.type,
+        timestamp: event.timestamp,
+      };
+    });
+    return event.data;
+  }));
+
+  cookies.forEach( cookie => {
+    let cookie_from_events = cookies_from_events.find( cookie_from_events => {
+      return (cookie.name == cookie_from_events.key) &&
+             (cookie.domain.replace(/^\./,'') == cookie_from_events.domain) &&
+             (cookie.path == cookie_from_events.path);
+    });
+    if (!!cookie_from_events) {
+      cookie.log = cookie_from_events.log;
+    }
+  });
+
+  if (argv.output) {
+    let yaml_dump = yaml.safeDump(cookies, {noRefs: true});
+    fs.writeFileSync(path.join(argv.output, 'cookies.yml'), yaml_dump);
   }
 
   if(argv.output || argv.yaml) {
