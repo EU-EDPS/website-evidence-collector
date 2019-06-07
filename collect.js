@@ -160,7 +160,9 @@ var refs_regexp = new RegExp(`\\b(${uri_refs_stripped.join('|')})\\b`, 'i');
   output.end_time = new Date();
 
   // reporting
-  fs.writeFileSync('websockets-log.json', JSON.stringify(webSocketLog, null, 2));
+  if (argv.output) {
+    fs.writeFileSync(path.join(argv.output, 'websockets-log.json'), JSON.stringify(webSocketLog, null, 2));
+  }
 
   if(argv.output || argv.yaml) {
     let yaml_dump = yaml.safeDump(output, {noRefs: true});
