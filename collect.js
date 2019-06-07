@@ -166,7 +166,7 @@ if (!uri_ins.match(/\bwww\./)) {
 
   // console.dir(reportedEvents, {maxArrayLength: null, depth: null});
   if (argv.output) {
-    let reportedEvents = 
+    let reportedEvents = {};
     let json_dump = JSON.stringify(reportedEvents, null, 2);
     fs.writeFileSync(path.join(argv.output, 'events.json'), json_dump);
   }
