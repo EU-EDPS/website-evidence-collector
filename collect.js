@@ -27,7 +27,7 @@ const { setup_websocket_recording } = require('./lib/setup-websocket-recording')
 
 const uri_ins = argv._[0];
 const uri_ins_host = url.parse(uri_ins).hostname;
-var uri_bases = [].concat(argv.b || []);
+var uri_bases = [uri_ins_host].concat(argv.b || []);
 if (!uri_ins.match(/\bwww\./)) {
   uri_bases.push(`www.${uri_ins_host}`);
 }
