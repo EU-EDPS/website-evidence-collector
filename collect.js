@@ -43,7 +43,7 @@ if (!uri_ins.match(/\bwww\./)) {
       width: WindowSize.width,
       height: WindowSize.height,
     },
-    userDataDir: argv.output || undefined,
+    userDataDir: argv.output ? path.join(argv.output, 'browser-profile') : undefined,
     args: [
       `--user-agent=${UserAgent}`,
       `--window-size=${WindowSize.width},${WindowSize.height}`
