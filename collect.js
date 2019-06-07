@@ -22,15 +22,24 @@ const logger = require('./lib/logger');
 const { setup_cookie_recording } = require('./lib/setup-cookie-recording');
 const { setup_beacon_recording } = require('./lib/setup-beacon-recording');
 const { setup_websocket_recording } = require('./lib/setup-websocket-recording');
+const escapeRegExp = require('lodash/escapeRegExp');
+const groupBy = require('lodash/groupBy');
+
+const { isFirstParty } = require('./lib/tools');
 
 
 
 const uri_ins = argv._[0];
 const uri_ins_host = url.parse(uri_ins).hostname;
-var uri_bases = [uri_ins_host].concat(argv.b || []);
-if (!uri_ins.match(/\bwww\./)) {
-  uri_bases.push(`www.${uri_ins_host}`);
-}
+
+var uri_refs = [uri_ins].concat(argv.firstPartyUri);
+
+let uri_refs_stripped = uri_refs.map((uri_ref) => {
+  let uri_ref_parsed = url.parse(uri_ref);
+  return escapeRegExp(`${uri_ref_parsed.hostname}${uri_ref_parsed.pathname.replace(/\/$/, "")}`);
+});
+
+var refs_regexp = new RegExp(`\\b(${uri_refs_stripped.join('|')})\\b`, 'i');
 
 (async() => {
   if (argv.output && !fs.existsSync(argv.output)) {
@@ -52,13 +61,12 @@ if (!uri_ins.match(/\bwww\./)) {
 
   output = {
     uri_ins: uri_ins,
-    uri_ref: argv.b && argv.b[0] || uri_ins,
+    uri_refs: uri_refs,
     uri_dest: null,
     uri_redirects: null,
     // The key difference between url.host and url.hostname is that url.hostname
     // does not include the port.
     host: uri_ins_host,
-    uri_bases: uri_bases,
     script: {
       host: os.hostname(),
       version: {
@@ -70,8 +78,8 @@ if (!uri_ins.match(/\bwww\./)) {
     },
     browser: {
       name: "Chromium",
-      version: await browser.version(),
-      user_agent: await browser.userAgent(),
+      version: (await browser.version()),
+      user_agent: (await browser.userAgent()),
       platform: {
         name: os.type(),
         version: os.release(),
@@ -112,10 +120,16 @@ if (!uri_ins.match(/\bwww\./)) {
       return {
         href: a.href,
         inner_text: a.innerText,
-        inner_html: a.innerHTML,
+        inner_html: a.innerHTML.trim(),
       };
+    }).filter(link => {
+      return link.href.startsWith('http');
     });
   });
+
+  output.webpage.links = groupBy(links, (link) => {
+    return isFirstParty(refs_regexp, link.href) ? 'first_party' : 'third_party';
+  })
 
   // console.dir({
   //   cookies: cookies.cookies,
