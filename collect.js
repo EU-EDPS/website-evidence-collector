@@ -113,10 +113,10 @@ var refs_regexp = new RegExp(`\\b(${uri_refs_stripped.join('|')})\\b`, 'i');
 
   await page.waitFor(argv.sleep); // in ms
 
-  const links = await page.evaluate( () => {
+  const links_with_duplicates = await page.evaluate( () => {
     return [].map.call(document.querySelectorAll('a[href]'), a => {
       return {
-        href: a.href,
+        href: a.href.split('#')[0], // link without fragment
         inner_text: a.innerText,
         inner_html: a.innerHTML.trim(),
       };
@@ -125,7 +125,13 @@ var refs_regexp = new RegExp(`\\b(${uri_refs_stripped.join('|')})\\b`, 'i');
     });
   });
 
-  output.webpage.links = groupBy(links, (link) => {
+  // https://dev.to/vuevixens/removing-duplicates-in-an-array-of-objects-in-js-with-sets-3fep
+  const links = Array.from(new Set(links_with_duplicates.map(link => link.href)))
+  .map(href => {
+    return links_with_duplicates.find(link => link.href === href);
+  });
+
+  output.links = groupBy(links, (link) => {
     return isFirstParty(refs_regexp, link.href) ? 'first_party' : 'third_party';
   });
 
