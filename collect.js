@@ -159,10 +159,13 @@ var refs_regexp = new RegExp(`\\b(${uri_refs_stripped.join('|')})\\b`, 'i');
     return link.href.match(social_platforms_regexp);
   });
 
-  // console.dir({
-  //   cookies: cookies.cookies,
-  //   links: links,
-  // }, {'maxArrayLength': null});
+  let keywords = yaml.safeLoad(fs.readFileSync('./keywords.yml', 'utf8')).map((keyword) => {
+    return escapeRegExp(keyword);
+  });
+  let keywords_regexp = new RegExp(keywords.join('|'), 'i');
+  output.links.keywords = links.filter( (link) => {
+    return link.href.match(keywords_regexp) || link.inner_html.match(keywords_regexp);
+  });
 
   if (argv.output) {
     await page.screenshot({path: path.join(argv.output, 'screenshot-full.png'), fullPage: true});
