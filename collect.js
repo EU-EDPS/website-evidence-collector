@@ -193,8 +193,10 @@ var refs_regexp = new RegExp(`^(${uri_refs_stripped.join('|')})\\b`, 'i');
   // example from https://stackoverflow.com/a/50290081/1407622
   // Here we can get all of the cookies
   const cookies = (await page._client.send('Network.getAllCookies')).cookies.map( cookie => {
-    cookie.expiresUTC = new Date(cookie.expires * 1000);
-    cookie.expiresDays = Math.round((cookie.expiresUTC - output.start_time) / (10 * 60 * 60 * 24)) / 100;
+    if (cookie.expires > -1) {
+      cookie.expiresUTC = new Date(cookie.expires * 1000);
+      cookie.expiresDays = Math.round((cookie.expiresUTC - output.start_time) / (10 * 60 * 60 * 24)) / 100;
+    }
     return cookie;
   });
 
