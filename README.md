@@ -36,6 +36,15 @@ Use of Hooks for restructuring source code:
 - https://www.npmjs.com/package/promised-hooks
 - https://www.npmjs.com/package/grappling-hook
 
+Generation of Markdown Excerpts:
+
+- https://justmarkup.com/articles/2019-01-04-using-puppeteer-to-crawl-pages-and-save-them-as-markdown-files/
+
+Relevant Github Issues:
+
+- [New HAR page doesn't appear to be created upon navigation chrome-har#19](https://github.com/sitespeedio/chrome-har/issues/19)
+- [No mechanism to use seeded random generation lodash#3289](https://github.com/lodash/lodash/issues/3289)
+
 ## Contributors
 
 - Robert Riemann (European Data Protection Supervisor, initial author)
