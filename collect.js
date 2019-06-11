@@ -335,11 +335,4 @@ var refs_regexp = new RegExp(`\\b(${uri_refs_stripped.join('|')})\\b`, 'i');
       fs.writeFileSync(path.join(argv.output, 'inspection.json'), json_dump);
     }
   }
-
-  // console.dir(reportedEvents, {maxArrayLength: null, depth: null});
-  if (argv.output) {
-    let reportedEvents = {};
-    let json_dump = JSON.stringify(reportedEvents, null, 2);
-    fs.writeFileSync(path.join(argv.output, 'events.json'), json_dump);
-  }
 })();
