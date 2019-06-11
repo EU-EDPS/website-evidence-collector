@@ -12,7 +12,7 @@ const WindowSize = {
 
 const puppeteer = require('puppeteer');
 const PuppeteerHar = require('puppeteer-har');
-const fs = require('fs');
+const fs = require('fs-extra');
 const os = require('os');
 const url = require('url');
 const yaml = require('js-yaml');
@@ -42,7 +42,10 @@ let uri_refs_stripped = uri_refs.map((uri_ref) => {
 var refs_regexp = new RegExp(`\\b(${uri_refs_stripped.join('|')})\\b`, 'i');
 
 (async() => {
-  if (argv.output && !fs.existsSync(argv.output)) {
+  if (argv.output) {
+    if (fs.existsSync(argv.output)) {
+      fs.removeSync(argv.output);
+    }
     fs.mkdirSync(argv.output);
   }
 
