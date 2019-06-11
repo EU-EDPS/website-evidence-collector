@@ -25,6 +25,7 @@ const { setup_websocket_recording } = require('./lib/setup-websocket-recording')
 const escapeRegExp = require('lodash/escapeRegExp');
 const groupBy = require('lodash/groupBy');
 const flatten = require('lodash/flatten');
+const sampleSize = require('lodash/sampleSize');
 
 const { isFirstParty } = require('./lib/tools');
 
@@ -154,6 +155,17 @@ var refs_regexp = new RegExp(`\\b(${uri_refs_stripped.join('|')})\\b`, 'i');
       window.scrollTo(0,document.body.scrollHeight);
     });
     await page.screenshot({path: path.join(argv.output, 'screenshot-bottom.png')});
+  }
+
+  // browsing
+  browse_links = sampleSize(links, argv.max);
+  output.browsing_history = [output.uri_ins].concat(browse_links.map( l => l.href ));
+
+  for (const link of browse_links) {
+    logger.log('info', `browsing now to ${link.href}`, {type: 'Browser'});
+    await page.goto(link.href, {timeout: 0, waitUntil : 'networkidle2' });
+
+    await page.waitFor(argv.sleep); // in ms
   }
 
 
