@@ -174,10 +174,11 @@ var refs_regexp = new RegExp(`\\b(${uri_refs_stripped.join('|')})\\b`, 'i');
   }
 
   // browsing
-  browse_links = sampleSize(links, argv.max - argv.browseLink.length);
-  output.browsing_history = [output.uri_ins].concat(argv.browseLink || [], browse_links.map( l => l.href ));
+  let browse_user_set = argv.browseLink || [];
+  let browse_links = sampleSize(output.links.first_party, argv.max - browse_user_set.length);
+  output.browsing_history = [output.uri_ins].concat(browse_user_set, browse_links.map( l => l.href ));
 
-  for (const link of output.browsing_history) {
+  for (const link of output.browsing_history.slice(1)) {
     logger.log('info', `browsing now to ${link}`, {type: 'Browser'});
     await page.goto(link, {timeout: 0, waitUntil : 'networkidle2' });
 
