@@ -39,7 +39,7 @@ let uri_refs_stripped = uri_refs.map((uri_ref) => {
   return escapeRegExp(`${uri_ref_parsed.hostname}${uri_ref_parsed.pathname.replace(/\/$/, "")}`);
 });
 
-var refs_regexp = new RegExp(`\\b(${uri_refs_stripped.join('|')})\\b`, 'i');
+var refs_regexp = new RegExp(`^(${uri_refs_stripped.join('|')})\\b`, 'i');
 
 (async() => {
   if (argv.output) {
