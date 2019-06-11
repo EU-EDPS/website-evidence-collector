@@ -230,6 +230,11 @@ var refs_regexp = new RegExp(`\\b(${uri_refs_stripped.join('|')})\\b`, 'i');
     return event.data;
   }));
 
+
+  for (const cookie of cookies) {
+    hosts.cookies.add(cookie.domain.replace(/^\./,''));
+  }
+
   cookies.forEach( cookie => {
     let cookie_from_events = cookies_from_events.find( cookie_from_events => {
       return (cookie.name == cookie_from_events.key) &&
@@ -259,6 +264,11 @@ var refs_regexp = new RegExp(`\\b(${uri_refs_stripped.join('|')})\\b`, 'i');
       }
     });
   }));
+
+  for (const beacon of beacons_from_events) {
+    const u = url.parse(beacon.url);
+    hosts.beacons.add(u.hostname);
+  }
 
   // make now a summary for the beacons (one of every hostname+pathname and their occurance)
   let beacons_from_events_grouped = groupBy(beacons_from_events, beacon => {
