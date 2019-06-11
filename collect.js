@@ -29,8 +29,6 @@ const sampleSize = require('lodash/sampleSize');
 
 const { isFirstParty } = require('./lib/tools');
 
-
-
 const uri_ins = argv._[0];
 const uri_ins_host = url.parse(uri_ins).hostname;
 
@@ -118,7 +116,7 @@ var refs_regexp = new RegExp(`\\b(${uri_refs_stripped.join('|')})\\b`, 'i');
   logger.log('info', `browsing now to ${uri_ins}`, {type: 'Browser'});
 
   let page_response = await page.goto(uri_ins, {timeout: 0, waitUntil : 'networkidle2' });
-  output.uri_redirects = page_response.request().redirectChain().map(req => {return req.url()});
+  output.uri_redirects = page_response.request().redirectChain().map(req => {return req.url();});
 
   output.uri_dest = page.url();
 
