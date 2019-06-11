@@ -100,6 +100,17 @@ var refs_regexp = new RegExp(`\\b(${uri_refs_stripped.join('|')})\\b`, 'i');
   await setup_cookie_recording(page);
   setup_beacon_recording(page);
   let webSocketLog = setup_websocket_recording(page);
+  let hosts = {
+    requests: new Set(),
+    beacons: new Set(),
+    cookies: new Set(),
+    links: new Set(),
+  };
+
+  await page.on('request', (request) => {
+    const l = url.parse(request.url());
+    hosts.requests.add(l.hostname);
+  });
 
   const har = new PuppeteerHar(page);
   await har.start({ path: argv.output ? path.join(argv.output, 'requests.har') : undefined });
@@ -131,6 +142,11 @@ var refs_regexp = new RegExp(`\\b(${uri_refs_stripped.join('|')})\\b`, 'i');
     return links_with_duplicates.find(link => link.href === href);
   });
 
+  for (const link of links) {
+    const l = url.parse(link.href);
+    hosts.links.add(l.hostname);
+  }
+
   output.links = groupBy(links, (link) => {
     return isFirstParty(refs_regexp, link.href) ? 'first_party' : 'third_party';
   });
@@ -158,12 +174,12 @@ var refs_regexp = new RegExp(`\\b(${uri_refs_stripped.join('|')})\\b`, 'i');
   }
 
   // browsing
-  browse_links = sampleSize(links, argv.max);
-  output.browsing_history = [output.uri_ins].concat(browse_links.map( l => l.href ));
+  browse_links = sampleSize(links, argv.max - argv.browseLink.length);
+  output.browsing_history = [output.uri_ins].concat(argv.browseLink || [], browse_links.map( l => l.href ));
 
-  for (const link of browse_links) {
-    logger.log('info', `browsing now to ${link.href}`, {type: 'Browser'});
-    await page.goto(link.href, {timeout: 0, waitUntil : 'networkidle2' });
+  for (const link of output.browsing_history) {
+    logger.log('info', `browsing now to ${link}`, {type: 'Browser'});
+    await page.goto(link, {timeout: 0, waitUntil : 'networkidle2' });
 
     await page.waitFor(argv.sleep); // in ms
   }
@@ -260,6 +276,25 @@ var refs_regexp = new RegExp(`\\b(${uri_refs_stripped.join('|')})\\b`, 'i');
   beacons_summary.sort( (b1, b2) => { return b2.occurances - b1.occurances;});
 
   output.beacons = beacons_summary;
+
+  output.hosts = {
+    requests: {
+      count: hosts.requests.size,
+      entries: Array.from(hosts.requests),
+    },
+    beacons: {
+      count: hosts.beacons.size,
+      entries: Array.from(hosts.beacons),
+    },
+    cookies: {
+      count: hosts.cookies.size,
+      entries: Array.from(hosts.cookies),
+    },
+    links: {
+      count: hosts.links.size,
+      entries: Array.from(hosts.links),
+    },
+  };
 
   if (argv.output) {
     let yaml_dump = yaml.safeDump(beacons_summary, {noRefs: true});
