@@ -240,6 +240,8 @@ var refs_regexp = new RegExp(`\\b(${uri_refs_stripped.join('|')})\\b`, 'i');
     }));
   }
 
+  beacons_summary.sort( (b1, b2) => { return b2.occurances - b1.occurances;});
+
   output.beacons = beacons_summary;
 
   if (argv.output) {
