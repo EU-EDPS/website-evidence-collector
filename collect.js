@@ -88,7 +88,6 @@ var refs_regexp = new RegExp(`\\b(${uri_refs_stripped.join('|')})\\b`, 'i');
     },
     start_time: new Date(),
     end_time: null,
-    webpage: {},
   };
 
   const page = await browser.newPage();
@@ -139,7 +138,7 @@ var refs_regexp = new RegExp(`\\b(${uri_refs_stripped.join('|')})\\b`, 'i');
     return escapeRegExp(platform);
   });
   let social_platforms_regexp = new RegExp(`\\b(${social_platforms.join('|')})\\b`, 'i');
-  output.webpage.links.social = links.filter( (link) => {
+  output.links.social = links.filter( (link) => {
     return link.href.match(social_platforms_regexp);
   });
 
@@ -274,7 +273,7 @@ var refs_regexp = new RegExp(`\\b(${uri_refs_stripped.join('|')})\\b`, 'i');
     }
 
     if (argv.output) {
-      let json_dump = JSON.stringify(webSocketLog, null, 2);
+      let json_dump = JSON.stringify(output, null, 2);
       fs.writeFileSync(path.join(argv.output, 'inspection.json'), json_dump);
     }
   }
