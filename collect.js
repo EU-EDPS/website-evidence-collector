@@ -233,16 +233,12 @@ var refs_regexp = new RegExp(`\\b(${uri_refs_stripped.join('|')})\\b`, 'i');
     return `${url_parsed.hostname}${url_parsed.pathname.replace(/\/$/,'')}`;
   });
 
-  let beacons_summary = {};
-
-  Object.entries(beacons_from_events_grouped).forEach( beacon_group => {
-    console.log(beacon_group);
-    console.log(beacon_group.length);
-
-    return Object.assign({}, beacon_group[0], {
+  let beacons_summary = [];
+  for (const [key, beacon_group] of Object.entries(beacons_from_events_grouped)) {
+    beacons_summary.push(Object.assign({}, beacon_group[0], {
       occurances: beacon_group.length,
-    });
-  });
+    }));
+  }
 
   output.beacons = beacons_summary;
 
