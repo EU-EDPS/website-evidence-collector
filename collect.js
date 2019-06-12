@@ -154,7 +154,7 @@ var refs_regexp = new RegExp(`^(${uri_refs_stripped.join('|')})\\b`, 'i');
     return isFirstParty(refs_regexp, link.href) ? 'first_party' : 'third_party';
   });
 
-  let social_platforms = yaml.safeLoad(fs.readFileSync('./social-media-platforms.yml', 'utf8')).map((platform) => {
+  let social_platforms = yaml.safeLoad(fs.readFileSync('./assets/social-media-platforms.yml', 'utf8')).map((platform) => {
     return escapeRegExp(platform);
   });
   let social_platforms_regexp = new RegExp(`\\b(${social_platforms.join('|')})\\b`, 'i');
@@ -162,7 +162,7 @@ var refs_regexp = new RegExp(`^(${uri_refs_stripped.join('|')})\\b`, 'i');
     return link.href.match(social_platforms_regexp);
   });
 
-  let keywords = yaml.safeLoad(fs.readFileSync('./keywords.yml', 'utf8')).map((keyword) => {
+  let keywords = yaml.safeLoad(fs.readFileSync('./assets/keywords.yml', 'utf8')).map((keyword) => {
     return escapeRegExp(keyword);
   });
   let keywords_regexp = new RegExp(keywords.join('|'), 'i');
