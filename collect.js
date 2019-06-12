@@ -27,7 +27,7 @@ const groupBy = require('lodash/groupBy');
 const flatten = require('lodash/flatten');
 const sampleSize = require('lodash/sampleSize');
 
-const { isFirstParty } = require('./lib/tools');
+const { isFirstParty, getLocalStorage } = require('./lib/tools');
 
 const uri_ins = argv._[0];
 const uri_ins_host = url.parse(uri_ins).hostname;
@@ -124,6 +124,7 @@ var refs_regexp = new RegExp(`^(${uri_refs_stripped.join('|')})\\b`, 'i');
   output.uri_dest = page.url();
 
   await page.waitFor(argv.sleep); // in ms
+  let localStorage = await getLocalStorage(page);
 
   const links_with_duplicates = await page.evaluate( () => {
     return [].map.call(document.querySelectorAll('a[href]'), a => {
@@ -187,6 +188,7 @@ var refs_regexp = new RegExp(`^(${uri_refs_stripped.join('|')})\\b`, 'i');
     await page.goto(link, {timeout: 0, waitUntil : 'networkidle2' });
 
     await page.waitFor(argv.sleep); // in ms
+    localStorage = await getLocalStorage(page, localStorage);
   }
 
 
@@ -258,6 +260,12 @@ var refs_regexp = new RegExp(`^(${uri_refs_stripped.join('|')})\\b`, 'i');
   if (argv.output) {
     let yaml_dump = yaml.safeDump(cookies, {noRefs: true});
     fs.writeFileSync(path.join(argv.output, 'cookies.yml'), yaml_dump);
+  }
+
+  output.local_storage = localStorage;
+  if (argv.output) {
+    let yaml_dump = yaml.safeDump(localStorage, {noRefs: true});
+    fs.writeFileSync(path.join(argv.output, 'local-storage.yml'), yaml_dump);
   }
 
   let beacons_from_events = flatten(event_data.filter( (event) => {
