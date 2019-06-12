@@ -262,6 +262,28 @@ var refs_regexp = new RegExp(`^(${uri_refs_stripped.join('|')})\\b`, 'i');
     fs.writeFileSync(path.join(argv.output, 'cookies.yml'), yaml_dump);
   }
 
+  let storage_from_events = event_data.filter( (event) => {
+    return event.type.startsWith('Storage');
+  });
+
+  Object.keys(localStorage).forEach( (origin) => {
+    let originStorage = localStorage[origin];
+    Object.keys(originStorage).forEach( (key) => {
+      // find log for a given key
+      let matched_event = storage_from_events.find( event => {
+        return (origin == event.origin) &&
+               Object.keys(event.data).includes(key);
+      });
+      if (!!matched_event) {
+        originStorage[key].log = {
+          stack: matched_event.stack,
+          type: matched_event.type,
+          timestamp: matched_event.timestamp,
+        };
+      }
+    });
+  });
+
   output.local_storage = localStorage;
   if (argv.output) {
     let yaml_dump = yaml.safeDump(localStorage, {noRefs: true});
