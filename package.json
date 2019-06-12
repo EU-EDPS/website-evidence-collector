@@ -22,7 +22,7 @@
   "scripts": {
     "start": "node ./collect.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "pretty-print": "node node_modules/.bin/pino-pretty --timestampKey timestamp --messageKey type --ignore stack,raw"
+    "pretty-print": "node node_modules/.bin/pino-pretty --timestampKey timestamp --messageKey type --ignore stack,raw,origin"
   },
   "keywords": [
     "privacy",
