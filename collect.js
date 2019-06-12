@@ -199,6 +199,7 @@ var refs_regexp = new RegExp(`^(${uri_refs_stripped.join('|')})\\b`, 'i');
     if (cookie.expires > -1) {
       cookie.expiresUTC = new Date(cookie.expires * 1000);
       cookie.expiresDays = Math.round((cookie.expiresUTC - output.start_time) / (10 * 60 * 60 * 24)) / 100;
+      cookie.domain = cookie.domain.replace(/^\./,'');
     }
     return cookie;
   });
@@ -242,13 +243,13 @@ var refs_regexp = new RegExp(`^(${uri_refs_stripped.join('|')})\\b`, 'i');
 
 
   for (const cookie of cookies) {
-    hosts.cookies.add(cookie.domain.replace(/^\./,''));
+    hosts.cookies.add(cookie.domain);
   }
 
   cookies.forEach( cookie => {
     let matched_event = cookies_from_events.find( cookie_from_events => {
       return (cookie.name == cookie_from_events.key) &&
-             (cookie.domain.replace(/^\./,'') == cookie_from_events.domain) &&
+             (cookie.domain == cookie_from_events.domain) &&
              (cookie.path == cookie_from_events.path);
     });
     if (!!matched_event) {
