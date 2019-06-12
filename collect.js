@@ -105,6 +105,7 @@ var refs_regexp = new RegExp(`^(${uri_refs_stripped.join('|')})\\b`, 'i');
     requests: new Set(),
     beacons: new Set(),
     cookies: new Set(),
+    local_storage: new Set(),
     links: new Set(),
   };
 
@@ -267,6 +268,7 @@ var refs_regexp = new RegExp(`^(${uri_refs_stripped.join('|')})\\b`, 'i');
   });
 
   Object.keys(localStorage).forEach( (origin) => {
+    hosts.local_storage.add(new URL(origin).hostname);
     let originStorage = localStorage[origin];
     Object.keys(originStorage).forEach( (key) => {
       // find log for a given key
@@ -336,6 +338,10 @@ var refs_regexp = new RegExp(`^(${uri_refs_stripped.join('|')})\\b`, 'i');
     cookies: {
       count: hosts.cookies.size,
       entries: Array.from(hosts.cookies),
+    },
+    local_storage: {
+      count: hosts.local_storage.size,
+      entries: Array.from(hosts.local_storage),
     },
     links: {
       count: hosts.links.size,
