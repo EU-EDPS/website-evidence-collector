@@ -232,7 +232,7 @@ var refs_regexp = new RegExp(`^(${uri_refs_stripped.join('|')})\\b`, 'i');
     event.data.forEach( cookie => {
       cookie.log = {
         stack: event.stack,
-        // type: event.type,
+        type: event.type,
         timestamp: event.timestamp,
       };
     });
@@ -245,13 +245,13 @@ var refs_regexp = new RegExp(`^(${uri_refs_stripped.join('|')})\\b`, 'i');
   }
 
   cookies.forEach( cookie => {
-    let cookie_from_events = cookies_from_events.find( cookie_from_events => {
+    let matched_event = cookies_from_events.find( cookie_from_events => {
       return (cookie.name == cookie_from_events.key) &&
              (cookie.domain.replace(/^\./,'') == cookie_from_events.domain) &&
              (cookie.path == cookie_from_events.path);
     });
-    if (!!cookie_from_events) {
-      cookie.log = cookie_from_events.log;
+    if (!!matched_event) {
+      cookie.log = matched_event.log;
     }
   });
 
