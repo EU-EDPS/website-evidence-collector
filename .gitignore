@@ -1,7 +1,7 @@
 .*
 *.ndjson
 *.har
-output/
+output*/
 
 ##### from https://github.com/github/gitignore/blob/master/Node.gitignore
 
