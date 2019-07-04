@@ -93,13 +93,12 @@ var refs_regexp = new RegExp(`^(${uri_refs_stripped.join('|')})\\b`, 'i');
   };
 
   const page = (await browser.pages())[0];
-  await page.bringToFront();
 
   page.on('console', msg => logger.log('debug', msg.text(), {type: 'Browser.Console'}));
 
   // setup tracking
   await setup_cookie_recording(page);
-  setup_beacon_recording(page);
+  await setup_beacon_recording(page);
   let webSocketLog = setup_websocket_recording(page);
   let hosts = {
     requests: new Set(),
