@@ -16,6 +16,20 @@ The tool *Website Evidence Collector* (WEC) automates the website evidence colle
 
 To start the collection for e.g. <https://example.com>, open the terminal, navigate to the folder `website-evidence-collector` and run `npm start -- https://example.com`.
 
+### Examples
+
+#### Ignore Certificate Errors during Collection
+
+```sh
+npm start -- -y -q https://untrusted-root.badssl.com -- --ignore-certificate-errors
+# or
+./collect.js -y -q https://untrusted-root.badssl.com -- --ignore-certificate-errors
+```
+
+All commandline arguments after `--` (the second in case of `npm`) are applied to launch Chromium.
+
+Reference: <https://peter.sh/experiments/chromium-command-line-switches/#ignore-certificate-errors>
+
 ## TODO List
 
 - fix bugs in HAR creation, see <https://github.com/Everettss/puppeteer-har/issues>
