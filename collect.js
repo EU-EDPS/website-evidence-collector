@@ -236,6 +236,7 @@ var refs_regexp = new RegExp(`^(${uri_refs_stripped.join('|')})\\b`, 'i');
         stack: event.stack,
         type: event.type,
         timestamp: event.timestamp,
+        location: event.location,
       };
     });
     return event.data;
@@ -282,6 +283,7 @@ var refs_regexp = new RegExp(`^(${uri_refs_stripped.join('|')})\\b`, 'i');
           stack: matched_event.stack,
           type: matched_event.type,
           timestamp: matched_event.timestamp,
+          location: matched_event.location,
         };
       }
     });
