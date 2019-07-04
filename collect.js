@@ -92,7 +92,7 @@ var refs_regexp = new RegExp(`^(${uri_refs_stripped.join('|')})\\b`, 'i');
     end_time: null,
   };
 
-  const page = await browser.newPage();
+  const page = (await browser.pages())[0];
   await page.bringToFront();
 
   page.on('console', msg => logger.log('debug', msg.text(), {type: 'Browser.Console'}));
