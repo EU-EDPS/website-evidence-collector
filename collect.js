@@ -58,8 +58,8 @@ var refs_regexp = new RegExp(`^(${uri_refs_stripped.join('|')})\\b`, 'i');
     userDataDir: argv.output ? path.join(argv.output, 'browser-profile') : undefined,
     args: [
       `--user-agent=${UserAgent}`,
-      `--window-size=${WindowSize.width},${WindowSize.height}`
-    ],
+      `--window-size=${WindowSize.width},${WindowSize.height}`,
+    ].concat(argv._.slice(1)),
   });
 
   output = {
