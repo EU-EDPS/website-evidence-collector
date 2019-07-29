@@ -1,4 +1,7 @@
 ## HEAD
+
+## 0.2.0 / 2019-07-29
+
   * license: adopt EUPL license and add headers to relevant files
   * feature: change cookie placement locator mechanism to use injections and stacktrace.js instead of `Debugger.scriptParsed` for improved accuracy
   * feature: also track HTTP cookies
