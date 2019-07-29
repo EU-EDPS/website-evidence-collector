@@ -2,7 +2,8 @@
   "name": "website-evidence-collector",
   "version": "0.1.0",
   "description": "automation of website evidence collection for storage and transfer of personal data based on puppeteer",
-  "main": "website-evidence-collector.js",
+  "homepage": "https://edps.europa.eu/press-publications/edps-inspection-software_en",
+  "main": "collect.js",
   "dependencies": {
     "@cliqz/adblocker": "^0.9.1",
     "fs-extra": "^8.0.1",
