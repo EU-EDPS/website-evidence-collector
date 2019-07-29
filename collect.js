@@ -1,13 +1,19 @@
 #!/usr/bin/env node
 // jshint esversion: 8
 
-const argv = require('./lib/argv');
+/**
+ * @file Collects evidence from websites on processed data in transit and at rest.
+ * @author Robert Riemann <robert.riemann@edps.europa.eu>
+ * @copyright European Data Protection Supervisor (2019)
+ * @license EUPL-1.2
+ */
 
+const argv = require('./lib/argv');
 
 const UserAgent = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3617.0 Safari/537.36";
 const WindowSize = {
   width: 1680,
-  height: 927, // quite arbitrary
+  height: 927, // arbitrary value close to 1050
 };
 
 const puppeteer = require('puppeteer');
@@ -30,7 +36,7 @@ const sampleSize = require('lodash/sampleSize');
 const { isFirstParty, getLocalStorage } = require('./lib/tools');
 
 const uri_ins = argv._[0];
-const uri_ins_host = url.parse(uri_ins).hostname;
+const uri_ins_host = url.parse(uri_ins).hostname; // hostname does not include port unlike host
 
 var uri_refs = [uri_ins].concat(argv.firstPartyUri);
 
@@ -62,13 +68,12 @@ var refs_regexp = new RegExp(`^(${uri_refs_stripped.join('|')})\\b`, 'i');
     ].concat(argv._.slice(1)),
   });
 
+  // prepare hash to store data for output
   output = {
     uri_ins: uri_ins,
     uri_refs: uri_refs,
     uri_dest: null,
     uri_redirects: null,
-    // The key difference between url.host and url.hostname is that url.hostname
-    // does not include the port.
     host: uri_ins_host,
     script: {
       host: os.hostname(),
@@ -94,6 +99,7 @@ var refs_regexp = new RegExp(`^(${uri_refs_stripped.join('|')})\\b`, 'i');
 
   const page = (await browser.pages())[0];
 
+  // forward logs from the browser console
   page.on('console', msg => logger.log('debug', msg.text(), {type: 'Browser.Console'}));
 
   // setup tracking
@@ -108,6 +114,7 @@ var refs_regexp = new RegExp(`^(${uri_refs_stripped.join('|')})\\b`, 'i');
     links: new Set(),
   };
 
+  // record all requested hosts
   await page.on('request', (request) => {
     const l = url.parse(request.url());
     hosts.requests.add(l.hostname);
@@ -153,6 +160,7 @@ var refs_regexp = new RegExp(`^(${uri_refs_stripped.join('|')})\\b`, 'i');
     return isFirstParty(refs_regexp, link.href) ? 'first_party' : 'third_party';
   });
 
+  // prepare regexp to match social media platforms
   let social_platforms = yaml.safeLoad(fs.readFileSync('./assets/social-media-platforms.yml', 'utf8')).map((platform) => {
     return escapeRegExp(platform);
   });
@@ -161,6 +169,7 @@ var refs_regexp = new RegExp(`^(${uri_refs_stripped.join('|')})\\b`, 'i');
     return link.href.match(social_platforms_regexp);
   });
 
+  // prepare regexp to match links by their href or their caption
   let keywords = yaml.safeLoad(fs.readFileSync('./assets/keywords.yml', 'utf8')).map((keyword) => {
     return escapeRegExp(keyword);
   });
@@ -169,6 +178,7 @@ var refs_regexp = new RegExp(`^(${uri_refs_stripped.join('|')})\\b`, 'i');
     return link.href.match(keywords_regexp) || link.inner_html.match(keywords_regexp);
   });
 
+  // record screenshots
   if (argv.output) {
     await page.screenshot({path: path.join(argv.output, 'screenshot-full.png'), fullPage: true});
     await page.screenshot({path: path.join(argv.output, 'screenshot-top.png')});
@@ -193,12 +203,13 @@ var refs_regexp = new RegExp(`^(${uri_refs_stripped.join('|')})\\b`, 'i');
 
 
   // example from https://stackoverflow.com/a/50290081/1407622
-  // Here we can get all of the cookies
   const cookies = (await page._client.send('Network.getAllCookies')).cookies.map( cookie => {
     if (cookie.expires > -1) {
+      // add derived attributes for convenience
       cookie.expiresUTC = new Date(cookie.expires * 1000);
       cookie.expiresDays = Math.round((cookie.expiresUTC - output.start_time) / (10 * 60 * 60 * 24)) / 100;
-      cookie.domain = cookie.domain.replace(/^\./,'');
+
+      cookie.domain = cookie.domain.replace(/^\./,''); // normalise domain value
     }
     return cookie;
   });
@@ -240,7 +251,6 @@ var refs_regexp = new RegExp(`^(${uri_refs_stripped.join('|')})\\b`, 'i');
     });
     return event.data;
   }));
-
 
   for (const cookie of cookies) {
     hosts.cookies.add(cookie.domain);
