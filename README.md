@@ -16,7 +16,23 @@ The tool *Website Evidence Collector* (WEC) automates the website evidence colle
 
 To start the collection for e.g. <https://example.com>, open the terminal, navigate to the folder `website-evidence-collector` and run `npm start -- https://example.com`.
 
-### Examples
+**Notice on the Processing of Personal Data:** This tool carries out automated processing of data of websites for the purpose of identifying their processing of personal data. If the tool visits in the course of this web pages with personal data, it also processes, i.e. downloads, displays, and stores in the form of text files and screenshots, personal data.
+
+### Examples with Command Line Options
+
+#### Simple Output
+
+```sh
+npm start --no-output --quiet --yaml https://example.com
+```
+
+#### Use pretty-printed Live Logs
+
+```sh
+npm start -- --output https://example.com | npm run pretty-print
+```
+
+The formatting and provided information for pretty printing is configured in the script section of the [package.json](./package.json).
 
 #### Ignore Certificate Errors during Collection
 
@@ -32,7 +48,10 @@ Reference: <https://peter.sh/experiments/chromium-command-line-switches/#ignore-
 
 ## TODO List
 
-- fix bugs in HAR creation, see <https://github.com/Everettss/puppeteer-har/issues>
+- fix bugs in HAR creation, see <https://github.com/Everettss/puppeteer-har/issues> and [New HAR page doesn't appear to be created upon navigation chrome-har#19](https://github.com/sitespeedio/chrome-har/issues/19)
+- prevent browsing to non-HTML pages (PDF, ZIP, etc) by checking the document mime-type in the HTTP HEAD response
+- improve reproducability by employing only RNG with optionally provided seed, see: [No mechanism to use seeded random generation lodash#3289](https://github.com/lodash/lodash/issues/3289)
+- optionally store web pages matching the keywords in markdown format, see <https://justmarkup.com/articles/2019-01-04-using-puppeteer-to-crawl-pages-and-save-them-as-markdown-files/>
 
 ## Resources for Developers
 
@@ -44,26 +63,18 @@ Reference: <https://peter.sh/experiments/chromium-command-line-switches/#ignore-
 - stacktrace.js documentation: <https://www.stacktracejs.com/#!/docs/stacktrace-js>
 - Chrome DevTools Protocol Documentation: <https://chromedevtools.github.io/devtools-protocol/>
 
-Use of Hooks for restructuring source code:
+**Use of Hooks for Restructuring Source Code:**
 
 - https://www.npmjs.com/package/before-after-hook
 - https://www.npmjs.com/package/promised-hooks
 - https://www.npmjs.com/package/grappling-hook
 
-Generation of Markdown Excerpts:
-
-- https://justmarkup.com/articles/2019-01-04-using-puppeteer-to-crawl-pages-and-save-them-as-markdown-files/
-
-Relevant Github Issues:
-
-- [New HAR page doesn't appear to be created upon navigation chrome-har#19](https://github.com/sitespeedio/chrome-har/issues/19)
-- [No mechanism to use seeded random generation lodash#3289](https://github.com/lodash/lodash/issues/3289)
-
 ## Contributors
 
 - Robert Riemann (European Data Protection Supervisor, initial author)
 
-
 ## License
 
-See [LICENSE.txt](./LICENSE.txt).
+This work, excluding filter lists, is distributed under the European Union Public Licence (the ‘EUPL’). Please find the terms in the file [LICENSE.txt](./LICENSE.txt).
+
+Filter lists in the `assets/` directory are authored by the EasyList authors (<https://easylist.to/>) and are for your convenience distributed together with this work under their respective license as indicated in their file headers.
