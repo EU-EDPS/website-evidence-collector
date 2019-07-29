@@ -1,5 +1,10 @@
 ## HEAD
 
+## 0.2.1 / 2019-07-29
+
+  * security: update lodash
+  * documentation: update data protection notice in README.md
+
 ## 0.2.0 / 2019-07-29
 
   * license: adopt EUPL license and add headers to relevant files
