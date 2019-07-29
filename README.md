@@ -16,7 +16,7 @@ The tool *Website Evidence Collector* (WEC) automates the website evidence colle
 
 To start the collection for e.g. <https://example.com>, open the terminal, navigate to the folder `website-evidence-collector` and run `npm start -- https://example.com`.
 
-**Notice on the Processing of Personal Data:** This tool carries out automated processing of data of websites for the purpose of identifying their processing of personal data. If the tool visits in the course of this web pages with personal data, it also processes, i.e. downloads, displays, and stores in the form of text files and screenshots, personal data.
+**Notice on the Processing of Personal Data:** This tool carries out automated processing of data of websites for the purpose of identifying their processing of personal data. If you run the tool to visit web pages containing personal data, this tool will download, display, and store these personal data in the form of text files and screenshots, and you will therefore process personal data.
 
 ### Examples with Command Line Options
 
