@@ -1,5 +1,6 @@
 ## HEAD
 
+  * feature: log commit version if git is installed and repository found
 ## 0.2.1 / 2019-07-29
 
   * security: update lodash

@@ -12,6 +12,8 @@ The tool *Website Evidence Collector* (WEC) automates the website evidence colle
 2. Download WEC using `git clone [source]` or unzip `website-evidence-collector.zip` and open the terminal and navigate to the folder `website-evidence-collector`.
 3. Install the dependencies using `npm install`
 
+The version control system *Git* (<https://git-scm.com/>) is recommended for development work.
+
 ## Run Website Evidence Collection
 
 To start the collection for e.g. <https://example.com>, open the terminal, navigate to the folder `website-evidence-collector` and run `npm start -- https://example.com`.
