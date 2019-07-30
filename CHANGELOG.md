@@ -1,7 +1,11 @@
 ## HEAD
 
+## 0.2.2 / 2019-07-30
+
   * bugfix: in some cases, location of JS cookies is not set in its log data
+  * documentation: update README.md
   * feature: log commit version if git is installed and repository found
+
 ## 0.2.1 / 2019-07-29
 
   * security: update lodash
