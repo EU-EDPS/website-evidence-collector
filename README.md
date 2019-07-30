@@ -44,15 +44,16 @@ npm start -- -y -q https://untrusted-root.badssl.com -- --ignore-certificate-err
 ./collect.js -y -q https://untrusted-root.badssl.com -- --ignore-certificate-errors
 ```
 
-All commandline arguments after `--` (the second in case of `npm`) are applied to launch Chromium.
+All command line arguments after `--` (the second in case of `npm`) are applied to launch Chromium.
 
 Reference: <https://peter.sh/experiments/chromium-command-line-switches/#ignore-certificate-errors>
 
 ## TODO List
 
-- fix bugs in HAR creation, see <https://github.com/Everettss/puppeteer-har/issues> and [New HAR page doesn't appear to be created upon navigation chrome-har#19](https://github.com/sitespeedio/chrome-har/issues/19)
+- some recorded HTTP cookies have not yet information on their origin (log data)
+- fix bugs in HAR creation and verify accuracy, see <https://github.com/Everettss/puppeteer-har/issues> and [New HAR page doesn't appear to be created upon navigation chrome-har#19](https://github.com/sitespeedio/chrome-har/issues/19)
 - prevent browsing to non-HTML pages (PDF, ZIP, etc) by checking the document mime-type in the HTTP HEAD response
-- improve reproducability by employing only RNG with optionally provided seed, see: [No mechanism to use seeded random generation lodash#3289](https://github.com/lodash/lodash/issues/3289)
+- improve reproducibility by employing only RNG with optionally provided seed, see: [No mechanism to use seeded random generation lodash#3289](https://github.com/lodash/lodash/issues/3289)
 - optionally store web pages matching the keywords in markdown format, see <https://justmarkup.com/articles/2019-01-04-using-puppeteer-to-crawl-pages-and-save-them-as-markdown-files/>
 
 ## Resources for Developers
