@@ -23,6 +23,7 @@ const os = require('os');
 const url = require('url');
 const yaml = require('js-yaml');
 const path = require('path');
+const {gitDescribeSync} = require('git-describe');
 
 const logger = require('./lib/logger');
 const { setup_cookie_recording } = require('./lib/setup-cookie-recording');
@@ -96,6 +97,12 @@ var refs_regexp = new RegExp(`^(${uri_refs_stripped.join('|')})\\b`, 'i');
     start_time: new Date(),
     end_time: null,
   };
+
+  // log git version if git is installed
+  try {
+    const gitInfo = gitDescribeSync(__dirname);
+    output.script.version.commit = gitInfo.raw;
+  } catch (e) {}
 
   const page = (await browser.pages())[0];
 
