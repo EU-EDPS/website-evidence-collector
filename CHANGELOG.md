@@ -1,5 +1,6 @@
 ## HEAD
 
+  * bugfix: in some cases, location of JS cookies is not set in its log data
   * feature: log commit version if git is installed and repository found
 ## 0.2.1 / 2019-07-29
 
