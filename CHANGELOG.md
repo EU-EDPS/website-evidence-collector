@@ -2,6 +2,7 @@
 
   * refactor: rename `collect.js` to `website-evidence-collector.js`
   * feature: make npm setup a symlink to have command `website-evidence-collector` available
+  * bugfix: fix bug related to URL
 
 ## 0.2.2 / 2019-07-30
 
