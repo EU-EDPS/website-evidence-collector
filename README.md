@@ -1,3 +1,5 @@
+![Website Evidence Collector Logo](wec_logo.svg)
+
 # Website Evidence Collector
 
 The tool *Website Evidence Collector* (WEC) automates the website evidence collection of storage and transfer of personal data. It is based on the browser Chromium/Chrome and its JavaScript software library for automation [puppeteer].
