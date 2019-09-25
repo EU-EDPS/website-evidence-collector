@@ -1,6 +1,6 @@
 {
   "name": "website-evidence-collector",
-  "version": "0.2.2",
+  "version": "0.3.0",
   "description": "automation of website evidence collection for storage and transfer of personal data based on puppeteer",
   "homepage": "https://edps.europa.eu/press-publications/edps-inspection-software_en",
   "main": "website-evidence-collector",
