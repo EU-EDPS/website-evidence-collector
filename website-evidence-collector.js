@@ -168,7 +168,7 @@ var refs_regexp = new RegExp(`^(${uri_refs_stripped.join('|')})\\b`, 'i');
   });
 
   // prepare regexp to match social media platforms
-  let social_platforms = yaml.safeLoad(fs.readFileSync('./assets/social-media-platforms.yml', 'utf8')).map((platform) => {
+  let social_platforms = yaml.safeLoad(fs.readFileSync(path.join(__dirname, 'assets/social-media-platforms.yml'), 'utf8')).map((platform) => {
     return escapeRegExp(platform);
   });
   let social_platforms_regexp = new RegExp(`\\b(${social_platforms.join('|')})\\b`, 'i');
@@ -177,7 +177,7 @@ var refs_regexp = new RegExp(`^(${uri_refs_stripped.join('|')})\\b`, 'i');
   });
 
   // prepare regexp to match links by their href or their caption
-  let keywords = yaml.safeLoad(fs.readFileSync('./assets/keywords.yml', 'utf8')).map((keyword) => {
+  let keywords = yaml.safeLoad(fs.readFileSync(path.join(__dirname, 'assets/keywords.yml'), 'utf8')).map((keyword) => {
     return escapeRegExp(keyword);
   });
   let keywords_regexp = new RegExp(keywords.join('|'), 'i');
@@ -234,7 +234,7 @@ var refs_regexp = new RegExp(`^(${uri_refs_stripped.join('|')})\\b`, 'i');
   output.websockets = webSocketLog;
 
   // analyse cookies and web beacons
-  let event_data = await new Promise( (resolve, reject) => {
+  let event_data_all = await new Promise( (resolve, reject) => {
     logger.query({
       start: 0,
       order: 'desc',
@@ -245,7 +245,13 @@ var refs_regexp = new RegExp(`^(${uri_refs_stripped.join('|')})\\b`, 'i');
     });
   });
 
+  // filter only events with type set
+  let event_data = event_data_all.filter( (event) => {
+    return !!event.type;
+  });
+
   let cookies_from_events = flatten(event_data.filter( (event) => {
+    console.log(event)
     return event.type.startsWith('Cookie');
   }).map( event => {
     event.data.forEach( cookie => {

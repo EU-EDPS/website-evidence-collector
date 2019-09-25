@@ -9,44 +9,56 @@ The tool *Website Evidence Collector* (WEC) automates the website evidence colle
 1. The Website Evidence Collector is a set of scripts written in JavaScript for execution by *Node.js*. Install Node.js and the *Node.js package manager* (NPM).
   a. Windows or Mac: Follow the guide on <https://nodejs.org/en/>.
   b. Linux: use the Linux package manager to install Node.js, e.g. `zypper in nodejs10` (check version) or `apt install nodejs`.
-2. Download WEC using `git clone [source]` or unzip `website-evidence-collector.zip` and open the terminal and navigate to the folder `website-evidence-collector`.
-3. Install the dependencies using `npm install`
-
-The version control system *Git* (<https://git-scm.com/>) is recommended for development work.
+2. Install the Website Evidence Collector from
+  a. the zip file downloaded from the [EDPS Website](https://edps.europa.eu/press-publications/edps-inspection-software_en): `npm install --global ./website-evidence-collector-*.zip` (with `*` to be replaced by the current release version).
+  b. Github with `npm install --global https://github.com/EU-EDPS/website-evidence-collector/tarball/latest`
 
 ## Run Website Evidence Collection
 
-To start the collection for e.g. <https://example.com>, open the terminal, navigate to the folder `website-evidence-collector` and run `npm start -- https://example.com`.
+To start the collection for e.g. <https://example.com>, open the terminal and run `website-evidence-collector https://example.com`. The folder `output` contains the gathered evidence.
 
 **Notice on the Processing of Personal Data:** This tool carries out automated processing of data of websites for the purpose of identifying their processing of personal data. If you run the tool to visit web pages containing personal data, this tool will download, display, and store these personal data in the form of text files and screenshots, and you will therefore process personal data.
 
 ### Examples with Command Line Options
 
-#### Simple Output
+#### Simple Output on the Terminal only
 
 ```sh
-npm start --no-output --quiet --yaml https://example.com
+website-evidence-collector --no-output --quiet --yaml https://example.com
 ```
-
-#### Use pretty-printed Live Logs
-
-```sh
-npm start -- --output https://example.com | npm run pretty-print
-```
-
-The formatting and provided information for pretty printing is configured in the script section of the [package.json](./package.json).
 
 #### Ignore Certificate Errors during Collection
 
 ```sh
-npm start -- -y -q https://untrusted-root.badssl.com -- --ignore-certificate-errors
-# or
-./collect.js -y -q https://untrusted-root.badssl.com -- --ignore-certificate-errors
+website-evidence-collector -y -q https://untrusted-root.badssl.com -- --ignore-certificate-errors
 ```
 
 All command line arguments after `--` (the second in case of `npm`) are applied to launch Chromium.
 
 Reference: <https://peter.sh/experiments/chromium-command-line-switches/#ignore-certificate-errors>
+
+#### Use pretty-printed Live Logs
+
+First, install `pino-pretty` with `npm install -g pino-pretty`.
+
+On POSIX compliant systems such as Linux or Mac, the output can be filtered to get prettier output:
+
+```sh
+website-evidence-collector --output https://example.com | pino-pretty --timestampKey timestamp --messageKey type --ignore stack,raw,origin
+```
+
+The formatting and provided information for pretty printing is configured in the script section of the [package.json](./package.json).
+
+## Setup of the Development Environment
+
+1. Install the dependencies according to the Installation Guide point 1.
+2. Install the version control system *Git* (<https://git-scm.com/>).
+3. Download the Website Evidence Collector
+  a. from the [EDPS Website](https://edps.europa.eu/press-publications/edps-inspection-software_en) and unzip the received folder, or
+  b. from Github with `git clone https://github.com/EU-EDPS/website-evidence-collector`.
+4. Open the terminal and navigate to the folder `website-evidence-collector`.
+5. Install the dependencies using `npm install`
+6. Consider to use `npm link` to make the command `website-evidence-collector` outside of the project folder.
 
 ## TODO List
 
