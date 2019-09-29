@@ -1,5 +1,7 @@
 ## HEAD
 
+  * documentation: move from zip to tarball archives to allow for installation with `npm install`
+
 ## 0.3.0 / 2019-09-25
 
   * refactor: rename `collect.js` to `website-evidence-collector.js`

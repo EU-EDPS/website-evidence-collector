@@ -12,7 +12,7 @@ The tool *Website Evidence Collector* (WEC) automates the website evidence colle
   a. Windows or Mac: Follow the guide on <https://nodejs.org/en/>.
   b. Linux: use the Linux package manager to install Node.js, e.g. `zypper in nodejs10` (check version) or `apt install nodejs`.
 2. Install the Website Evidence Collector from
-  a. the zip file downloaded from the [EDPS Website](https://edps.europa.eu/press-publications/edps-inspection-software_en): `npm install --global ./website-evidence-collector-*.zip` (with `*` to be replaced by the current release version).
+  a. the tarball archive file (`*.tar.gz`) downloaded from the [EDPS Website](https://edps.europa.eu/press-publications/edps-inspection-software_en): `npm install --global ./website-evidence-collector-*.tar.gz` (with `*` to be replaced by the current release version).
   b. Github with `npm install --global https://github.com/EU-EDPS/website-evidence-collector/tarball/latest`
 
 ## Run Website Evidence Collection
@@ -56,7 +56,7 @@ The formatting and provided information for pretty printing is configured in the
 1. Install the dependencies according to the Installation Guide point 1.
 2. Install the version control system *Git* (<https://git-scm.com/>).
 3. Download the Website Evidence Collector
-  a. from the [EDPS Website](https://edps.europa.eu/press-publications/edps-inspection-software_en) and unzip the received folder, or
+  a. from the [EDPS Website](https://edps.europa.eu/press-publications/edps-inspection-software_en) and unpack the received folder with e.g. [7zip](https://www.7-zip.org), or
   b. from Github with `git clone https://github.com/EU-EDPS/website-evidence-collector`.
 4. Open the terminal and navigate to the folder `website-evidence-collector`.
 5. Install the dependencies using `npm install`
