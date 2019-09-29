@@ -8,6 +8,8 @@ The tool *Website Evidence Collector* (WEC) automates the website evidence colle
 
 ## Installation
 
+![Screencast Installation](screencast-installation.svg "Screencast Installation")
+
 1. The Website Evidence Collector is a set of scripts written in JavaScript for execution by *Node.js*. Install Node.js and the *Node.js package manager* (NPM).
   a. Windows or Mac: Follow the guide on <https://nodejs.org/en/>.
   b. Linux: use the Linux package manager to install Node.js, e.g. `zypper in nodejs10` (check version) or `apt install nodejs`.
@@ -16,6 +18,8 @@ The tool *Website Evidence Collector* (WEC) automates the website evidence colle
   b. Github with `npm install --global https://github.com/EU-EDPS/website-evidence-collector/tarball/latest`
 
 ## Run Website Evidence Collection
+
+![Screencast Call](screencast-call.svg "Screencast Call")
 
 To start the collection for e.g. <https://example.com>, open the terminal and run `website-evidence-collector https://example.com`. The folder `output` contains the gathered evidence.
 

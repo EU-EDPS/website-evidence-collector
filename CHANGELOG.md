@@ -1,6 +1,7 @@
 ## HEAD
 
   * documentation: move from zip to tarball archives to allow for installation with `npm install`
+  * documentation: add screencast videos
 
 ## 0.3.0 / 2019-09-25
 
