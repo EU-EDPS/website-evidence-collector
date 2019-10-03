@@ -5,7 +5,7 @@
   "homepage": "https://edps.europa.eu/press-publications/edps-inspection-software_en",
   "main": "website-evidence-collector",
   "dependencies": {
-    "@cliqz/adblocker": "^0.9.1",
+    "@cliqz/adblocker-puppeteer": "^1.2.0",
     "fs-extra": "^8.0.1",
     "git-describe": "^4.0.4",
     "js-yaml": "^3.13.1",
@@ -13,7 +13,6 @@
     "puppeteer": "^1.18.1",
     "puppeteer-har": "github:rriemann/puppeteer-har#1f8d9041e2d651e5be8bb7ed08f14b2e51cce875",
     "stacktrace-js": "^2.0.0",
-    "tldts": "^4.0.6",
     "tmp": "^0.1.0",
     "tough-cookie": "^3.0.1",
     "winston": "^3.2.1",
