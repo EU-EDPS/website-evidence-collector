@@ -2,6 +2,7 @@
 
   * documentation: move from zip to tarball archives to allow for installation with `npm install`
   * documentation: add screencast videos
+  * refactor: improve the integration of the adblock library provided by the browser [Cliqz](https://cliqz.com/) and better link filtered content to a specific filter in the output
 
 ## 0.3.0 / 2019-09-25
 
