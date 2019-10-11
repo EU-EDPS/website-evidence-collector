@@ -55,6 +55,10 @@ website-evidence-collector --output https://example.com | pino-pretty --timestam
 
 The formatting and provided information for pretty printing is configured in the script section of the [package.json](./package.json).
 
+## Frequently Asked Questions
+
+Please find a collection of frequently asked questions with answers in [FAQ.md](FAQ.md)
+
 ## Setup of the Development Environment
 
 1. Install the dependencies according to the Installation Guide point 1.
