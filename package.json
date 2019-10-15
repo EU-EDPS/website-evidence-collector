@@ -14,7 +14,7 @@
     "puppeteer-har": "^1.1.1",
     "stacktrace-js": "^2.0.0",
     "tmp": "^0.1.0",
-    "tough-cookie": "^3.0.1",
+    "tough-cookie": "2.3.4",
     "winston": "^3.2.1",
     "yargs": "^13.2.4"
   },

@@ -5,6 +5,7 @@
   * refactor: improve the integration of the adblock library provided by the browser [Cliqz](https://cliqz.com/) and better link filtered content to a specific filter in the output
   * documentation: add [FAQ.md](FAQ.md) to answer frequent questions
   * dependency: update version and provider of [puppeteer-har](https://www.npmjs.com/package/puppeteer-har) to [Remove git dependency for end-users](https://github.com/EU-EDPS/website-evidence-collector/issues/9)
+  * dependency: downgrade version of tough-cookie to match version employed by chrome-har
 
 ## 0.3.0 / 2019-09-25
 
