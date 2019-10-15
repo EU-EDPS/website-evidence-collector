@@ -14,8 +14,11 @@ The tool *Website Evidence Collector* (WEC) automates the website evidence colle
   - Windows or Mac: Follow the guide on <https://nodejs.org/en/>.
   - Linux: use the Linux package manager to install Node.js, e.g. `zypper in nodejs10` (check version) or `apt install nodejs`.
 2. Install the Website Evidence Collector from
-  - the tarball archive file (`*.tar.gz`) downloaded from the [EDPS Website](https://edps.europa.eu/press-publications/edps-inspection-software_en): `npm install --global ./website-evidence-collector-*.tar.gz` (with `*` to be replaced by the current release version).
-  - Github with `npm install --global https://github.com/EU-EDPS/website-evidence-collector/tarball/latest`
+  - the tarball archive file (`*.tar.gz`) downloaded from the [EDPS Website](https://edps.europa.eu/press-publications/edps-inspection-software_en): `npm install --global ./website-evidence-collector-*.tar.gz` (with `*` to be replaced by the current release version),
+  - Github with `npm install --global https://github.com/EU-EDPS/website-evidence-collector/tarball/latest`, or
+  - Github with `npm install --global https://github.com/EU-EDPS/website-evidence-collector/tarball/master` to get a potentially broken testing version, which includes the latest changes.
+
+The tool can be uninstalled with `npm uninstall --global website-evidence-collector`.
 
 ## Run Website Evidence Collection
 
