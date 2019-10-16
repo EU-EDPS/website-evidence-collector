@@ -251,7 +251,6 @@ var refs_regexp = new RegExp(`^(${uri_refs_stripped.join('|')})\\b`, 'i');
   });
 
   let cookies_from_events = flatten(event_data.filter( (event) => {
-    console.log(event)
     return event.type.startsWith('Cookie');
   }).map( event => {
     event.data.forEach( cookie => {
