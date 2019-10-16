@@ -391,13 +391,13 @@ var refs_regexp = new RegExp(`^(${uri_refs_stripped.join('|')})\\b`, 'i');
   }
 
   if (argv.output || argv.json) {
+    let json_dump = JSON.stringify(output, null, 2);
+
     if (argv.json) {
-      // console.log(output);
-      console.dir(output, {maxArrayLength: null, depth: null});
+      console.log(json_dump);
     }
 
     if (argv.output) {
-      let json_dump = JSON.stringify(output, null, 2);
       fs.writeFileSync(path.join(argv.output, 'inspection.json'), json_dump);
     }
   }

@@ -7,6 +7,7 @@
   * dependency: update version and provider of [puppeteer-har](https://www.npmjs.com/package/puppeteer-har) to [Remove git dependency for end-users](https://github.com/EU-EDPS/website-evidence-collector/issues/9)
   * dependency: downgrade version of tough-cookie to match version employed by chrome-har
   * documentation: add guidance to install unstable versions and to uninstall any version
+  * bugfix: make json console output json compliant
 
 ## 0.3.0 / 2019-09-25
 
