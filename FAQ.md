@@ -2,9 +2,9 @@
 
 ## Installation and Use
 
-#### Question: Why does the installation with `npm install` fail with ‘permision denied’?
+#### Why does the installation with `npm install` fail with ‘permision denied’?
 
-#### Question: How can I install the website evidence collector if I do not have root/administrator permission or do not want to employ root/administrator permission?
+#### How can I install the website evidence collector if I do not have root/administrator permission or do not want to employ root/administrator permission?
 
 The website evidence collector is a bundled as a *node package* and is installed
 using the *node package manager* (NPM). NPM installs by default packages to a
@@ -40,7 +40,7 @@ Instead of steps 1-3, you can use the corresponding ENV variable (e.g. if you do
 
 - <https://docs.npmjs.com/resolving-eacces-permissions-errors-when-installing-packages-globally>
 
-#### Question: How do I launch Chrome if no usable sandbox is found?
+#### How do I launch Chrome if no usable sandbox is found?
 
 If you launch the website evidence collector and receive the following error message,
 than the integrated browser has an issue.
@@ -110,3 +110,9 @@ The website evidence collector stores a number of files in an output directory u
 - The directory `browser-profile` contains the browser profile used during evidence collection.
 
   Note that for every use of the website evidence collector, a fresh profile is generated.
+
+#### Do you offer guidelines on how to interpret the collected evidence?
+
+The website evidence collector helps you to collect evidence for your own legal assessment. The categories of collected data were initially chosen to serve the assessment carried out by the EDPS and evolve based on feedback and contributions. The retrieved data is quickly introduced in this FAQ.
+
+The tool is written to serve in various legal contexts and avoids suggestions towards a legal assessment. Though, some data protection authorities provide specific guidelines on how to apply data protection rules to websites in their jurisdiction.
