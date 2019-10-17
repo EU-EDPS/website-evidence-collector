@@ -291,7 +291,7 @@ var refs_regexp = new RegExp(`^(${uri_refs_stripped.join('|')})\\b`, 'i');
   });
 
   Object.keys(localStorage).forEach( (origin) => {
-    hosts.local_storage.add(new URL(origin).hostname);
+    hosts.local_storage.add(new url.URL(origin).hostname);
     let originStorage = localStorage[origin];
     Object.keys(originStorage).forEach( (key) => {
       // find log for a given key
