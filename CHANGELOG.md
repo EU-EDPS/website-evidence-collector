@@ -8,6 +8,7 @@
   * dependency: downgrade version of tough-cookie to match version employed by chrome-har
   * documentation: add guidance to install unstable versions and to uninstall any version
   * bugfix: make json console output json compliant
+  * feature: add secure connection tests
 
 ## 0.3.0 / 2019-09-25
 

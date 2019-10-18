@@ -15,6 +15,8 @@
     "lodash": "^4.17.15",
     "puppeteer": "^1.18.1",
     "puppeteer-har": "^1.1.1",
+    "request": "^2.88.0",
+    "request-promise-native": "^1.0.7",
     "stacktrace-js": "^2.0.0",
     "tmp": "^0.1.0",
     "tough-cookie": "2.3.4",

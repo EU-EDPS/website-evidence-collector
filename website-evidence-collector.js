@@ -23,6 +23,7 @@ const os = require('os');
 const url = require('url');
 const yaml = require('js-yaml');
 const path = require('path');
+const request = require('request-promise-native');
 const {gitDescribeSync} = require('git-describe');
 
 const logger = require('./lib/logger');
@@ -75,6 +76,7 @@ var refs_regexp = new RegExp(`^(${uri_refs_stripped.join('|')})\\b`, 'i');
     uri_refs: uri_refs,
     uri_dest: null,
     uri_redirects: null,
+    secure_connection: {},
     host: uri_ins_host,
     script: {
       host: os.hostname(),
@@ -136,6 +138,39 @@ var refs_regexp = new RegExp(`^(${uri_refs_stripped.join('|')})\\b`, 'i');
   output.uri_redirects = page_response.request().redirectChain().map(req => {return req.url();});
 
   output.uri_dest = page.url();
+
+  // secure connection
+
+  // test if server responds to https
+  try {
+    let uri_ins_https = new url.URL(uri_ins);
+    uri_ins_https.protocol = 'https:';
+    await request(uri_ins_https.toString(), {
+      followRedirect: false,
+      resolveWithFullResponse: true,
+      simple: false,
+    });
+    output.secure_connection.https_support = true;
+  } catch(error) {
+    output.secure_connection.https_support = false;
+    output.secure_connection.https_error = error.toString();
+  }
+
+  // test if server redirects http to https
+  try {
+    let uri_ins_http = new url.URL(uri_ins);
+    uri_ins_http.protocol = 'http:';
+    let res = await request(uri_ins_http.toString(), {
+      followRedirect: true,
+      resolveWithFullResponse: true,
+      simple: false,
+    });
+    output.secure_connection.redirects = res.request._redirect.redirects.map(r => r.redirectUri);
+    let last_redirect_url = new url.URL(output.secure_connection.redirects[output.secure_connection.redirects.length-1]);
+    output.secure_connection.https_redirect = last_redirect_url.protocol.includes('https');
+  } catch(error) {
+    output.secure_connection.http_error = error.toString();
+  }
 
   await page.waitFor(argv.sleep); // in ms
   let localStorage = await getLocalStorage(page);
