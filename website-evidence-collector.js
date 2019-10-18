@@ -23,6 +23,7 @@ const os = require('os');
 const url = require('url');
 const yaml = require('js-yaml');
 const path = require('path');
+const pug = require('pug');
 const request = require('request-promise-native');
 const {gitDescribeSync} = require('git-describe');
 
@@ -72,6 +73,7 @@ var refs_regexp = new RegExp(`^(${uri_refs_stripped.join('|')})\\b`, 'i');
 
   // prepare hash to store data for output
   output = {
+    title: argv.title,
     uri_ins: uri_ins,
     uri_refs: uri_refs,
     uri_dest: null,
@@ -434,6 +436,22 @@ var refs_regexp = new RegExp(`^(${uri_refs_stripped.join('|')})\\b`, 'i');
 
     if (argv.output) {
       fs.writeFileSync(path.join(argv.output, 'inspection.json'), json_dump);
+    }
+  }
+
+  if (argv.output || argv.html) {
+    let html_template = argv.html_template || path.join(__dirname, 'assets/template.pug');
+    let html_dump = pug.renderFile(html_template, Object.assign({}, output, {
+      pretty: true,
+      basedir: __dirname,
+    }));
+
+    if (argv.html) {
+      console.log(html_dump);
+    }
+
+    if (argv.output)  {
+      fs.writeFileSync(path.join(argv.output, 'inspection.html'), html_dump);
     }
   }
 })();

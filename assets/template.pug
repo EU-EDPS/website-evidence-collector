@@ -1,0 +1,79 @@
+doctype html
+html(xmlns='http://www.w3.org/1999/xhtml', xml:lang='en', lang='en')
+  head
+    meta(charset='utf-8')
+    meta(name='generator', content='website-evidence-collector')
+    meta(name='viewport', content='width=device-width, initial-scale=1.0, user-scalable=yes')
+    title= title
+    style(type='text/css')
+      include /node_modules/github-markdown-css/github-markdown.css
+    style(type='text/css').
+      /* pandoc */
+      code{white-space: pre-wrap;}
+      span.smallcaps{font-variant: small-caps;}
+      span.underline{text-decoration: underline;}
+      div.column{display: inline-block; vertical-align: top; width: 50%;}
+      
+      /* github */
+      .markdown-body {
+        box-sizing: border-box;
+        min-width: 200px;
+        max-width: 980px;
+        margin: 0 auto;
+        padding: 45px;
+      }
+
+      @media (max-width: 767px) {
+        .markdown-body {
+          padding: 15px;
+        }
+      }
+  body: article.markdown-body
+    header#title-block-header
+      include /wec_logo.svg
+      h1.title= title
+      p.subtitle= uri_ins
+    h1#inspection-organisation Inspection Organisation
+    
+    table
+      colgroup
+        col(style='width: 50%')
+        col(style='width: 50%')
+      tbody
+        tr
+          td Inspected Web Service
+          td: code= uri_ins
+        tr
+          td Automated Evidence Collection Start Time
+          td= start_time
+        tr
+          td Automated Evidence Collection End Time
+          td= end_time
+        tr
+          td Inspection Script Version
+          td= script.version.commit || script.version.npm
+        tr
+          td Inspection Script Host
+          td= script['host']
+
+    h1#automated-evidence-collection Automated Evidence Collection
+    
+    p The automated evidence collection is carried out using the tool #[em website evidence collector] (#[a(href="https://edps.europa.eu/press-publications/edps-inspection-software_en") EDPS Inspection Software], also #[a(href="https://github.com/EU-EDPS/website-evidence-collector") on Github]) in version #{script.version.commit || script.version.npm} on the platform #{browser.platform.name} in version #{browser.platform.version}. The tool employs the browser #{browser.name} in version #{browser.version} for browsing the website.
+    
+    p During the browsing, the tool gathers evidence and runs a number of checks. It takes screenshots from the browser to identify potential cookie banners. It tests the use of HTTPS/SSL to check whether the website enforces a HTTPS connection. Then, the inspection tool scans the first web page for links to common social media and collaboration platforms for statistics on the overall use of potentially privacy-intrusive third-party web services within the EU institutions and bodies.
+
+    p The analysis of the recorded traffic between the browser and both the inspection target web service as well as involved third-party web services, and the browser’s persistent storage follows in @sec:traffic-and-persistent-data-analysis. @sec:early-assessment gives a short summary on the use of tracking devices such as cookies.
+    
+    
+    h2#webpage-visit Webpage Visit
+
+    p
+      | On #{start_time}, the inspection tool navigated the browser to #{uri_ins}. The final location after potential redirects was #{uri_dest}. The inspection tool took two screenshots @fig:screenshot-top and @fig:screenshot-bottom.
+
+    figure
+      img(src="screenshot-top.png" alt="Webpage Top Screenshot" id="fig:screenshot-top" style="width:100.0%")
+      figcaption Webpage Top Screenshot
+
+    figure
+      img(src="screenshot-bottom.png" alt="Webpage Bottom Screenshot" id="fig:screenshot-bottom" style="width:100.0%")
+      figcaption Webpage Bottom Screenshot
