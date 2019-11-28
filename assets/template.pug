@@ -357,7 +357,7 @@ html(xmlns='http://www.w3.org/1999/xhtml', xml:lang='en', lang='en')
             if beacon.query
               tr
                 td.notrunc
-                td.trunc.code(colspan=2): pre: code= JSON.stringify(beacon.query, null, 2).split("\n").slice(1,-1).join("\n")
+                td.trunc.code(colspan=2): pre: code= JSON.stringify(beacon.query, null, 2).split("\n").slice(1,-1).join("\n").replace(/^  /mg , '')
 
     h2(id="app:history") Browsing History
     
