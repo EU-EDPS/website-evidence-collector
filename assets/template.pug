@@ -4,7 +4,7 @@ html(xmlns='http://www.w3.org/1999/xhtml', xml:lang='en', lang='en')
     meta(charset='utf-8')
     meta(name='generator', content='website-evidence-collector')
     meta(name='viewport', content='width=device-width, initial-scale=1.0, user-scalable=yes')
-    title= title
+    title #{title} (#{uri_ins})
     style(type='text/css')
       include /node_modules/github-markdown-css/github-markdown.css
     style(type='text/css').
@@ -28,12 +28,51 @@ html(xmlns='http://www.w3.org/1999/xhtml', xml:lang='en', lang='en')
           padding: 15px;
         }
       }
+      
+      /* custom */
+      #logo{
+        width: 40%;
+        float: right;
+        background-color: white;
+      }
+      
+      .notrunc {
+        white-space: nowrap;
+      }
+      
+      .trunc {
+        white-space: nowrap;
+        text-overflow:ellipsis;
+        overflow: hidden;
+        max-width:1px;
+      }
+      
+      .markdown-body table td.code {
+        padding: 0px;
+      }
+      
+      .markdown-body table td.code pre {
+        margin: 0px;
+      }
+      
+      body {        
+          background-color: white;
+      }
+      
+      @media print {
+        .markdown-body h1,h2,h3,h4,h5,h6 {
+          break-after: avoid-page;
+        }
+      }
+
   body: article.markdown-body
     header#title-block-header
-      include /wec_logo.svg
+      div#logo
+        include /wec_logo.svg
       h1.title= title
-      p.subtitle= uri_ins
-    h1#inspection-organisation Inspection Organisation
+      h2.subtitle: a(href=uri_ins)= uri_ins
+
+    h1(id="sec:evidence-collection-organisation") Evidence Collection Organisation
     
     table
       colgroup
@@ -41,34 +80,32 @@ html(xmlns='http://www.w3.org/1999/xhtml', xml:lang='en', lang='en')
         col(style='width: 50%')
       tbody
         tr
-          td Inspected Web Service
+          td Target Web Service
           td: code= uri_ins
         tr
           td Automated Evidence Collection Start Time
-          td= start_time
+          td= new Date(start_time).toLocaleString()
         tr
           td Automated Evidence Collection End Time
-          td= end_time
+          td= new Date(end_time).toLocaleString()
         tr
-          td Inspection Script Version
+          td Software Version
           td= script.version.commit || script.version.npm
         tr
-          td Inspection Script Host
+          td Software Host
           td= script['host']
 
-    h1#automated-evidence-collection Automated Evidence Collection
+    h1(id="sec:automated-evidence-collection") Automated Evidence Collection
     
-    p The automated evidence collection is carried out using the tool #[em website evidence collector] (#[a(href="https://edps.europa.eu/press-publications/edps-inspection-software_en") EDPS Inspection Software], also #[a(href="https://github.com/EU-EDPS/website-evidence-collector") on Github]) in version #{script.version.commit || script.version.npm} on the platform #{browser.platform.name} in version #{browser.platform.version}. The tool employs the browser #{browser.name} in version #{browser.version} for browsing the website.
+    p The automated evidence collection is carried out using the tool #[a(href="https://edps.europa.eu/press-publications/edps-inspection-software_en") website evidence collector] (also #[a(href="https://github.com/EU-EDPS/website-evidence-collector") on Github]) in version #{script.version.commit || script.version.npm} on the platform #{browser.platform.name} in version #{browser.platform.version}. The tool employs the browser #{browser.name} in version #{browser.version} for browsing the website.
     
-    p During the browsing, the tool gathers evidence and runs a number of checks. It takes screenshots from the browser to identify potential cookie banners. It tests the use of HTTPS/SSL to check whether the website enforces a HTTPS connection. Then, the inspection tool scans the first web page for links to common social media and collaboration platforms for statistics on the overall use of potentially privacy-intrusive third-party web services within the EU institutions and bodies.
+    p During the browsing, the tool gathers evidence and runs a number of checks. It takes screenshots from the browser to identify potential cookie banners. It tests the use of HTTPS/SSL to check whether the website enforces a HTTPS connection. Then, the evidence collection tool scans the first web page for links to common social media and collaboration platforms for statistics on the overall use of potentially privacy-intrusive third-party web services.
 
-    p The analysis of the recorded traffic between the browser and both the inspection target web service as well as involved third-party web services, and the browser’s persistent storage follows in @sec:traffic-and-persistent-data-analysis. @sec:early-assessment gives a short summary on the use of tracking devices such as cookies.
+    p The analysis of the recorded traffic between the browser and both the target web service as well as involved third-party web services, and the browser’s persistent storage follows in a #[span.citation(data-cites="sec:traffic-and-persistent-data-analysis"): a(href="#traffic-and-persistent-data-analysis") subsequent section].
     
-    
-    h2#webpage-visit Webpage Visit
+    h2(id="sec:webpage-visit") Webpage Visit
 
-    p
-      | On #{start_time}, the inspection tool navigated the browser to #{uri_ins}. The final location after potential redirects was #{uri_dest}. The inspection tool took two screenshots @fig:screenshot-top and @fig:screenshot-bottom.
+    p On #{new Date(start_time).toLocaleString()}, the evidence collection tool navigated the browser to #[a(href=uri_ins)= uri_ins]. The final location after potential redirects was #[a(href=uri_dest)= uri_dest]. The evidence collection tool took two screenshots #[span.citation(data-cites="fig:screenshot-top") to cover the top of the webpage] and #[span.citation(data-cites="fig:screenshot-bottom") the bottom].
 
     figure
       img(src="screenshot-top.png" alt="Webpage Top Screenshot" id="fig:screenshot-top" style="width:100.0%")
@@ -77,3 +114,280 @@ html(xmlns='http://www.w3.org/1999/xhtml', xml:lang='en', lang='en')
     figure
       img(src="screenshot-bottom.png" alt="Webpage Bottom Screenshot" id="fig:screenshot-bottom" style="width:100.0%")
       figcaption Webpage Bottom Screenshot
+
+    h2(id="sec:use-of-httpsssl") Use of HTTPS/SSL
+
+    p The evidence collection tool assessed the redirecting behaviour of #{host} with respect to the use of HTTPS.
+    
+    table.use-of-httpsssl
+      colgroup
+        col(style='width: 50%')
+        col(style='width: 50%')
+      tbody
+        tr
+          td allows connection with HTTPS
+          td= secure_connection.https_support
+        tr
+          td HTTP redirect to HTTPS
+          td= secure_connection.https_redirect
+        tr
+          td HTTP redirect location
+          td: ul
+            each redirect in secure_connection.redirects
+              li
+                a(href=redirect)= redirect
+                
+    if testssl
+      p The tool #[code testssl.sh] from #[a(href="https://testssl.sh") https://testssl.sh] inspected the HTTPS configuration of the web service host #{host}. It classifies detected vulnerabilities by their level of severity #[em low], #[em medium], #[em high], or #[em critical]. Details on the findings are listed in #[span.citation(data-cites="sec:testssl"): a(href="#sec:testssl") the Annex].
+      
+      table.testssl-summary
+        colgroup
+          col(style='width: 50%')
+          col(style='width: 50%')
+        thead
+          tr
+            th TestSSL Severity
+            th Number of Occurrences
+        tbody
+          each occurrences, severity in testssl.summary
+            tr
+              td= severity.toLowerCase()
+              td= occurrences
+
+    h2(id="sec:use-of-social-media") Use of Social Media and Collaboration Platforms
+    
+    if links.social.length > 0    
+      table.use-of-social-media-and-collaboration-platforms
+        colgroup
+          col(style='width: 50%')
+          col(style='width: 50%')
+        thead
+          tr
+            th Link URL
+            th Link Caption
+        tbody
+          each social in links.social
+            tr
+              td: a(href=social.href)= social.href
+              td= social.inner_text
+    else
+      p No corresponding links were found.
+    
+    p Common social media and collaboration platforms linked from #[a(href=uri_dest)= uri_dest] have been considered.
+    
+    h2(id="traffic-and-persistent-data-analysis") Traffic and Persistent Data Analysis
+
+    p The evidence collection tool simulates a browsing session of the web service to analyse hereafter the recorded traffic between the browser and the Internet as well as the persistent data stored in the browser. First, the browser visited #[a(href=uri_dest)= uri_dest]. The evidence collection took #{browsing_history.length > 1 ? browsing_history.length - 1 : "no"} other web page(s) into account. Generally, predefined pages and a random subset of all firt-party link targets (URLs) from the initial web page #[a(href=uri_dest)= uri_dest] are considered. The exhaustive list of browsed web pages is given in #[span.citation(data-cites="app:history"): a(href="#app:history") the Annex].
+
+    p The web page(s) were browsed consecutively between #{new Date(start_time).toLocaleString()} and #{new Date(end_time).toLocaleString()}.
+    
+    p For the subsequent analysis, the following hosts (with their path) were defined as first-party:
+    
+    ol
+      each uri in uri_refs
+        li: a(href=uri)= uri.replace(/(^\w+:|^)\/\//, '')
+
+    h3(id="sec:traffic-analysis") Traffic Analysis
+
+    p In the case of a visit of a very simple web page with a given URL, the browser sends a #[em request] to the web server configured for the domain specified in the URL. The web server, also called #[em host], sends then a #[em response] in the form of e.g. an HTML file that the browser downloads and displays. Most web pages nowadays are more complex and require the browser to send further requests to the same host (#[em first-party]) or even different hosts (potentially #[em third-party]) to download e.g. images, videos and fonts and to embed e.g. maps, tweets and comments. Please find more information about hosts and the distinction between first-party and third-party in the glossary in #[span.citation(data-cites="sec:glossary"): a(href="#sec:glossary") the Annex].
+
+    p The evidence collection tool extracted lists of distinct first-party, respectively third-party, hosts from the browser requests recorded as part of the traffic. Note that if a specific path is configured to be first-party, than requests to other paths may lead to the first-party host being also listed amongst the third-party hosts.
+
+    p A number of techniques allow hosts to track the browsing behaviour. The first-party host may instruct the browser to send requests for the (sole) purpose of providing information embedded in the request (e.g. cookies) to a given first-party or third-party host. Often, those requests are then responded with an empty file or with an image of size 1x1 pixel. Such files requested for the purpose of tracking are commonly called #[em web beacons].
+
+    p The evidence collection tool compares all requests to signature lists compiled to detect potential web beacons or otherwise problematic content. The positive matches with the lists #[a(href='https://easylist.to/#easyprivacy') EasyPrivacy] (#[code easyprivacy.txt]) and #[a(href='https://easylist.to/#fanboy-s-annoyance-list') Fanboy's Annoyance] (#[code fanboy-annoyance.txt]) from #[a(href="https://easylist.to") https://easylist.to] are presented in #[span.citation(data-cites="app:annex-beacons"): a(href="#app:annex-beacons") the Annex]. The list of #[em web beacon hosts] contains hosts of those requests that match the signature list EasyPrivacy. Note that the result may include false positives and may be incomplete due to inaccurate, outdated or incomplete signature lists.
+
+    p Eventually, the evidence collection tool logged all identified web forms that potentially transmit web form data using an unencrypted connection.
+
+    h4 First-Party Hosts
+    
+    ol
+      each host in hosts.requests.firstParty
+        li: a(href=`http://${host}`)= host
+
+    p Requests have been made to #{hosts.requests.firstParty.length} distinct first-party hosts.
+    
+    h4 Third-Party Hosts
+    
+    ol
+      each host in hosts.requests.thirdParty
+        li: a(href=`http://${host}`)= host
+
+    p Requests have been made to #{hosts.requests.thirdParty.length} distinct third-party hosts.
+
+    h4 First-Party Web Beacon Hosts
+    
+    ol
+      each host in hosts.beacons.firstParty
+        li: a(href=`http://${host}`)= host
+
+    if hosts.beacons.firstParty.length > 0
+      p Potential first-party web beacons were sent to #{hosts.beacons.firstParty.length} distinct hosts. Corresponding HTTP requests for first- and third-parties are listed in #[span.citation(data-cites="app:annex-beacons"): a(href="#app:annex-beacons") the Annex].
+    else
+      p No first-party web beacons were found.
+
+    h4 Third-Party Web Beacon Hosts
+    
+    ol
+      each host in hosts.beacons.thirdParty
+        li: a(href=`http://${host}`)= host
+        
+    if hosts.beacons.thirdParty.length > 0
+      p Potential third-party web beacons were sent to #{hosts.beacons.thirdParty.length} distinct hosts. Corresponding HTTP requests for first- and third-parties are listed in #[span.citation(data-cites="app:annex-beacons"): a(href="#app:annex-beacons") the Annex].
+    else
+      p No third-party web beacons were found.
+
+    h4(id="sec:unsecure-forms") Web Forms with non-encrypted Transmission
+    
+    if unsafeForms.length > 0
+      table.unfase-webforms
+        colgroup
+          col
+          col
+        thead
+          tr
+            th #
+            th Web Form ID
+            th Recipient URL
+            th HTTP Method
+        tbody
+          each form,index in unsafeForms
+            tr
+              td= index+1
+              td= form.id
+              td= form.action
+              td= form.method
+
+      p The evidence collection tool logged #{unsafeForms.length} web forms that submit data potentially with no SSL encryption to a different web page.
+    else
+      p No web forms submitting data without SSL encryption were detected.
+
+    h3(id="sec:persistent-data-analysis") Persistent Data Analysis
+
+    p The evidence collection tool analysed persistent cookies after the browsing session. Web pages can also use the persistent HTML5 #[em local storage]. #[span.citation(data-cites="sec:local-storage"): a(href="#sec:local-storage") The subsequent section] lists its content after the browsing.
+    
+    - var cookiesByStorage = groupBy(cookies, 'firstPartyStorage')
+    
+    each cookieList,index in {'First-Party': cookiesByStorage['true'] || [], 'Third-Party': cookiesByStorage['false'] || []}
+      h4 Cookies linked to #{index} Hosts
+    
+      if cookieList.length > 0
+        table.cookies(width="100%")
+          colgroup
+            col(width="0%")
+            col(width="0%")
+            col(width="0%")
+            col(width="100%")
+            col(width="0%")
+          thead
+            tr
+              th.notrunc #
+              th.notrunc Host
+              th.notrunc Path
+              th.trunc Name
+              th.notrunc Expiry in d
+          tbody
+            each cookie,index in cookieList
+              tr
+                td.notrunc= index+1
+                td.notrunc: a(href=`http://${cookie.domain}`)= cookie.domain
+                td.notrunc: a(href=`http://${cookie.domain}${cookie.path}`)= cookie.path
+                td.trunc= cookie.name
+                td.notrunc
+                  if cookie.session
+                    em session
+                  else
+                    = cookie.expiresDays
+
+        p In total, #{cookieList.length} #{index.toLowerCase()} cookies were found.
+      else
+        p No #{cookieList.length} #{index.toLowerCase()} cookies were found.
+
+    h4(id="sec:local-storage") Local Storage
+    
+    if Object.keys(localStorage).length > 0
+      table(width="100%").local-storage
+        colgroup
+          col(width="0%")
+          col(width="20%")
+          col(width="40%")
+          col(width="40%")
+        thead
+          tr
+            th.notrunc #
+            th.trunc Host
+            th.trunc Key
+            th.trunc Value
+        tbody
+          - let index = 1
+          each storage,url in localStorage
+            each data,key in storage
+              tr
+                td.notrunc= index++
+                td.trunc: a(href=url title=url)= url.replace(/(^\w+:|^)\/\//, '')
+                td.trunc= key
+                td.trunc.code: pre: code= JSON.stringify(data.value, null, 2)
+    else
+      p The local storage has found to be empty.
+
+    h1(id="app:annex") Annex
+    
+    h2(id="app:annex-beacons") All Beacons
+    
+    
+    each beaconsByList, listName in groupBy(beacons, 'listName')
+      h5(id=`annex-beacons-${listName}`)= listName
+    
+      table.adblock-findings(style="width: 100%;")
+        colgroup
+          col(width="0%")
+          col(width="100%")
+          col(width="0%")
+        thead
+          tr
+            th.notrunc #
+            th.trunc Sample URL
+            th.notrunc Freq.
+        tbody
+          each beacon,index in beacons
+            tr
+              td.notrunc= index+1
+              td.trunc(title=beacon.url)= beacon.url
+              td.notrunc= beacon.occurrances
+            if beacon.query
+              tr
+                td.notrunc
+                td.trunc.code(colspan=2): pre: code= JSON.stringify(beacon.query, null, 2).split("\n").slice(1,-1).join("\n")
+
+    h2(id="app:history") Browsing History
+    
+    p For the collection of evidence, the browser navigated consecutively to the following #{browsing_history.length} webpage(s):
+    
+    ol
+      each link in browsing_history
+        li: a(href=link)= link
+    
+    h2(id='app:glossary') Glossary
+    dl
+      dt Filter Lists
+      dd Browser extensions commonly referred by #[em Adblocker] have been developed to block the loading of advertisements based on filter lists. Later on, filter lists have been extended to block also the loading of web page elements connected to the tracking of web page visitors. For this evidence collection, publicly available tracking filter lists are re-purposed to identify web page elements that may track the web page visitors.
+      dt Do Not Track (DNT for short, HTTP)
+      dd The Do Not Track header is the proposed HTTP header field DNT that requests that a web service does not track its individual visitors. Note that this request cannot be enforced by technical means on the visitors&rsquo; side. It is upon the web service to take the DNT header field into account. For this evidence collection, the Do Not Track header is not employed.
+      dt First-Party
+      dd In this document, #[em first-party] is a classification of the resources links, web beacons, and cookies. To be first party, the resource domain must match the domain of the inspected web service or other configured first-party domains. Note that the resource path must also be within the path of the web service to be considered first-party.
+      dt Host (HTTP)
+      dd The HTTP #[em host] is the computer receiving and answering browser requests for web pages.
+      dt Redirect (HTTP)
+      dd A request for a web page may be answered with a new location (URL) to be requested instead. These HTTP #[em redirects] can be used to enforce the use of HTTPS. Visitors requested an HTTP web page are redirected to the corresponding HTTPS web page.
+      dt Request (HTTP)
+      dd To download and display a web page identified by an URL, browsers send HTTP #[em requests] with the URL to the host computer specified as part of the URL.
+      dt Local Storage (HTML5)
+      dd Modern web browsers allow web pages to store data locally in the browser profile. This #[em local storage] is web site-specific and persistent through browser shutdowns. As embedded third-party resources may also have access to the first-party local storage, it is classified both as first- and third-party.
+      dt Third-Party
+      dd Links, web beacons and cookies that are not #[em first-party] (see above) are classified as #[em third-party].
+      dt Web Beacon
+      dd A web beacon is one of various techniques used on web pages to unobtrusively (usually invisibly) allow tracking of web page visitors. A web beacon can be implemented for instance as a 1x1 pixel image, a transparent image, or an empty file that is requested together with other resources when a web page is loaded.
+      dt Web Beacon Host
+      dd The #[em host] in the URL of a #[em request] of a #[em Web Beacon] is called #[em Web Beacon host].
+
+    
