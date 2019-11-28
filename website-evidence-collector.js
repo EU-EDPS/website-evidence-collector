@@ -73,7 +73,7 @@ var refs_regexp = new RegExp(`^(${uri_refs_stripped.join('|')})\\b`, 'i');
 
   // prepare hash to store data for output
   output = {
-    title: argv.title,
+    title: argv.title || `Website Evidence Collection`,
     uri_ins: uri_ins,
     uri_refs: uri_refs,
     uri_dest: null,
@@ -118,17 +118,39 @@ var refs_regexp = new RegExp(`^(${uri_refs_stripped.join('|')})\\b`, 'i');
   await setup_beacon_recording(page);
   let webSocketLog = setup_websocket_recording(page);
   let hosts = {
-    requests: new Set(),
-    beacons: new Set(),
-    cookies: new Set(),
-    local_storage: new Set(),
-    links: new Set(),
+    requests: {
+      firstParty: new Set(),
+      thirdParty: new Set(),
+    },
+    beacons: {
+      firstParty: new Set(),
+      thirdParty: new Set(),
+    },
+    cookies: {
+      firstParty: new Set(),
+      thirdParty: new Set(),
+    },
+    localStorage: {
+      firstParty: new Set(),
+      thirdParty: new Set(),
+    },
+    links: {
+      firstParty: new Set(),
+      thirdParty: new Set(),
+    },
   };
 
   // record all requested hosts
   await page.on('request', (request) => {
     const l = url.parse(request.url());
-    hosts.requests.add(l.hostname);
+    // note that hosts may appear as first and third party depending on the path
+    if (isFirstParty(refs_regexp, l)) {
+      hosts.requests.firstParty.add(l.hostname);
+    } else {
+      if(l.protocol != 'data:') {
+        hosts.requests.thirdParty.add(l.hostname);
+      }
+    }
   });
 
   const har = new PuppeteerHar(page);
@@ -195,14 +217,22 @@ var refs_regexp = new RegExp(`^(${uri_refs_stripped.join('|')})\\b`, 'i');
     return links_with_duplicates.find(link => link.href === href);
   });
 
+  output.links = {
+    firstParty: [],
+    thirdParty: [],
+  };
+
   for (const link of links) {
     const l = url.parse(link.href);
-    hosts.links.add(l.hostname);
-  }
 
-  output.links = groupBy(links, (link) => {
-    return isFirstParty(refs_regexp, link.href) ? 'first_party' : 'third_party';
-  });
+    if (isFirstParty(refs_regexp, l)) {
+      output.links.firstParty.push(link);
+      hosts.links.firstParty.add(l.hostname);
+    } else {
+      output.links.thirdParty.push(link);
+      hosts.links.thirdParty.add(l.hostname);
+    }
+  }
 
   // prepare regexp to match social media platforms
   let social_platforms = yaml.safeLoad(fs.readFileSync(path.join(__dirname, 'assets/social-media-platforms.yml'), 'utf8')).map((platform) => {
@@ -232,10 +262,23 @@ var refs_regexp = new RegExp(`^(${uri_refs_stripped.join('|')})\\b`, 'i');
     await page.screenshot({path: path.join(argv.output, 'screenshot-bottom.png')});
   }
 
+  // unsafe webforms
+  output.unsafeForms = await page.evaluate( () => {
+    return [].map.call(document.querySelectorAll('form'), form => {
+      return {
+        id: form.id,
+        action: form.action,
+        method: form.method,
+      };
+    }).filter(form => {
+      return form.action.startsWith('http:');
+    });
+  });
+
   // browsing
   let browse_user_set = argv.browseLink || [];
-  let browse_links = sampleSize(output.links.first_party, argv.max - browse_user_set.length);
-  output.browsing_history = [output.uri_ins].concat(browse_user_set, browse_links.map( l => l.href ));
+  let browse_links = sampleSize(output.links.firstParty, argv.max - browse_user_set.length);
+  output.browsing_history = [output.uri_dest].concat(browse_user_set, browse_links.map( l => l.href ));
 
   for (const link of output.browsing_history.slice(1)) {
     logger.log('info', `browsing now to ${link}`, {type: 'Browser'});
@@ -252,9 +295,10 @@ var refs_regexp = new RegExp(`^(${uri_refs_stripped.join('|')})\\b`, 'i');
       // add derived attributes for convenience
       cookie.expiresUTC = new Date(cookie.expires * 1000);
       cookie.expiresDays = Math.round((cookie.expiresUTC - output.start_time) / (10 * 60 * 60 * 24)) / 100;
-
-      cookie.domain = cookie.domain.replace(/^\./,''); // normalise domain value
     }
+
+    cookie.domain = cookie.domain.replace(/^\./,''); // normalise domain value
+
     return cookie;
   });
 
@@ -301,10 +345,6 @@ var refs_regexp = new RegExp(`^(${uri_refs_stripped.join('|')})\\b`, 'i');
     return event.data;
   }));
 
-  for (const cookie of cookies) {
-    hosts.cookies.add(cookie.domain);
-  }
-
   cookies.forEach( cookie => {
     let matched_event = cookies_from_events.find( cookie_from_events => {
       return (cookie.name == cookie_from_events.key) &&
@@ -314,9 +354,17 @@ var refs_regexp = new RegExp(`^(${uri_refs_stripped.join('|')})\\b`, 'i');
     if (!!matched_event) {
       cookie.log = matched_event.log;
     }
+
+    if (isFirstParty(refs_regexp, `cookie://${cookie.domain}${cookie.path}`)) {
+      cookie.firstPartyStorage = true;
+      hosts.cookies.firstParty.add(cookie.domain);
+    } else {
+      cookie.firstPartyStorage = false;
+      hosts.cookies.thirdParty.add(cookie.domain);
+    }
   });
 
-  output.cookies = cookies;
+  output.cookies = cookies.sort(function(a,b) {return b.expires-a.expires;});
 
   if (argv.output) {
     let yaml_dump = yaml.safeDump(cookies, {noRefs: true});
@@ -328,9 +376,18 @@ var refs_regexp = new RegExp(`^(${uri_refs_stripped.join('|')})\\b`, 'i');
   });
 
   Object.keys(localStorage).forEach( (origin) => {
-    hosts.local_storage.add(new url.URL(origin).hostname);
+    let hostname = new url.URL(origin).hostname;
+    let isFirstPartyStorage = isFirstParty(refs_regexp, origin);
+    if (isFirstPartyStorage) {
+      hosts.localStorage.firstParty.add(hostname);
+    } else {
+      hosts.localStorage.thirdParty.add(hostname);
+    }
+
     let originStorage = localStorage[origin];
     Object.keys(originStorage).forEach( (key) => {
+      // add if entry is linked to first-party host
+      originStorage[key].firstPartyStorage = isFirstPartyStorage;
       // find log for a given key
       let matched_event = storage_from_events.find( event => {
         return (origin == event.origin) &&
@@ -347,7 +404,7 @@ var refs_regexp = new RegExp(`^(${uri_refs_stripped.join('|')})\\b`, 'i');
     });
   });
 
-  output.local_storage = localStorage;
+  output.localStorage = localStorage;
   if (argv.output) {
     let yaml_dump = yaml.safeDump(localStorage, {noRefs: true});
     fs.writeFileSync(path.join(argv.output, 'local-storage.yml'), yaml_dump);
@@ -366,11 +423,18 @@ var refs_regexp = new RegExp(`^(${uri_refs_stripped.join('|')})\\b`, 'i');
   }));
 
   for (const beacon of beacons_from_events) {
-    const u = url.parse(beacon.url);
-    hosts.beacons.add(u.hostname);
+    const l = url.parse(beacon.url);
+
+    if(beacon.listName == 'easyprivacy.txt') {
+      if (isFirstParty(refs_regexp, l)) {
+        hosts.beacons.firstParty.add(l.hostname);
+      } else {
+        hosts.beacons.thirdParty.add(l.hostname);
+      }
+    }
   }
 
-  // make now a summary for the beacons (one of every hostname+pathname and their occurance)
+  // make now a summary for the beacons (one of every hostname+pathname and their occurrance)
   let beacons_from_events_grouped = groupBy(beacons_from_events, beacon => {
     let url_parsed = url.parse(beacon.url);
     return `${url_parsed.hostname}${url_parsed.pathname.replace(/\/$/,'')}`;
@@ -379,7 +443,7 @@ var refs_regexp = new RegExp(`^(${uri_refs_stripped.join('|')})\\b`, 'i');
   let beacons_summary = [];
   for (const [key, beacon_group] of Object.entries(beacons_from_events_grouped)) {
     beacons_summary.push(Object.assign({}, beacon_group[0], {
-      occurances: beacon_group.length,
+      occurrances: beacon_group.length,
     }));
   }
 
@@ -387,27 +451,19 @@ var refs_regexp = new RegExp(`^(${uri_refs_stripped.join('|')})\\b`, 'i');
 
   output.beacons = beacons_summary;
 
+  let arrayFromParties = function(array) {
+    return {
+      firstParty: Array.from(array.firstParty),
+      thirdParty: Array.from(array.thirdParty),
+    };
+  };
+
   output.hosts = {
-    requests: {
-      count: hosts.requests.size,
-      entries: Array.from(hosts.requests),
-    },
-    beacons: {
-      count: hosts.beacons.size,
-      entries: Array.from(hosts.beacons),
-    },
-    cookies: {
-      count: hosts.cookies.size,
-      entries: Array.from(hosts.cookies),
-    },
-    local_storage: {
-      count: hosts.local_storage.size,
-      entries: Array.from(hosts.local_storage),
-    },
-    links: {
-      count: hosts.links.size,
-      entries: Array.from(hosts.links),
-    },
+    requests: arrayFromParties(hosts.requests),
+    beacons: arrayFromParties(hosts.beacons),
+    cookies: arrayFromParties(hosts.cookies),
+    localStorage: arrayFromParties(hosts.localStorage),
+    links: arrayFromParties(hosts.links),
   };
 
   if (argv.output) {
@@ -444,6 +500,7 @@ var refs_regexp = new RegExp(`^(${uri_refs_stripped.join('|')})\\b`, 'i');
     let html_dump = pug.renderFile(html_template, Object.assign({}, output, {
       pretty: true,
       basedir: __dirname,
+      groupBy: groupBy,
     }));
 
     if (argv.html) {
