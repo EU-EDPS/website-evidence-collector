@@ -366,6 +366,14 @@ html(xmlns='http://www.w3.org/1999/xhtml', xml:lang='en', lang='en')
 
     h1(id="app:annex") Annex
     
+    h2(id="app:history") Browsing History
+    
+    p For the collection of evidence, the browser navigated consecutively to the following #{browsing_history.length} webpage(s):
+    
+    ol
+      each link in browsing_history
+        li: a(href=link)= link
+            
     h2(id="app:annex-beacons") All Beacons
     
     p The data transmitted by beacons using HTTP GET parameters are decoded for improved readability and displayed beneath the beacon URL.
@@ -393,14 +401,6 @@ html(xmlns='http://www.w3.org/1999/xhtml', xml:lang='en', lang='en')
               tr
                 td.notrunc
                 td.trunc.code(colspan=2): pre: code= JSON.stringify(beacon.query, null, 2).split("\n").slice(1,-1).join("\n").replace(/^  /mg , '')
-
-    h2(id="app:history") Browsing History
-    
-    p For the collection of evidence, the browser navigated consecutively to the following #{browsing_history.length} webpage(s):
-    
-    ol
-      each link in browsing_history
-        li: a(href=link)= link
     
     if testSSL
       - var results = testSSL.scanResult[0]
