@@ -339,6 +339,7 @@ html(xmlns='http://www.w3.org/1999/xhtml', xml:lang='en', lang='en')
     
     h2(id="app:annex-beacons") All Beacons
     
+    p The data transmitted by beacons using HTTP GET parameters are decoded for improved readability and displayed beneath the beacon URL.
     
     each beaconsByList, listName in groupBy(beacons, 'listName')
       h5(id=`annex-beacons-${listName}`)= listName
