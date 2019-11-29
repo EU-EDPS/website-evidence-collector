@@ -59,6 +59,11 @@ html(xmlns='http://www.w3.org/1999/xhtml', xml:lang='en', lang='en')
           background-color: white;
       }
       
+      td.highlighted, td.highlighted pre, li.highlighted a {
+        background-color: red;
+        color: white;
+      }
+      
       @media print {
         .markdown-body h1,h2,h3,h4,h5,h6 {
           break-after: avoid-page;
@@ -390,4 +395,14 @@ html(xmlns='http://www.w3.org/1999/xhtml', xml:lang='en', lang='en')
       dt Web Beacon Host
       dd The #[em host] in the URL of a #[em request] of a #[em Web Beacon] is called #[em Web Beacon host].
 
-    
+    script.
+      function highlighter(item) { 
+         item.addEventListener('dblclick', function() {
+             item.classList.toggle('highlighted');
+         }, false);    
+      }
+      // highlighting for table cells
+      [].forEach.call(document.getElementsByTagName('td'), highlighter);
+      // highlighting for list items
+      [].forEach.call(document.getElementsByTagName('li'), highlighter);
+  
