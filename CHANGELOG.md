@@ -1,5 +1,12 @@
 ## HEAD
 
+* log web forms with non-encrypted transmission
+* distinguish links and hosts between first- and third-party
+* bugfix: always normalise cookie domains
+* feature: limit beacon hosts to requests detected by easyprivacy.txt
+* feature: add computed property to cookies and local storage objects: `firstPartyStorage` is true if the cookie is stored under a first-party host (considers also cookie path)
+* feature: sort cookies with respect to their expiration (all session cookies at the end)
+* feature: add HTML output describing the collection alongside tables and lists with evidence
 ## 0.3.1 / 2019-10-18
 
   * documentation: move from zip to tarball archives to allow for installation with `npm install`
