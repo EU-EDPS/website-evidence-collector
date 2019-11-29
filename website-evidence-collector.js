@@ -166,8 +166,9 @@ var refs_regexp = new RegExp(`^(${uri_refs_stripped.join('|')})\\b`, 'i');
   // secure connection
 
   // test if server responds to https
+  let uri_ins_https;
   try {
-    let uri_ins_https = new url.URL(uri_ins);
+    uri_ins_https = new url.URL(uri_ins);
     uri_ins_https.protocol = 'https:';
     await request(uri_ins_https.toString(), {
       followRedirect: false,
@@ -465,6 +466,58 @@ var refs_regexp = new RegExp(`^(${uri_refs_stripped.join('|')})\\b`, 'i');
     localStorage: arrayFromParties(hosts.localStorage),
     links: arrayFromParties(hosts.links),
   };
+
+  // testssl integration
+
+  if (argv.testssl) {
+    let testssl_args = [
+      "--ip one",     // speed up testssl: just test the first DNS returns (useful for multiple IPs)
+      "--quiet",      // no banner
+      "--hints",      // additional hints to findings
+      "--fast",       // omits some checks: using openssl for all ciphers (-e), show only first preferred cipher.
+      "--vulnerable", // tests vulnerabilities (if applicable)
+      "--headers",    // tests HSTS, HPKP, server/app banner, security headers, cookie, reverse proxy, IPv4 address
+      "--protocols",  // checks TLS/SSL protocols (including SPDY/HTTP2)
+      "--standard",   // tests certain lists of cipher suites by strength
+      "--server-defaults",   // displays the server's default picks and certificate info
+      "--server-defaults",   // displays the server's default picks and certificate info
+      "--server-preference", // displays the server's picks: protocol+cipher
+    ];
+
+    let json_file;
+
+    if(argv.output) {
+      let output_testssl = path.join(argv.output, 'testssl');
+      fs.mkdirSync(output_testssl);
+
+      json_file = `${output_testssl}/testssl.json`;
+      testssl_args.push(`--htmlfile ${output_testssl}/testssl.html`);
+      testssl_args.push(`--logfile ${output_testssl}/testssl.log`);
+    } else { // case with --no-ouput and --testssl
+      json_file = `testssl.tmp.json`;
+    }
+    testssl_args.push(`--jsonfile-pretty ${json_file}`);
+    testssl_args.push(uri_ins_https.toString());
+
+    const { execSync } = require('child_process');
+    try {
+      let cmd = `${argv.testssl} ${testssl_args.join(' ')}`;
+      logger.log('info', `launching testSSL: ${cmd}`, {type: 'testSSL'});
+      execSync(cmd);
+    } catch (e) {
+      logger.log('warn', e.toString(), {type: 'testSSL'});
+      output.testSSLError= e.toString();
+    }
+    output.testSSL = JSON.parse(fs.readFileSync(json_file, 'utf8'));
+
+    if(!argv.output) {
+      fs.removeSync(json_file);
+    }
+  } else if(argv.testsslFile) {
+    output.testSSL = JSON.parse(fs.readFileSync(argv.testssl_file), 'utf8');
+  }
+
+  // output to various formats
 
   if (argv.output) {
     let yaml_dump = yaml.safeDump(beacons_summary, {noRefs: true});

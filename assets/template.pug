@@ -68,6 +68,10 @@ html(xmlns='http://www.w3.org/1999/xhtml', xml:lang='en', lang='en')
         .markdown-body h1,h2,h3,h4,h5,h6 {
           break-after: avoid-page;
         }
+        
+        .screen-only {
+          display: none;
+        }
       }
 
   body: article.markdown-body
@@ -142,22 +146,47 @@ html(xmlns='http://www.w3.org/1999/xhtml', xml:lang='en', lang='en')
               li
                 a(href=redirect)= redirect
                 
-    if testssl
-      p The tool #[code testssl.sh] from #[a(href="https://testssl.sh") https://testssl.sh] inspected the HTTPS configuration of the web service host #{host}. It classifies detected vulnerabilities by their level of severity #[em low], #[em medium], #[em high], or #[em critical]. Details on the findings are listed in #[span.citation(data-cites="sec:testssl"): a(href="#sec:testssl") the Annex].
+    if testSSL
+      -
+        sortSeverity = function(a,b) {
+          var severityToNumber = {
+            CRITCAL: 0,
+            HIGH: 1,
+            MEDIUM: 2,
+            LOW: 3,
+            OK: 4,
+            INFO: 5,
+          };
+          
+          return severityToNumber[a.severity]-severityToNumber[b.severity];
+        }
+
+      - var results = testSSL.scanResult[0]
+        
+      p The software TestSSL from #[a(href="https://testssl.sh") https://testssl.sh] inspected the HTTPS configuration of the web service host #{results.targetHost}. It classifies detected vulnerabilities by their level of severity #[em low], #[em medium], #[em high], or #[em critical]. The severity ratings are automatically computed by the TestSSL software without consideration of the specifics of the individual website. They do not reflect the opinions or views of the website evidence collector authors. Details on the findings are listed in #[span.citation(data-cites="app:testssl"): a(href="#app:testssl") the Annex].
       
-      table.testssl-summary
+      table.testssl-summary(width="100%")
         colgroup
-          col(style='width: 50%')
-          col(style='width: 50%')
+          col
+          col(style='width: 0%')
         thead
           tr
-            th TestSSL Severity
-            th Number of Occurrences
+            th HTTPS/SSL Vulnerabilities per Severity
+            th.notrunc Freq.
         tbody
-          each occurrences, severity in testssl.summary
-            tr
-              td= severity.toLowerCase()
-              td= occurrences
+          - var vulnerabilitiesBySeverity = groupBy(results.vulnerabilities,'severity');
+          tr
+            td Critical
+            td= vulnerabilitiesBySeverity['CRITCAL'] ? vulnerabilitiesBySeverity['CRITCAL'].length : 0
+          tr
+            td High
+            td= vulnerabilitiesBySeverity['HIGH'] ? vulnerabilitiesBySeverity['HIGH'].length : 0
+          tr
+            td Medium
+            td= vulnerabilitiesBySeverity['MEDIUM'] ? vulnerabilitiesBySeverity['MEDIUM'].length : 0
+          tr
+            td Low
+            td= vulnerabilitiesBySeverity['LOW'] ? vulnerabilitiesBySeverity['LOW'].length : 0
 
     h2(id="sec:use-of-social-media") Use of Social Media and Collaboration Platforms
     
@@ -373,6 +402,118 @@ html(xmlns='http://www.w3.org/1999/xhtml', xml:lang='en', lang='en')
       each link in browsing_history
         li: a(href=link)= link
     
+    if testSSL
+      - var results = testSSL.scanResult[0]
+      
+      h2(id="app:testssl") TestSSL Scan
+      
+      p The following data stems from a #[a(href="https://testssl.sh/") TestSSL] scan. The severity ratings are automatically computed by the TestSSL software without consideration of the specifics of the individual website. They do not reflect the opinions or views of the website evidence collector authors.
+      
+      p.screen-only #[a(href="testssl/testssl.html") Click here] to check wether the full TestSSL scan report is available.
+      
+      table(width="100%")
+        colgroup
+          col
+          col
+        tbody
+          tr
+            td TestSSL version
+            td= testSSL.version
+          tr
+            td OpenSSL version
+            td= testSSL.openssl
+          tr
+            td Target Host
+            td #{results.targetHost}(#{results.ip})
+        
+      h3 Protocols
+      
+      table(width="100%")
+        colgroup
+          col(style='width: 0%')
+          col(style='width: 100%') 
+          col(style='width: 0%')
+        thead
+          tr
+            th Protocol
+            th Finding
+            th Severity
+        tbody
+          each protocol in results.protocols.sort(sortSeverity)
+            tr
+              td.notrunc= protocol.id
+              td= protocol.finding
+              td.notrunc= protocol.severity
+              
+      h3 HTTPS/SSL Vulnerabilities
+
+      table(width="100%")
+        colgroup
+          col(style='width: 0%')
+          col(style='width: 80%') 
+          col(style='width: 20%')
+          col(style='width: 0%')
+        thead
+          tr
+            th Vulnerability
+            th Finding
+            th CVE
+            th Severity
+        tbody
+          each vulnerability in results.vulnerabilities.sort(sortSeverity)
+            tr
+              td.notrunc= vulnerability.id
+              td.trunc(title=vulnerability.finding)= vulnerability.finding
+              td.trunc(title=vulnerability.cve).trunc                  
+                if vulnerability.cve
+                  each cve in vulnerability.cve.split(' ')
+                    a(href=`https://cve.mitre.org/cgi-bin/cvename.cgi?name=${cve}`)= cve
+                    |
+              td.notrunc= vulnerability.severity
+              
+      h3 Cipher Categories
+      
+      table(width="100%")
+        colgroup
+          col(style='width: 0%')
+          col(style='width: 100%') 
+          col(style='width: 0%')
+          col(style='width: 0%')
+        thead
+          tr
+            th Name
+            th Finding
+            th CWE
+            th Severity
+        tbody
+          each cipher in results.ciphers.sort(sortSeverity)
+            tr
+              td.notrunc= cipher.id
+              td.trunc= cipher.finding
+              td.notrunc
+                if cipher.cwe
+                  a(href=`https://cwe.mitre.org/cgi-bin/jumpmenu.cgi?id=${cipher.cwe.replace('CWE-','')}`)= cipher.cwe
+              td.notrunc= cipher.severity
+      
+      h3 HTTP Header Responses
+
+      table(width="100%")
+        colgroup
+          col(style='width: 0%')
+          col(style='width: 100%') 
+          col(style='width: 0%')
+        thead
+          tr
+            th Name
+            th Finding
+            th Severity
+        tbody
+          each response in results.headerResponse.sort(sortSeverity)
+            tr
+              td.notrunc= response.id
+              td.trunc(title=response.finding)= response.finding
+              td.notrunc= response.severity
+          
     h2(id='app:glossary') Glossary
     dl
       dt Filter Lists

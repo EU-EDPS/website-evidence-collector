@@ -8,6 +8,7 @@
 * feature: sort cookies with respect to their expiration (all session cookies at the end)
 * feature: add HTML output describing the collection alongside tables and lists with evidence
 * feature: allow highlighting with doubleclick on cells and list items in HTML output
+* feature: allow the use of [TestSSL.sh](https://testssl.sh/) or TestSSL.sh data to enrich the evidence collection
 
 ## 0.3.1 / 2019-10-18
 
