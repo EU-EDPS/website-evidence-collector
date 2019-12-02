@@ -9,6 +9,9 @@
 * feature: add HTML output describing the collection alongside tables and lists with evidence
 * feature: allow highlighting with doubleclick on cells and list items in HTML output
 * feature: allow the use of [TestSSL.sh](https://testssl.sh/) or TestSSL.sh data to enrich the evidence collection
+* feature: add new tool website-evidence-reporter to allow generation of HTML output from JSON output without repeating the evidence collection.
+
+  Together with custom templates, this allows to generate different HTML reports from the same data. It also helps the development/debugging of custom templates.
 
 ## 0.3.1 / 2019-10-18
 
