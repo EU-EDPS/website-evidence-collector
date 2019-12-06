@@ -46,6 +46,29 @@ All command line arguments after `--` (the second in case of `npm`) are applied 
 
 Reference: <https://peter.sh/experiments/chromium-command-line-switches/#ignore-certificate-errors>
 
+#### Integrate with testssl.sh
+
+**Note:** [Testssl.sh](https://testssl.sh/) must be already installed.
+
+With the option `--testssl`, the website evidence collector calls `testssl.sh`
+to gather information about the HTTPS/SSL connection.
+
+```sh
+website-evidence-collector -q --testssl https://example.com
+```
+
+The tool assumes the executable `testssl.sh` can be found in the `PATH` variable. The option `--testssl-executable` allows to specify the location and implies the option `testssl`.
+
+```sh
+website-evidence-collector -q --testssl-executable ../testssl.sh-3.0rc5/testssl.sh https://example.com
+```
+
+If `testssl.sh` is called separately, the JSON output file can be integrated subsequently with the option `--testssl-file`.
+
+```sh
+website-evidence-collector -q --testssl-file example-testssl.json https://example.com
+```
+
 #### Use pretty-printed Live Logs
 
 First, install `pino-pretty` with `npm install -g pino-pretty`.
