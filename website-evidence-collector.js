@@ -468,9 +468,13 @@ var refs_regexp = new RegExp(`^(${uri_refs_stripped.join('|')})\\b`, 'i');
   };
 
   // testssl integration
+  if (argv.testsslExecutable) {
+    argv.testssl = true; // imply testssl if executable file is configured
+  }
 
   if (argv.testssl) {
-    let testssl_args = [
+    let testsslExecutable = argv.testsslExecutable || "testssl.sh"; // set default location
+    let testsslArgs = [
       "--ip one",     // speed up testssl: just test the first DNS returns (useful for multiple IPs)
       "--quiet",      // no banner
       "--hints",      // additional hints to findings
@@ -491,17 +495,17 @@ var refs_regexp = new RegExp(`^(${uri_refs_stripped.join('|')})\\b`, 'i');
       fs.mkdirSync(output_testssl);
 
       json_file = `${output_testssl}/testssl.json`;
-      testssl_args.push(`--htmlfile ${output_testssl}/testssl.html`);
-      testssl_args.push(`--logfile ${output_testssl}/testssl.log`);
+      testsslArgs.push(`--htmlfile ${output_testssl}/testssl.html`);
+      testsslArgs.push(`--logfile ${output_testssl}/testssl.log`);
     } else { // case with --no-ouput and --testssl
       json_file = `testssl.tmp.json`;
     }
-    testssl_args.push(`--jsonfile-pretty ${json_file}`);
-    testssl_args.push(uri_ins_https.toString());
+    testsslArgs.push(`--jsonfile-pretty ${json_file}`);
+    testsslArgs.push(uri_ins_https.toString());
 
     const { execSync } = require('child_process');
     try {
-      let cmd = `${argv.testssl} ${testssl_args.join(' ')}`;
+      let cmd = `${testsslExecutable} ${testsslArgs.join(' ')}`;
       logger.log('info', `launching testSSL: ${cmd}`, {type: 'testSSL'});
       execSync(cmd);
     } catch (e) {
