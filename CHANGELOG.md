@@ -3,6 +3,7 @@
 * log web forms with non-encrypted transmission
 * distinguish links and hosts between first- and third-party
 * bugfix: always normalise cookie domains
+* bugfix: consider URLs equal if only fragment (part after #) differs when browsing multiple pages (#16)
 * feature: limit beacon hosts to requests detected by easyprivacy.txt
 * feature: add computed property to cookies and local storage objects: `firstPartyStorage` is true if the cookie is stored under a first-party host (considers also cookie path)
 * feature: sort cookies with respect to their expiration (all session cookies at the end)

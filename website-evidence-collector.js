@@ -35,6 +35,7 @@ const escapeRegExp = require('lodash/escapeRegExp');
 const groupBy = require('lodash/groupBy');
 const flatten = require('lodash/flatten');
 const sampleSize = require('lodash/sampleSize');
+const uniqWith = require('lodash/uniqWith');
 
 const { isFirstParty, getLocalStorage } = require('./lib/tools');
 
@@ -212,10 +213,10 @@ var refs_regexp = new RegExp(`^(${uri_refs_stripped.join('|')})\\b`, 'i');
     });
   });
 
-  // https://dev.to/vuevixens/removing-duplicates-in-an-array-of-objects-in-js-with-sets-3fep
-  const links = Array.from(new Set(links_with_duplicates.map(link => link.href)))
-  .map(href => {
-    return links_with_duplicates.find(link => link.href === href);
+  // https://lodash.com/docs/4.17.15#uniqWith
+  const links = uniqWith(links_with_duplicates, (l1, l2) => {
+    // consider URLs equal if only fragment (part after #) differs.
+    return l1.href.split('#').shift() === l2.href.split('#').shift();
   });
 
   output.links = {
