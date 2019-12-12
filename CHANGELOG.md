@@ -9,6 +9,7 @@
 * feature: sort cookies with respect to their expiration (all session cookies at the end)
 * feature: add HTML output describing the collection alongside tables and lists with evidence
 * feature: allow highlighting with doubleclick on cells and list items in HTML output
+* feature: require explicit option `--overwrite` to delete existing files
 * feature: allow the use of [TestSSL.sh](https://testssl.sh/) or TestSSL.sh data to enrich the evidence collection
 * feature: add new tool website-evidence-reporter to allow generation of HTML output from JSON output without repeating the evidence collection.
 

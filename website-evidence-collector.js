@@ -54,7 +54,12 @@ var refs_regexp = new RegExp(`^(${uri_refs_stripped.join('|')})\\b`, 'i');
 (async() => {
   if (argv.output) {
     if (fs.existsSync(argv.output)) {
-      fs.removeSync(argv.output);
+      if (argv.overwrite) {
+        fs.removeSync(argv.output);
+      } else {
+        console.error(`Error: Output folder or file ${argv.output} exists already. Delete manually or call with --overwrite.`);
+        process.exit(1);
+      }
     }
     fs.mkdirSync(argv.output);
   }
