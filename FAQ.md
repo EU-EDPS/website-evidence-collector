@@ -67,6 +67,8 @@ The website evidence collector provides two options to embed the TestSSL.sh resu
 1. With the option `--testssl [TestSSL.sh script]` and the location of the script as argument, the website evidence collector calls TestSSL.sh and embeds the results.
 2. With the option `--testssl-file [TestSSL.sh JSON file]` and a JSON log file from a previous TestSSL.sh call, the website evidence collector embeds the file directly.
 
+The website evidence collector has been tested to work with TestSSL.sh in version 3.0rc5.
+
 ## Evaluation of the Output
 
 #### Which applications do you recommend to open and display the output?
