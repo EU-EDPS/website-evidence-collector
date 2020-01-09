@@ -48,7 +48,7 @@ Reference: <https://peter.sh/experiments/chromium-command-line-switches/#ignore-
 
 #### Integrate with testssl.sh
 
-**Note:** [Testssl.sh](https://testssl.sh/) must be already installed.
+**Note:** [Testssl.sh](https://testssl.sh/) v3.0 or higher must be already installed.
 
 With the option `--testssl`, the website evidence collector calls `testssl.sh`
 to gather information about the HTTPS/SSL connection.
