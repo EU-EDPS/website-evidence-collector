@@ -520,6 +520,7 @@ var refs_regexp = new RegExp(`^(${uri_refs_stripped.join('|')})\\b`, 'i');
     } catch (e) {
       logger.log('warn', e.message.toString(), {type: 'testSSL'});
       output.testSSLError = e.message.toString();
+      output.testSSLErrorOutput = e.stderr.toString();
     }
 
     if(!argv.output) {
