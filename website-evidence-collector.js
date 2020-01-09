@@ -27,10 +27,6 @@ const pug = require('pug');
 const request = require('request-promise-native');
 const {gitDescribeSync} = require('git-describe');
 
-const logger = require('./lib/logger');
-const { setup_cookie_recording } = require('./lib/setup-cookie-recording');
-const { setup_beacon_recording } = require('./lib/setup-beacon-recording');
-const { setup_websocket_recording } = require('./lib/setup-websocket-recording');
 const escapeRegExp = require('lodash/escapeRegExp');
 const groupBy = require('lodash/groupBy');
 const flatten = require('lodash/flatten');
@@ -63,6 +59,12 @@ var refs_regexp = new RegExp(`^(${uri_refs_stripped.join('|')})\\b`, 'i');
     }
     fs.mkdirSync(argv.output);
   }
+
+  // logger involves file access and should initate after overwrite check
+  const logger = require('./lib/logger');
+  const { setup_cookie_recording } = require('./lib/setup-cookie-recording');
+  const { setup_beacon_recording } = require('./lib/setup-beacon-recording');
+  const { setup_websocket_recording } = require('./lib/setup-websocket-recording');
 
   const browser = await puppeteer.launch({
     headless: argv.headless,
