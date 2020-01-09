@@ -146,7 +146,9 @@ html(xmlns='http://www.w3.org/1999/xhtml', xml:lang='en', lang='en')
               li
                 a(href=redirect)= redirect
                 
-    if testSSL
+    if testSSL && testSSL.scanResult[0]
+      - var results = testSSL.scanResult[0]
+
       -
         sortSeverity = function(a,b) {
           var severityToNumber = {
@@ -160,8 +162,6 @@ html(xmlns='http://www.w3.org/1999/xhtml', xml:lang='en', lang='en')
           
           return severityToNumber[a.severity]-severityToNumber[b.severity];
         }
-
-      - var results = testSSL.scanResult[0]
         
       p The software TestSSL from #[a(href="https://testssl.sh") https://testssl.sh] inspected the HTTPS configuration of the web service host #{results.targetHost}. It classifies detected vulnerabilities by their level of severity #[em low], #[em medium], #[em high], or #[em critical]. The severity ratings are automatically computed by the TestSSL software without consideration of the specifics of the individual website. They do not reflect the opinions or views of the website evidence collector authors. Details on the findings are listed in #[span.citation(data-cites="app:testssl"): a(href="#app:testssl") the Annex].
       
