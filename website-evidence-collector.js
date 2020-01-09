@@ -516,11 +516,11 @@ var refs_regexp = new RegExp(`^(${uri_refs_stripped.join('|')})\\b`, 'i');
       let cmd = `${testsslExecutable} ${testsslArgs.join(' ')}`;
       logger.log('info', `launching testSSL: ${cmd}`, {type: 'testSSL'});
       execSync(cmd);
+      output.testSSL = JSON.parse(fs.readFileSync(json_file, 'utf8'));
     } catch (e) {
-      logger.log('warn', e.toString(), {type: 'testSSL'});
-      output.testSSLError= e.toString();
+      logger.log('warn', e.message.toString(), {type: 'testSSL'});
+      output.testSSLError = e.message.toString();
     }
-    output.testSSL = JSON.parse(fs.readFileSync(json_file, 'utf8'));
 
     if(!argv.output) {
       fs.removeSync(json_file);
