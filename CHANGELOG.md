@@ -12,6 +12,7 @@
 * feature: require explicit option `--overwrite` to delete existing files
 * feature: allow the use of [TestSSL.sh](https://testssl.sh/) or TestSSL.sh data to enrich the evidence collection
 * update: update bundled filterlists easyprivacy.txt and fanboy-annoyance.txt to the most recent version as of 2019-12-12
+* update: update puppeteer version to v2.0.0
 * feature: add new tool website-evidence-reporter to allow generation of HTML output from JSON output without repeating the evidence collection.
 
   Together with custom templates, this allows to generate different HTML reports from the same data. It also helps the development/debugging of custom templates.
