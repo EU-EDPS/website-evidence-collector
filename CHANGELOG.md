@@ -1,5 +1,7 @@
 ## HEAD
 
+## 0.4.0 / 2020-01-17
+
 * log web forms with non-encrypted transmission
 * distinguish links and hosts between first- and third-party
 * bugfix: always normalise cookie domains
