@@ -290,6 +290,17 @@ var refs_regexp = new RegExp(`^(${uri_refs_stripped.join('|')})\\b`, 'i');
   output.browsing_history = [output.uri_dest].concat(browse_user_set, browse_links.map( l => l.href ));
 
   for (const link of output.browsing_history.slice(1)) {
+    // check mime-type and skip if not html
+    const head = await request({
+      method: 'HEAD',
+      uri: link,
+    });
+
+    if(!head['content-type'].startsWith('text/html')) {
+      logger.log('info', `skipping now ${link} of mime-type ${head['content-type']}`, {type: 'Browser'});
+      continue;
+    }
+
     logger.log('info', `browsing now to ${link}`, {type: 'Browser'});
     await page.goto(link, {timeout: 0, waitUntil : 'networkidle2' });
 

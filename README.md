@@ -103,6 +103,7 @@ Please find a collection of frequently asked questions with answers in [FAQ.md](
 - prevent browsing to non-HTML pages (PDF, ZIP, etc) by checking the document mime-type in the HTTP HEAD response
 - improve reproducibility by employing only RNG with optionally provided seed, see: [No mechanism to use seeded random generation lodash#3289](https://github.com/lodash/lodash/issues/3289)
 - optionally store web pages matching the keywords in markdown format, see <https://justmarkup.com/articles/2019-01-04-using-puppeteer-to-crawl-pages-and-save-them-as-markdown-files/>
+- [puppeteer does not fully support PDF and downloads](https://github.com/puppeteer/puppeteer/issues/2794), so that if `--max` is used to browse random links, the script skips links to content with different mime type than `text/html` and scans effectively less pages
 
 ## Resources for Developers
 
