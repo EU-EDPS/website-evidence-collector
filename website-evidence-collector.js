@@ -165,8 +165,13 @@ var refs_regexp = new RegExp(`^(${uri_refs_stripped.join('|')})\\b`, 'i');
   await har.start({ path: argv.output ? path.join(argv.output, 'requests.har') : undefined });
 
   logger.log('info', `browsing now to ${uri_ins}`, {type: 'Browser'});
-
-  let page_response = await page.goto(uri_ins, {timeout: 0, waitUntil : 'networkidle2' });
+  let page_response;
+  try {
+    page_response = await page.goto(uri_ins, {timeout: argv.pageTimeout, waitUntil : 'networkidle2' });
+  } catch(error) {
+    logger.log('error', error.message, {type: 'Browser'});
+    process.exit(2);
+  }
   output.uri_redirects = page_response.request().redirectChain().map(req => {return req.url();});
 
   output.uri_dest = page.url();
@@ -302,7 +307,12 @@ var refs_regexp = new RegExp(`^(${uri_refs_stripped.join('|')})\\b`, 'i');
     }
 
     logger.log('info', `browsing now to ${link}`, {type: 'Browser'});
-    await page.goto(link, {timeout: 0, waitUntil : 'networkidle2' });
+    try {
+      await page.goto(link, {timeout: argv.pageTimeout, waitUntil : 'networkidle2' });
+    } catch(error) {
+      logger.log('error', error.message, {type: 'Browser'});
+      process.exit(2);
+    }
 
     await page.waitFor(argv.sleep); // in ms
     localStorage = await getLocalStorage(page, localStorage);
