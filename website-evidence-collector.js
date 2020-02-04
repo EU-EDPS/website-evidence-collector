@@ -105,6 +105,7 @@ var refs_regexp = new RegExp(`^(${uri_refs_stripped.join('|')})\\b`, 'i');
         name: os.type(),
         version: os.release(),
       },
+      extra_headers: {},
     },
     start_time: new Date(),
     end_time: null,
@@ -118,8 +119,10 @@ var refs_regexp = new RegExp(`^(${uri_refs_stripped.join('|')})\\b`, 'i');
 
   const page = (await browser.pages())[0];
   if(argv.dnt) {
-    // source: https://stackoverflow.com/a/47973485/1407622
-    page.setExtraHTTPHeaders({ DNT: "1" });
+    // source: https://stackoverflow.com/a/47973485/1407622 (setting extra headers)
+    // source: https://stackoverflow.com/a/5259004/1407622 (headers are case-insensitive)
+    output.browser.extra_headers.dnt = 1;
+    page.setExtraHTTPHeaders({ dnt: "1" });
   }
 
   // forward logs from the browser console
