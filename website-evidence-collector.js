@@ -117,6 +117,10 @@ var refs_regexp = new RegExp(`^(${uri_refs_stripped.join('|')})\\b`, 'i');
   } catch (e) {}
 
   const page = (await browser.pages())[0];
+  if(argv.dnt) {
+    // source: https://stackoverflow.com/a/47973485/1407622
+    page.setExtraHTTPHeaders({ DNT: "1" });
+  }
 
   // forward logs from the browser console
   page.on('console', msg => logger.log('debug', msg.text(), {type: 'Browser.Console'}));

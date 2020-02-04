@@ -3,6 +3,7 @@
 * fix an issue when tool crashes when the browsing of multiple random pages with `--max` includes PDF files and other downloads: selected links are tested first to have mime type `text/html` using a HEAD HTTP request outside of the browser.
 * bugfix: stop script and log error in case of unreachable websites
 * feature: allow for custom page load timeouts, example: `--page-timeout=200` for a timeout of 200 ms.
+* feature: add option `--dnt` to send DO-NOT-TRACK (DNT) HTTP header
 
 ## 0.4.0 / 2020-01-17
 
