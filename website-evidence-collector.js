@@ -118,11 +118,24 @@ var refs_regexp = new RegExp(`^(${uri_refs_stripped.join('|')})\\b`, 'i');
   } catch (e) {}
 
   const page = (await browser.pages())[0];
+
+  if(argv.dntJs) {
+    argv.dnt = true; // imply Do-Not-Track HTTP Header
+  }
+
   if(argv.dnt) {
     // source: https://stackoverflow.com/a/47973485/1407622 (setting extra headers)
     // source: https://stackoverflow.com/a/5259004/1407622 (headers are case-insensitive)
     output.browser.extra_headers.dnt = 1;
     page.setExtraHTTPHeaders({ dnt: "1" });
+
+    // do not use by default, as it is not implemented by all major browsers,
+    // see: https://caniuse.com/#feat=do-not-track
+    if(argv.dntJs) {
+      await page.evaluateOnNewDocument(() => {
+        Object.defineProperty(navigator, 'doNotTrack', {value: '1'});
+      });
+    }
   }
 
   // forward logs from the browser console

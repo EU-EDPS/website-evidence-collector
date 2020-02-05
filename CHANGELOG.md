@@ -4,6 +4,7 @@
 * bugfix: stop script and log error in case of unreachable websites
 * feature: allow for custom page load timeouts, example: `--page-timeout=200` for a timeout of 200 ms.
 * feature: add option `--dnt` to send DO-NOT-TRACK (DNT) HTTP header
+* feature: add option `--dnt-js` to both send DO-NOT-TRACK (DNT) HTTP header and set `navigator.doNotTrack` property accordingly
 * bugfix: Chromium retains cookies with empty name and value if web servers send empty HTTP Cookie Header, i.e. "Set-Cookie: "
 
 ## 0.4.0 / 2020-01-17
