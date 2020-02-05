@@ -328,7 +328,13 @@ var refs_regexp = new RegExp(`^(${uri_refs_stripped.join('|')})\\b`, 'i');
 
 
   // example from https://stackoverflow.com/a/50290081/1407622
-  const cookies = (await page._client.send('Network.getAllCookies')).cookies.map( cookie => {
+  const cookies = (await page._client.send('Network.getAllCookies')).cookies
+  .filter( cookie => {
+    // work-around: Chromium retains cookies with empty name and value
+    // if web servers send empty HTTP Cookie Header, i.e. "Set-Cookie: "
+    return cookie.name != '';
+  })
+  .map( cookie => {
     if (cookie.expires > -1) {
       // add derived attributes for convenience
       cookie.expiresUTC = new Date(cookie.expires * 1000);
