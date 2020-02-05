@@ -215,6 +215,8 @@ html(xmlns='http://www.w3.org/1999/xhtml', xml:lang='en', lang='en')
 
     p The web page(s) were browsed consecutively between #{new Date(start_time).toLocaleString()} and #{new Date(end_time).toLocaleString()}.
     
+    p During the browsing, the HTTP Header #[a(href="https://en.wikipedia.org/wiki/Do_Not_Track") Do Not Track] was #{browser.extra_headers.dnt ? 'set' : 'not set'}.
+        
     p For the subsequent analysis, the following hosts (with their path) were defined as first-party:
     
     ol
@@ -299,8 +301,6 @@ html(xmlns='http://www.w3.org/1999/xhtml', xml:lang='en', lang='en')
     h3(id="sec:persistent-data-analysis") Persistent Data Analysis
 
     p The evidence collection tool analysed persistent cookies after the browsing session. Web pages can also use the persistent HTML5 #[em local storage]. #[span.citation(data-cites="sec:local-storage"): a(href="#sec:local-storage") The subsequent section] lists its content after the browsing.
-    
-    p During the browsing, the HTTP Header #[a(href="https://en.wikipedia.org/wiki/Do_Not_Track") Do Not Track] was #{browser.extra_headers.dnt ? 'set' : 'not set'}.
     
     - var cookiesByStorage = groupBy(cookies, 'firstPartyStorage')
     
