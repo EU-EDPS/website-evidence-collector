@@ -38,9 +38,8 @@ const { isFirstParty, getLocalStorage } = require('./lib/tools');
 const uri_ins = argv._[0];
 const uri_ins_host = url.parse(uri_ins).hostname; // hostname does not include port unlike host
 
-// default the cookie expiration time, set to 5 minutes into the future.
-// This is a workaround because it seems session cookies (with expiration 0) are not sent
-const cookieDefaultExpirationTime = Math.floor(Date.now() / 1000) + 300
+// default cookie expiration time, this should result in a session-cookie
+const cookieDefaultExpirationTime = -1;
 
 var uri_refs = [uri_ins].concat(argv.firstPartyUri);
 
@@ -191,12 +190,12 @@ var refs_regexp = new RegExp(`^(${uri_refs_stripped.join('|')})\\b`, 'i');
   logger.log('info', `browsing now to ${uri_ins}`, {type: 'Browser'});
 
   // check if cookies need to be added
-  if (argv.cookie) {
+  if (argv.setCookie) {
     // variable that will buffer all the valid cookies that are passed
     let cookieJar = [];
-    if (fs.existsSync(argv.cookie)) {
+    if (fs.existsSync(argv.setCookie)) {
       // passed argument is the location of a file
-      logger.log('info', 'cookie parameter is an existing file; reading values from '+argv.cookie);
+      logger.log('info', 'cookie parameter is an existing file; reading values from '+argv.setCookie);
       let requestedDomain, protocol;
       if (uri_ins.indexOf('http') == 0) {
         requestedDomain = uri_ins.split('/')[2];
@@ -207,7 +206,7 @@ var refs_regexp = new RegExp(`^(${uri_refs_stripped.join('|')})\\b`, 'i');
         protocol = "http";
       }
       // cookiefile should be small, so reading it into memory
-      const lines = fs.readFileSync(argv.cookie, 'UTF-8').trim().split(/\r?\n/);
+      const lines = fs.readFileSync(argv.setCookie, 'UTF-8').trim().split(/\r?\n/);
       for(let line of lines) {
         if (line.trim().indexOf('#') == 0) {
           // this line is a comment; not parsing it
@@ -246,7 +245,7 @@ var refs_regexp = new RegExp(`^(${uri_refs_stripped.join('|')})\\b`, 'i');
     }
     else {
       logger.log('info', 'cookie parameter is not an existing file; parsing it as key=value pairs');
-      let jarArr = argv.cookie.split(";");
+      let jarArr = argv.setCookie.split(";");
       for (let cookieStr of jarArr) {
         if (cookieStr.indexOf("=") >= 0) {
           let cookieName = cookieStr.split(/=(.+)/)[0], cookieValue = cookieStr.split(/=(.+)/)[1];
