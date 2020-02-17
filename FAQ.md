@@ -69,6 +69,12 @@ The website evidence collector provides two options to embed the TestSSL.sh resu
 
 The website evidence collector has been tested to work with TestSSL.sh in version 3.0rc5.
 
+#### How do I gather evidence with given consent?
+
+If a particular website stores given user consent in a cookie and the encoding of consent in the cookie value is known, than the software can preset such a cookie. The website receives this consent cookie and would assumes from the very beginning of the browsing session that consent has been obtained.
+
+TODO: example of such a cookie and example of a command line call.
+
 ## Evaluation of the Output
 
 #### Which applications do you recommend to open and display the output?
