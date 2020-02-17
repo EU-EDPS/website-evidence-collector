@@ -124,6 +124,7 @@ Please find a collection of frequently asked questions with answers in [FAQ.md](
 ## Contributors
 
 - Robert Riemann (European Data Protection Supervisor, initial author)
+- Company BitnessWise <https://www.bitnesswise.com/> (code to preset cookies)
 
 ## License
 

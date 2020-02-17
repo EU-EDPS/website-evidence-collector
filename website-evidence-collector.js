@@ -187,7 +187,7 @@ var refs_regexp = new RegExp(`^(${uri_refs_stripped.join('|')})\\b`, 'i');
   });
 
   // set predefined cookies if any
-  set_cookies(page, uri_ins);
+  set_cookies(page, uri_ins, output);
 
   const har = new PuppeteerHar(page);
   await har.start({ path: argv.output ? path.join(argv.output, 'requests.har') : undefined });
