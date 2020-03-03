@@ -33,7 +33,7 @@ const flatten = require('lodash/flatten');
 const sampleSize = require('lodash/sampleSize');
 const uniqWith = require('lodash/uniqWith');
 
-const { isFirstParty, getLocalStorage } = require('./lib/tools');
+const { isFirstParty, getLocalStorage, safeJSONParse } = require('./lib/tools');
 
 const uri_ins = argv._[0];
 const uri_ins_host = url.parse(uri_ins).hostname; // hostname does not include port unlike host
@@ -82,6 +82,7 @@ var refs_regexp = new RegExp(`^(${uri_refs_stripped.join('|')})\\b`, 'i');
   // prepare hash to store data for output
   output = {
     title: argv.title || `Website Evidence Collection`,
+    task_description: safeJSONParse(argv.taskDescription),
     uri_ins: uri_ins,
     uri_refs: uri_refs,
     uri_dest: null,
