@@ -38,9 +38,6 @@ const { isFirstParty, getLocalStorage } = require('./lib/tools');
 const uri_ins = argv._[0];
 const uri_ins_host = url.parse(uri_ins).hostname; // hostname does not include port unlike host
 
-// default cookie expiration time, this should result in a session-cookie
-const cookieDefaultExpirationTime = -1;
-
 var uri_refs = [uri_ins].concat(argv.firstPartyUri);
 
 let uri_refs_stripped = uri_refs.map((uri_ref) => {
