@@ -71,9 +71,22 @@ The website evidence collector has been tested to work with TestSSL.sh in versio
 
 #### How do I gather evidence with given consent?
 
-If a particular website stores given user consent in a cookie and the encoding of consent in the cookie value is known, than the software can preset such a cookie. The website receives this consent cookie and would assumes from the very beginning of the browsing session that consent has been obtained.
+If a particular website stores given user consent in a cookie and the encoding of consent in the cookie value is known, than the software can pre-install such a consent cookie. The website receives this consent cookie and would assume from the beginning of the browsing session that consent has been obtained.
 
-TODO: example of such a cookie and example of a command line call.
+The website https://edps.europa.eu/ (as of March 2020) encodes given consent in a cookie named `edp_cookie_agree` with value `1` and for rejected consent with value `0`. The following examples demonstrate the configuration for the website evidence collector:
+
+    website-evidence-collector --set-cookie "edp_cookie_agree=1" http://edps.europa.eu
+    website-evidence-collector --set-cookie "edp_cookie_agree=0" http://edps.europa.eu
+
+The configuration is compatible with the cookie option (`--cookie` or `-b`) of the command line tool `curl` (cf. curl [manual page](https://curl.haxx.se/docs/manpage.html#-b)). Hence, the configuration allows to pre-install multiple cookies at the same time and to read cookies from local files.
+
+    website-evidence-collector --set-cookie "edp_cookie_agree=1;foo=bar" http://edps.europa.eu
+    website-evidence-collector --set-cookie "cookiejar.txt" http://edps.europa.eu
+
+**More Resources:**
+
+- <https://curl.haxx.se/docs/manpage.html#-b>
+- <https://curl.haxx.se/docs/http-cookies.html>
 
 ## Evaluation of the Output
 
