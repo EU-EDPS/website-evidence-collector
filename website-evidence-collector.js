@@ -189,6 +189,9 @@ var refs_regexp = new RegExp(`^(${uri_refs_stripped.join('|')})\\b`, 'i');
   let page_response;
   try {
     page_response = await page.goto(uri_ins, {timeout: argv.pageTimeout, waitUntil : 'networkidle2' });
+    if (page_response === null) { // see: https://github.com/puppeteer/puppeteer/issues/2479#issuecomment-408263504
+      page_response = await page.waitForResponse(() => true);
+    }
   } catch(error) {
     logger.log('error', error.message, {type: 'Browser'});
     process.exit(2);

@@ -13,6 +13,7 @@
 * bugfix: tool crashes sometimes if no redirects from HTTP are found
 * bugfix: catch Error: Protocol error (Page.captureScreenshot): Unable to capture screenshot
 * bugfix: catch Error: Protocol error (DOMStorage.getDOMStorageItems): Frame not found for the given security origin
+* bugfix: tool crashes sometimes when page response is for some reason empty (TypeError: Cannot read property 'request' of null)
 
 ## 0.4.0 / 2020-01-17
 
