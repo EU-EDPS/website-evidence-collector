@@ -238,7 +238,7 @@ var refs_regexp = new RegExp(`^(${uri_refs_stripped.join('|')})\\b`, 'i');
   let localStorage = await getLocalStorage(page);
 
   const links_with_duplicates = await page.evaluate( () => {
-    return [].map.call(document.querySelectorAll('a[href]'), a => {
+    return [].map.call(Array.from(document.querySelectorAll('a[href]')), a => {
       return {
         href: a.href.split('#')[0], // link without fragment
         inner_text: a.innerText,
@@ -302,7 +302,7 @@ var refs_regexp = new RegExp(`^(${uri_refs_stripped.join('|')})\\b`, 'i');
 
   // unsafe webforms
   output.unsafeForms = await page.evaluate( () => {
-    return [].map.call(document.querySelectorAll('form'), form => {
+    return [].map.call(Array.from(document.querySelectorAll('form')), form => {
       return {
         id: form.id,
         action: form.action,
