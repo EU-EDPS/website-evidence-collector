@@ -228,8 +228,12 @@ var refs_regexp = new RegExp(`^(${uri_refs_stripped.join('|')})\\b`, 'i');
       strictSSL: false,
     });
     output.secure_connection.redirects = res.request._redirect.redirects.map(r => r.redirectUri);
-    let last_redirect_url = new url.URL(output.secure_connection.redirects[output.secure_connection.redirects.length-1]);
-    output.secure_connection.https_redirect = last_redirect_url.protocol.includes('https');
+    if (output.secure_connection.redirects.length > 0) {
+      let last_redirect_url = new url.URL(output.secure_connection.redirects[output.secure_connection.redirects.length-1]);
+      output.secure_connection.https_redirect = last_redirect_url.protocol.includes('https');
+    } else {
+      output.secure_connection.https_redirect = false;
+    }
   } catch(error) {
     output.secure_connection.http_error = error.toString();
   }

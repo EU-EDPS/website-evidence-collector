@@ -10,6 +10,7 @@
 * bugfix: HTML output generation crashed for some websites with incomplete SSL certificates
 * documentation: include tips for fast/parallel evidence collection in FAQ
 * bugfix: injected JS produces error on some websites (Uncaught TypeError: this.each is not a function at NodeList.collect (prototype.js:293))
+* bugfix: tool crashes sometimes if no redirects from HTTP are found
 
 ## 0.4.0 / 2020-01-17
 
