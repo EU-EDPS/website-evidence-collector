@@ -296,12 +296,17 @@ var refs_regexp = new RegExp(`^(${uri_refs_stripped.join('|')})\\b`, 'i');
 
   // record screenshots
   if (argv.output) {
-    await page.screenshot({path: path.join(argv.output, 'screenshot-full.png'), fullPage: true});
-    await page.screenshot({path: path.join(argv.output, 'screenshot-top.png')});
-    await page.evaluate( () => {
-      window.scrollTo(0,document.body.scrollHeight);
-    });
-    await page.screenshot({path: path.join(argv.output, 'screenshot-bottom.png')});
+    try {
+      await page.screenshot({path: path.join(argv.output, 'screenshot-top.png')});
+      await page.evaluate( () => {
+        window.scrollTo(0,document.body.scrollHeight);
+      });
+      await page.screenshot({path: path.join(argv.output, 'screenshot-bottom.png')});
+      await page.screenshot({path: path.join(argv.output, 'screenshot-full.png'), fullPage: true});
+    } catch (error) {
+      // see: https://github.com/EU-EDPS/website-evidence-collector/issues/21 and https://github.com/puppeteer/puppeteer/issues/2569
+      logger.log('info', `not saving some screenshots due to software limitations`, {type: 'Browser'});
+    }
   }
 
   // unsafe webforms
