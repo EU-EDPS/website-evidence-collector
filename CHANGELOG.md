@@ -12,6 +12,7 @@
 * bugfix: injected JS produces error on some websites (Uncaught TypeError: this.each is not a function at NodeList.collect (prototype.js:293))
 * bugfix: tool crashes sometimes if no redirects from HTTP are found
 * bugfix: catch Error: Protocol error (Page.captureScreenshot): Unable to capture screenshot
+* bugfix: catch Error: Protocol error (DOMStorage.getDOMStorageItems): Frame not found for the given security origin
 
 ## 0.4.0 / 2020-01-17
 
