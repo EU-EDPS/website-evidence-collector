@@ -69,6 +69,30 @@ The website evidence collector provides two options to embed the TestSSL.sh resu
 
 The website evidence collector has been tested to work with TestSSL.sh in version 3.0rc5.
 
+#### How can I scan many websites in parallel?
+
+If you use the option `--browse-link` or `--max`, then the website evidence collector checks multiple web pages one after another. The tool uses the same browser profile with its cookies for all pages. Some data, such as the list of links, is only stored for the page visited first.
+
+For some use cases, it is interesting to scan web pages independently or to scan pages in parallel.
+
+**Option 1)** The company OVH provides the specialised tool [website-evidence-collector-batch](https://github.com/ovh/website-evidence-collector-batch) to scan with the website-evidence-collector many web pages fast in parallel. A common output file for all pages summarises the findings.
+
+**Option 2)** The tool [GNU Parallel](https://www.gnu.org/software/parallel/) allows to run any command in parallel. If you have a plain text file `links.txt` with one link in every line, you can let `parallel` build the commands for you and call them in parallel. Unlike in option 1, the output is not yet aggregated.
+
+    parallel --bar --results out --joblog jobs.log website-evidence-collector --quiet --task-description \'\{\"job\":{#}\}\' --output job_{#} {1} :::: links.txt
+
+CSV files can also be processed by parallel. This allows to add data from the CSV file to the output of the website-evidence-collector. CSV fields can be accessed using the placeholders `{1}`, `{2}` and so on.
+
+    parallel --bar --results out --retry-failed --joblog jobs.log --colsep '\t' website-evidence-collector --quiet --task-description \'\{\"job\":{#},\"parent\":{1}\}\' --output job_{#} {2} :::: input_full_parent_url.csv
+
+Note for zsh users: The command may require prefixing with the swith `noglob` or disabling of `globbing` to work.
+
+    noglob parallel --bar ...
+
+**More Resources:**
+
+- <https://www.gnu.org/software/parallel/man.html> (GNU Parallel manual)
+
 ## Evaluation of the Output
 
 #### Which applications do you recommend to open and display the output?

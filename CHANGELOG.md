@@ -8,6 +8,7 @@
 * bugfix: Chromium retains cookies with empty name and value if web servers send empty HTTP Cookie Header, i.e. "Set-Cookie: "
 * feature: add option `--task-description` to include custom text/JSON in the output
 * bugfix: HTML output generation crashed for some websites with incomplete SSL certificates
+* documentation: include tips for fast/parallel evidence collection in FAQ
 
 ## 0.4.0 / 2020-01-17
 
