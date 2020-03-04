@@ -139,12 +139,21 @@ html(xmlns='http://www.w3.org/1999/xhtml', xml:lang='en', lang='en')
         tr
           td HTTP redirect to HTTPS
           td= secure_connection.https_redirect
-        tr
-          td HTTP redirect location
-          td: ul
-            each redirect in secure_connection.redirects
-              li
-                a(href=redirect)= redirect
+        if secure_connection.redirects
+          tr
+            td HTTP redirect location
+            td: ul
+              each redirect in secure_connection.redirects
+                li
+                  a(href=redirect)= redirect
+        if secure_connection.http_error
+          tr
+            td Error when connecting with HTTP
+            td= secure_connection.http_error
+        if secure_connection.https_error
+          tr
+            td Error when connecting with HTTPS
+            td= secure_connection.https_error
                 
     if testSSL && testSSL.scanResult[0]
       - var results = testSSL.scanResult[0]

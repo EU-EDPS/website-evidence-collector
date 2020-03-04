@@ -223,6 +223,9 @@ var refs_regexp = new RegExp(`^(${uri_refs_stripped.join('|')})\\b`, 'i');
       followRedirect: true,
       resolveWithFullResponse: true,
       simple: false,
+      // ignore missing/wrongly configured SSL certificates when redirecting to
+      // HTTPS to avoid reporting SSL errors in the output field http_error
+      strictSSL: false,
     });
     output.secure_connection.redirects = res.request._redirect.redirects.map(r => r.redirectUri);
     let last_redirect_url = new url.URL(output.secure_connection.redirects[output.secure_connection.redirects.length-1]);
