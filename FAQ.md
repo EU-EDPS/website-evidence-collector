@@ -79,13 +79,20 @@ For some use cases, it is interesting to scan web pages independently or to scan
 
 **Option 2)** The tool [GNU Parallel](https://www.gnu.org/software/parallel/) allows to run any command in parallel. If you have a plain text file `links.txt` with one link in every line, you can let `parallel` build the commands for you and call them in parallel. Unlike in option 1, the output is not yet aggregated.
 
-    parallel --bar --results out --joblog jobs.log website-evidence-collector --quiet --task-description \'\{\"job\":{#}\}\' --output job_{#} {1} :::: links.txt
+    parallel --bar --results log --joblog jobs.log website-evidence-collector --quiet --task-description \'\{\"job\":{#}\}\' --output job_{#} {1} :::: links.txt
 
-CSV files can also be processed by parallel. This allows to add data from the CSV file to the output of the website-evidence-collector. CSV fields can be accessed using the placeholders `{1}`, `{2}` and so on.
+CSV files can also be processed by `parallel`. This allows to add data from a CSV file to the output of the website evidence collector. CSV fields can be accessed using the placeholders `{1}`, `{2}` and so on. Consider also the option `--csv`.
 
-    parallel --bar --results out --retry-failed --joblog jobs.log --colsep '\t' website-evidence-collector --quiet --task-description \'\{\"job\":{#},\"parent\":{1}\}\' --output job_{#} {2} :::: input_full_parent_url.csv
+    parallel --bar --results log --joblog jobs.log --colsep '\t' website-evidence-collector --quiet --task-description \'\{\"job\":{#},\"parent\":{1}\}\' --output job_{#} {2} :::: input_full_parent_url.csv
 
-Note for zsh users: The command may require prefixing with the swith `noglob` or disabling of `globbing` to work.
+A few options allow to resume or retry unfinished or crashed call. From the manual:
+
+- `--resume-failed` cares about the exit code, but also only looks at Seq number to figure out which commands to run. Again this means you can change the command, but not the arguments. It will run the failed seqs and the seqs not yet run.
+- `--retry-failed` ignores the command and arguments on the command line: It only looks at the joblog.
+
+If `--overwrite` shall be used to delete existing output of crashed calls, then it is better to use `--resume-failed` and change the command accordingly.
+
+Note for zsh users: The command may require prefixing with the switch `noglob` or disabling of `globbing` to work.
 
     noglob parallel --bar ...
 
