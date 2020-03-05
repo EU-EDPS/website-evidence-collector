@@ -14,6 +14,7 @@
 * bugfix: catch Error: Protocol error (Page.captureScreenshot): Unable to capture screenshot
 * bugfix: catch Error: Protocol error (DOMStorage.getDOMStorageItems): Frame not found for the given security origin
 * bugfix: tool crashes sometimes when page response is for some reason empty (TypeError: Cannot read property 'request' of null)
+* bugfix: tool hangs when page has forms that contains an element with id `action`
 
 ## 0.4.0 / 2020-01-17
 

@@ -317,7 +317,7 @@ var refs_regexp = new RegExp(`^(${uri_refs_stripped.join('|')})\\b`, 'i');
     return [].map.call(Array.from(document.querySelectorAll('form')), form => {
       return {
         id: form.id,
-        action: form.action,
+        action: new URL(form.getAttribute('action'), form.baseURI).toString(),
         method: form.method,
       };
     }).filter(form => {
