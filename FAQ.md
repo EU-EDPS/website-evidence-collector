@@ -69,7 +69,7 @@ The website evidence collector provides two options to embed the TestSSL.sh resu
 
 The website evidence collector has been tested to work with TestSSL.sh in version 3.0rc5.
 
-#### How can I scan many websites in parallel?
+#### How do I gather evidence of many websites in parallel?
 
 If you use the option `--browse-link` or `--max`, then the website evidence collector checks multiple web pages one after another. The tool uses the same browser profile with its cookies for all pages. Some data, such as the list of links, is only stored for the page visited first.
 
@@ -99,6 +99,25 @@ Note for zsh users: The command may require prefixing with the switch `noglob` o
 **More Resources:**
 
 - <https://www.gnu.org/software/parallel/man.html> (GNU Parallel manual)
+
+#### How do I gather evidence with given consent?
+
+If a particular website stores given user consent in a cookie and the encoding of consent in the cookie value is known, than the software can pre-install such a consent cookie. The website receives this consent cookie and would assume from the beginning of the browsing session that consent has been obtained.
+
+The website https://edps.europa.eu/ (as of March 2020) encodes given consent in a cookie named `edp_cookie_agree` with value `1` and for rejected consent with value `0`. The following examples demonstrate the configuration for the website evidence collector:
+
+    website-evidence-collector --set-cookie "edp_cookie_agree=1" http://edps.europa.eu
+    website-evidence-collector --set-cookie "edp_cookie_agree=0" http://edps.europa.eu
+
+The configuration is compatible with the cookie option (`--cookie` or `-b`) of the command line tool `curl` (cf. curl [manual page](https://curl.haxx.se/docs/manpage.html#-b)). Hence, the configuration allows to pre-install multiple cookies at the same time and to read cookies from local files.
+
+    website-evidence-collector --set-cookie "edp_cookie_agree=1;foo=bar" http://edps.europa.eu
+    website-evidence-collector --set-cookie "cookiejar.txt" http://edps.europa.eu
+
+**More Resources:**
+
+- <https://curl.haxx.se/docs/manpage.html#-b>
+- <https://curl.haxx.se/docs/http-cookies.html>
 
 ## Evaluation of the Output
 

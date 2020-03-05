@@ -65,6 +65,7 @@ var refs_regexp = new RegExp(`^(${uri_refs_stripped.join('|')})\\b`, 'i');
   const { setup_cookie_recording } = require('./lib/setup-cookie-recording');
   const { setup_beacon_recording } = require('./lib/setup-beacon-recording');
   const { setup_websocket_recording } = require('./lib/setup-websocket-recording');
+  const { set_cookies } = require('./lib/set-cookies');
 
   const browser = await puppeteer.launch({
     headless: argv.headless,
@@ -107,6 +108,7 @@ var refs_regexp = new RegExp(`^(${uri_refs_stripped.join('|')})\\b`, 'i');
         version: os.release(),
       },
       extra_headers: {},
+      preset_cookies: {},
     },
     start_time: new Date(),
     end_time: null,
@@ -182,10 +184,14 @@ var refs_regexp = new RegExp(`^(${uri_refs_stripped.join('|')})\\b`, 'i');
     }
   });
 
+  // set predefined cookies if any
+  set_cookies(page, uri_ins, output);
+
   const har = new PuppeteerHar(page);
   await har.start({ path: argv.output ? path.join(argv.output, 'requests.har') : undefined });
 
   logger.log('info', `browsing now to ${uri_ins}`, {type: 'Browser'});
+
   let page_response;
   try {
     page_response = await page.goto(uri_ins, {timeout: argv.pageTimeout, waitUntil : 'networkidle2' });
