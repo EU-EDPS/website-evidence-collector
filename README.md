@@ -128,6 +128,8 @@ Please find a collection of frequently asked questions with answers in [FAQ.md](
 
 ## License
 
-This work, excluding filter lists, is distributed under the European Union Public Licence (the ‘EUPL’). Please find the terms in the file [LICENSE.txt](./LICENSE.txt).
+This work, excluding filter lists and the file `github-markdown.css`, is distributed under the European Union Public Licence (the ‘EUPL’). Please find the terms in the file [LICENSE.txt](./LICENSE.txt).
 
 Filter lists in the `assets/` directory are authored by the EasyList authors (<https://easylist.to/>) and are for your convenience distributed together with this work under their respective license as indicated in their file headers.
+
+The `github-markdown.css` file is authored by the project <https://github.com/sindresorhus/github-markdown-css> and licensed under the MIT license (see file header).
