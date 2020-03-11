@@ -577,7 +577,7 @@ var refs_regexp = new RegExp(`^(${uri_refs_stripped.join('|')})\\b`, 'i');
       testsslArgs.push(`--htmlfile ${output_testssl}/testssl.html`);
       testsslArgs.push(`--logfile ${output_testssl}/testssl.log`);
     } else { // case with --no-ouput and --testssl
-      json_file = `testssl.tmp.json`;
+      json_file = path.join(os.tmpdir(), `testssl.${Date.now()}.json`);
     }
     testsslArgs.push(`--jsonfile-pretty ${json_file}`);
     testsslArgs.push(uri_ins_https.toString());
