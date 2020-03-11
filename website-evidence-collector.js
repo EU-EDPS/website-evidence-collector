@@ -50,14 +50,15 @@ var refs_regexp = new RegExp(`^(${uri_refs_stripped.join('|')})\\b`, 'i');
 (async() => {
   if (argv.output) {
     if (fs.existsSync(argv.output)) {
-      if (argv.overwrite) {
-        fs.removeSync(argv.output);
+      if (fs.readdirSync(argv.output).length > 0 && argv.overwrite) {
+        fs.emptyDirSync(argv.output);
       } else {
-        console.error(`Error: Output folder or file ${argv.output} exists already. Delete manually or call with --overwrite.`);
+        console.error(`Error: Output folder or file ${argv.output} is not empty. Delete/empty manually or call with --overwrite.`);
         process.exit(1);
       }
+    } else {
+      fs.mkdirSync(argv.output);
     }
-    fs.mkdirSync(argv.output);
   }
 
   // logger involves file access and should initate after overwrite check
