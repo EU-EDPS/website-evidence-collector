@@ -43,7 +43,7 @@ RUN yarn global add \
 # Let Puppeteer use system Chromium
 ENV PUPPETEER_EXECUTABLE_PATH /usr/bin/chromium-browser
 
-ENV PATH="/opt/testssl.sh-3.0:${PATH}"
+ENV PATH="/home/collector/bin:/opt/testssl.sh-3.0:${PATH}"
 # Configure default command in Docker container
 ENTRYPOINT ["/home/collector/bin/website-evidence-collector"]
 WORKDIR /
