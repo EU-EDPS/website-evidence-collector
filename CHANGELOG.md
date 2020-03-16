@@ -19,6 +19,8 @@
 * documentation: add to FAQ tips on data analysis with shell tool `jq`
 * breaking change: change commandline option name of `website-evidence-reporter` from `--output` to `--output-file` to mark the distinct meaning and avoid clash when setting `WEC_OUTPUT` environment variable (short option name stays `-o` for both)
 * update: node dependencies and filterlists
+* feature: respect environment variables such as `WEC_MAX=10` or `WEC_headless=false`
+* feature: introduce option `--browser-options <browser options>` as an alternative to the `-- <browser options>` syntax (required for Docker setup)
 
 ## 0.4.0 / 2020-01-17
 

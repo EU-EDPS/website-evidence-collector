@@ -32,6 +32,7 @@ const groupBy = require('lodash/groupBy');
 const flatten = require('lodash/flatten');
 const sampleSize = require('lodash/sampleSize');
 const uniqWith = require('lodash/uniqWith');
+const pickBy = require('lodash/pickBy');
 
 const { isFirstParty, getLocalStorage, safeJSONParse } = require('./lib/tools');
 
@@ -80,7 +81,7 @@ var refs_regexp = new RegExp(`^(${uri_refs_stripped.join('|')})\\b`, 'i');
     args: [
       `--user-agent=${UserAgent}`,
       `--window-size=${WindowSize.width},${WindowSize.height}`,
-    ].concat(argv._.slice(1)),
+    ].concat(argv.browserOptions, argv._.slice(1)),
   });
 
   // prepare hash to store data for output
@@ -100,6 +101,11 @@ var refs_regexp = new RegExp(`^(${uri_refs_stripped.join('|')})\\b`, 'i');
         commit: null,
       },
       cmd_args: process.argv.slice(2).join(' '),
+      environment: pickBy(process.env, (_value, key) => {
+        return key.startsWith('WEC') ||
+               key.startsWith('PUPPETEER') ||
+               key.startsWith('CHROM');
+      }),
       node_version: process.version,
     },
     browser: {
