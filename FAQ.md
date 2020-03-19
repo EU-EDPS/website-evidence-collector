@@ -104,6 +104,8 @@ Note for zsh users: The command may require prefixing with the switch `noglob` o
 
 If a particular website stores given user consent in a cookie and the encoding of consent in the cookie value is known, than the software can pre-install such a consent cookie. The website receives this consent cookie and would assume from the beginning of the browsing session that consent has been obtained.
 
+The developer tools integrated in most browsers (e.g. [Firefox](https://developer.mozilla.org/en-US/docs/Tools/Storage_Inspector), [Chrome](https://developers.google.com/web/tools/chrome-devtools/storage/cookies)) can help to find out in which cookie a particular website stores consent decisions.
+
 The website https://edps.europa.eu/ (as of March 2020) encodes given consent in a cookie named `edp_cookie_agree` with value `1` and for rejected consent with value `0`. The following examples demonstrate the configuration for the website evidence collector:
 
     website-evidence-collector --set-cookie "edp_cookie_agree=1" http://edps.europa.eu
