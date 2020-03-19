@@ -15,6 +15,8 @@ RUN apk add --no-cache \
       yarn \
 # Packages linked to testssl.sh
       bash procps drill coreutils libidn curl
+# Toolbox for advanced interactive use of WEC in container
+      parallel jq grep aha
 
 # Add user so we don't need --no-sandbox.
 RUN addgroup -S collector && adduser -S -g collector -s /bin/bash collector \
