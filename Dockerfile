@@ -45,6 +45,8 @@ RUN yarn global add file:/opt/website-evidence-collector --prefix /home/collecto
 ENV PUPPETEER_EXECUTABLE_PATH /usr/bin/chromium-browser
 
 ENV PATH="/home/collector/bin:/opt/testssl.sh-3.0:${PATH}"
+# Let website evidence collector run chrome without sandbox
+ENV WEC_BROWSER_OPTIONS="--no-sandbox"
 # Configure default command in Docker container
 ENTRYPOINT ["/home/collector/bin/website-evidence-collector"]
 WORKDIR /
