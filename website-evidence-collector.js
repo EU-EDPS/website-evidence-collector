@@ -646,6 +646,7 @@ var refs_regexp = new RegExp(`^(${uri_refs_stripped.join('|')})\\b`, 'i');
       pretty: true,
       basedir: __dirname,
       groupBy: groupBy,
+      inlineCSS: fs.readFileSync(require.resolve('github-markdown-css/github-markdown.css')),
     }));
 
     if (argv.html) {

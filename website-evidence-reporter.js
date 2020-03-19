@@ -47,6 +47,7 @@ let html_dump = pug.renderFile(html_template, Object.assign({}, output, {
   pretty: true,
   basedir: __dirname,
   groupBy: require('lodash/groupBy'),
+  inlineCSS: fs.readFileSync(require.resolve('github-markdown-css/github-markdown.css')),
 }));
 
 if (argv.output) {

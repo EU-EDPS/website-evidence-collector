@@ -5,8 +5,7 @@ html(xmlns='http://www.w3.org/1999/xhtml', xml:lang='en', lang='en')
     meta(name='generator', content='website-evidence-collector')
     meta(name='viewport', content='width=device-width, initial-scale=1.0, user-scalable=yes')
     title #{title} (#{uri_ins})
-    style(type='text/css')
-      include /node_modules/github-markdown-css/github-markdown.css
+    style(type='text/css') !{inlineCSS}
     style(type='text/css').
       /* pandoc */
       code{white-space: pre-wrap;}
