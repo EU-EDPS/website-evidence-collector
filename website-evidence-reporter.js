@@ -29,16 +29,16 @@ var argv = require('yargs') // TODO use rather option('o', hash) syntax and defi
   .string('html-template')
 
 
-  .describe('output', 'Write HTML output to file instead to the screen')
-  .nargs('output', 1)
-  .alias('output', 'o')
-  .string('output')
+  .describe('output-file', 'Write HTML output to file instead to the screen')
+  .nargs('output-file', 1)
+  .alias('output-file', 'o')
+  .string('output-file')
 
   .help('help')
   .alias('h', 'help')
   .epilog('Copyright European Union 2019, licensed under EUPL-1.2 (see LICENSE.txt)')
   .argv;
-  
+
 let output = JSON.parse(fs.readFileSync(argv._[0]));
 
 let html_template = argv.htmlTemplate || path.join(__dirname, 'assets/template.pug');
@@ -50,7 +50,7 @@ let html_dump = pug.renderFile(html_template, Object.assign({}, output, {
 }));
 
 if (argv.output) {
-  fs.writeFileSync(path.join(argv.output), html_dump);
+  fs.writeFileSync(path.join(argv.outputFile), html_dump);
 } else {
   console.log(html_dump);
 }
