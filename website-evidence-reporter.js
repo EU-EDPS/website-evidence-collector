@@ -39,7 +39,7 @@ var argv = require('yargs') // TODO use rather option('o', hash) syntax and defi
   
 let output = JSON.parse(fs.readFileSync(argv._[0]));
 
-let html_template = argv.html_template || path.join(__dirname, 'assets/template.pug');
+let html_template = argv.htmlTemplate || path.join(__dirname, 'assets/template.pug');
 
 let html_dump = pug.renderFile(html_template, Object.assign({}, output, {
   pretty: true,
