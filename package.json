@@ -11,6 +11,7 @@
     "@cliqz/adblocker-puppeteer": "^1.9.2",
     "fs-extra": "^8.1.0",
     "git-describe": "^4.0.4",
+    "github-markdown-css": "^3.0.1",
     "js-yaml": "^3.13.1",
     "lodash": "^4.17.15",
     "pug": "^2.0.4",
