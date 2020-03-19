@@ -16,6 +16,7 @@
 * bugfix: tool crashes sometimes when page response is for some reason empty (TypeError: Cannot read property 'request' of null)
 * bugfix: tool hangs when page has forms that contains an element with id `action`
 * feature: allow to pre-install cookies with `--set-cookie` to e.g. indicate given/rejected consent
+* documentation: add to FAQ tips on data analysis with shell tool `jq`
 
 ## 0.4.0 / 2020-01-17
 

@@ -69,7 +69,7 @@ The website evidence collector provides two options to embed the TestSSL.sh resu
 
 The website evidence collector has been tested to work with TestSSL.sh in version 3.0rc5.
 
-#### How do I gather evidence of many websites in parallel?
+#### How do I gather evidence of many websites in parallel? (advanced users)
 
 If you use the option `--browse-link` or `--max`, then the website evidence collector checks multiple web pages one after another. The tool uses the same browser profile with its cookies for all pages. Some data, such as the list of links, is only stored for the page visited first.
 
@@ -174,7 +174,67 @@ The website evidence collector stores a number of files in an output directory u
 - The screenshot files are captured from the first visited page.
 - The directory `browser-profile` contains the browser profile used during evidence collection.
 
-  Note that for every use of the website evidence collector, a fresh profile is generated.
+  Note that for every call of the website evidence collector, a fresh profile is generated.
+
+#### How do I extract data fields and produce lists from one or multiple evidence files automatically? (advanced users)
+
+The tool [jq](https://stedolan.github.io/jq/) for Linux, OS X and Windows allows to extract and manipulate data from json files easily. For your inspiration, a few recipes are mentioned here below.
+
+1. coloured output of the inspection data:
+
+       jq . output/inspection.json
+
+2. coloured output with paging and search using [less](https://en.wikipedia.org/wiki/Less_(Unix)) (Linux and OS X only)
+
+       jq -C . output/inspection.json | less -R
+
+3. extract all third-party hosts
+
+       jq '.hosts | map_values(.thirdParty)' output/inspection.json
+
+4. extract cookies with an expiration of one day or more
+
+       jq '.cookies[] | select(.expiresDays >= 1)'  output/inspection.json
+
+5. list cookies with name, domain, web page and source
+
+       jq '.cookies | map({name, domain, location: .log.location?, source: (.log.stack | first).fileName})' output/inspection.json
+
+For a quick overview, the website evidence collector data can feed JSON data on Linux and OS X directly to `jq` without storing files in between.
+
+    website-evidence-collector --quiet --no-output --json http://www.example.com | jq '.cookies | map({name, domain, location: .log.location?, source: (.log.stack | first).fileName})'
+
+For extraction across multiple files, the file structure in output folders `job_1`, `job_2`, etc. is assumed as provided by `parallel` described above.
+
+1. display all unique cookie hosts in a sorted flat list
+
+       jq -s 'map(.hosts.cookies[]) | flatten | unique | sort' job_*/inspection.json
+
+2. display all cookie hosts with their inspection URL and task description
+
+       jq -s 'map({uri_ins, details: .task_description, cookie_hosts: .hosts.cookies})' job_*/inspection.json
+
+3. display cookie names with and sorted by their occurance
+
+       jq -s 'map({uri_ins, cookie: (.cookies | map(.name))[]}) | group_by(.cookie) | sort_by(-length) | map({name: first.cookie, occurance: length})' job_*/inspection.json
+
+4. display which cookie has been found how often, by which website and sort results by occurrence
+
+       jq -s 'map({uri_ins, details: .task_description, cookie: (.cookies | map({name,expiresDays,domain,value,log}))[]}) | group_by(.cookie.name) | sort_by(-length) | map({name: first.cookie.name, occurance: length, example: first.cookie, websites: map({uri_ins,details})})' job_*/inspection.json
+
+5. display which website connects to a particular domain `example.com` and its subdomains
+
+       jq -s 'map(select(.hosts.requests | add | any(contains("example.com")))) | map({uri_ins,task_description})' job_*/inspection.json
+
+
+Afterwards, the output may be converted with [json2csv](https://www.npmjs.com/package/json2csv) from JSON to CSV to use any spreadsheet application to produce printable tables and e.g. bar charts.
+
+**More Resources:**
+
+- <https://stedolan.github.io/jq/manual/>
+- <https://www.privacy-wise.com/website-evidence-collector>
+- <https://www.npmjs.com/package/json2csv>
+- <https://jqplay.org/> (`jq` online)
 
 #### Do you offer guidelines on how to interpret the collected evidence?
 
