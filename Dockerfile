@@ -22,6 +22,8 @@ RUN addgroup -S collector && adduser -S -g collector -s /bin/bash collector \
     && chown -R collector:collector /home/collector \
     && chown -R collector:collector /output
 
+COPY ./* /opt/website-evidence-collector/
+
 # Install Testssl.sh
 WORKDIR /opt/
 RUN curl -SL https://github.com/drwetter/testssl.sh/archive/3.0.tar.gz | \
@@ -35,10 +37,7 @@ WORKDIR /home/collector
 # Tell Puppeteer to skip installing Chrome. We'll be using the installed package.
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD true
 
-# Puppeteer v1.19.0 works with Chromium 77.
-RUN yarn global add \
-    https://github.com/EU-EDPS/website-evidence-collector/tarball/docker \
-    --prefix /home/collector
+RUN yarn global add file:/opt/website-evidence-collector --prefix /home/collector
 
 # Let Puppeteer use system Chromium
 ENV PUPPETEER_EXECUTABLE_PATH /usr/bin/chromium-browser
