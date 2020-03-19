@@ -18,6 +18,8 @@ var argv = require('yargs') // TODO use rather option('o', hash) syntax and defi
   .scriptName('website-evidence-reporter')
   .usage('Usage: $0 <JSON file> [options]')
   .example('$0 /home/user/inspection.json')
+  // allow for shell variables such as WEC_HTML_TEMPLATE=/path/to/template.pug
+  .env('WEC')
   // top-level default command, see https://github.com/yargs/yargs/blob/master/docs/advanced.md#default-commands
   .demandCommand(1, 'An input JSON file is mandatory.') // ask for command and for inspection url
 
