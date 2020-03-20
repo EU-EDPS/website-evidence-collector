@@ -14,7 +14,7 @@ RUN apk add --no-cache \
       nodejs \
       yarn \
 # Packages linked to testssl.sh
-      bash procps drill coreutils libidn curl
+      bash procps drill coreutils libidn curl \
 # Toolbox for advanced interactive use of WEC in container
       parallel jq grep aha
 
