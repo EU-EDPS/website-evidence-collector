@@ -12,7 +12,7 @@ RUN apk add --no-cache \
       ca-certificates \
       ttf-freefont \
       nodejs \
-      yarn \
+      yarn~=1.22.4 \
 # Packages linked to testssl.sh
       bash procps drill coreutils libidn curl \
 # Toolbox for advanced interactive use of WEC in container
@@ -27,9 +27,8 @@ RUN addgroup -S collector && adduser -S -g collector -s /bin/bash collector \
 COPY . /opt/website-evidence-collector/
 
 # Install Testssl.sh
-WORKDIR /opt/
 RUN curl -SL https://github.com/drwetter/testssl.sh/archive/3.0.tar.gz | \
-    tar -xz
+    tar -xz --directory /opt
 
 # Run everything after as non-privileged user.
 USER collector
