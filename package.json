@@ -8,25 +8,25 @@
     "url": "https://github.com/EU-EDPS/website-evidence-collector.git"
   },
   "dependencies": {
-    "@cliqz/adblocker-puppeteer": "^1.4.1",
+    "@cliqz/adblocker-puppeteer": "^1.9.2",
     "fs-extra": "^8.1.0",
     "git-describe": "^4.0.4",
     "github-markdown-css": "^3.0.1",
     "js-yaml": "^3.13.1",
     "lodash": "^4.17.15",
     "pug": "^2.0.4",
-    "puppeteer": "^2.0.0",
-    "puppeteer-har": "^1.1.1",
-    "request": "^2.88.0",
+    "puppeteer": "~2.1.0",
+    "puppeteer-har": "^1.1.2",
+    "request": "^2.88.2",
     "request-promise-native": "^1.0.8",
-    "stacktrace-js": "^2.0.1",
+    "stacktrace-js": "^2.0.2",
     "tmp": "^0.1.0",
     "tough-cookie": "2.3.4",
     "winston": "^3.2.1",
-    "yargs": "^13.3.0"
+    "yargs": "^13.3.2"
   },
   "devDependencies": {
-    "pino-pretty": "^3.5.0"
+    "pino-pretty": "^3.6.1"
   },
   "scripts": {
     "start": "node ./website-evidence-collector.js",

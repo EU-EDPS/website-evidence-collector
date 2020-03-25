@@ -18,6 +18,7 @@
 * feature: allow to pre-install cookies with `--set-cookie` to e.g. indicate given/rejected consent
 * documentation: add to FAQ tips on data analysis with shell tool `jq`
 * breaking change: change commandline option name of `website-evidence-reporter` from `--output` to `--output-file` to mark the distinct meaning and avoid clash when setting `WEC_OUTPUT` environment variable (short option name stays `-o` for both)
+* update: node dependencies and filterlists
 
 ## 0.4.0 / 2020-01-17
 
