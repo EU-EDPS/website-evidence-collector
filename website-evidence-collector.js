@@ -81,7 +81,7 @@ var refs_regexp = new RegExp(`^(${uri_refs_stripped.join('|')})\\b`, 'i');
     args: [
       `--user-agent=${UserAgent}`,
       `--window-size=${WindowSize.width},${WindowSize.height}`,
-    ].concat(argv.browserOptions, argv._.slice(1)),
+    ].concat(argv.browserOptions, argv['--'] || []),
   });
 
   // prepare hash to store data for output
