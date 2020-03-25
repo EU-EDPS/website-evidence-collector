@@ -1,12 +1,22 @@
+# Website Evidence Collector running in a tiny Alpine Docker container
+#
+# Usage:
+#
+# build from source code folder: docker build -t website-evidence-collector
+# run container with e.g.:
+# docker run --rm -it --cap-add=SYS_ADMIN -v $(pwd)/output:/output \
+#   website-evidene-collector http://example.com/about
+
 FROM alpine:edge
 
 LABEL maintainer="Robert Riemann <robert.riemann@edps.europa.eu>"
 
-LABEL org.label-schema.description="Website Evidece Collector running in a tiny Alpine image" \
+LABEL org.label-schema.description="Website Evidence Collector running in a tiny Alpine Docker container" \
       org.label-schema.name="website-evidence-collector" \
       org.label-schema.usage="https://github.com/EU-EDPS/website-evidence-collector/blob/master/README.md" \
       org.label-schema.vcs-url="https://github.com/EU-EDPS/website-evidence-collector" \
-      org.label-schema.vendor="EDPS"
+      org.label-schema.vendor="European Data Protection Supervisor (EDPS)"
+      org.label-schema.license="EUPL-1.2"
 
 # Installs latest Chromium (77) package.
 RUN apk add --no-cache \
