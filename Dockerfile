@@ -4,7 +4,7 @@ LABEL maintainer="Robert Riemann <robert.riemann@edps.europa.eu>"
 
 # Installs latest Chromium (77) package.
 RUN apk add --no-cache \
-      chromium \
+      chromium~=80.0.3987 \
       nss \
       freetype \
       freetype-dev \
