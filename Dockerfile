@@ -24,7 +24,7 @@ RUN addgroup -S collector && adduser -S -g collector -s /bin/bash collector \
     && chown -R collector:collector /home/collector \
     && chown -R collector:collector /output
 
-COPY ./* /opt/website-evidence-collector/
+COPY . /opt/website-evidence-collector/
 
 # Install Testssl.sh
 WORKDIR /opt/
