@@ -21,6 +21,7 @@
 * update: node dependencies and filterlists
 * feature: respect environment variables such as `WEC_MAX=10` or `WEC_headless=false`
 * feature: introduce option `--browser-options <browser options>` as an alternative to the `-- <browser options>` syntax (required for Docker setup)
+* bugfix: update yargs dependency to get bugfix https://github.com/yargs/yargs-parser/issues/261 for `--browser-options` starting with double dash `--`
 
 ## 0.4.0 / 2020-01-17
 
