@@ -15,7 +15,7 @@ LABEL org.label-schema.description="Website Evidence Collector running in a tiny
       org.label-schema.name="website-evidence-collector" \
       org.label-schema.usage="https://github.com/EU-EDPS/website-evidence-collector/blob/master/README.md" \
       org.label-schema.vcs-url="https://github.com/EU-EDPS/website-evidence-collector" \
-      org.label-schema.vendor="European Data Protection Supervisor (EDPS)"
+      org.label-schema.vendor="European Data Protection Supervisor (EDPS)" \
       org.label-schema.license="EUPL-1.2"
 
 # Installs latest Chromium (77) package.
