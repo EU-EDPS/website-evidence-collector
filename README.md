@@ -20,6 +20,14 @@ The tool *Website Evidence Collector* (WEC) automates the website evidence colle
 
 The tool can be uninstalled with `npm uninstall --global website-evidence-collector`.
 
+**Hint:** You don't need root permissions for the installation. If you run into permission denied errors during step 2 of the installation try the following commands:
+
+`mkdir "${HOME}/.npm-packages"`  
+`npm config set prefix "${HOME}/.npm-packages"`
+
+Now repeat step 2.
+
+
 ## Run Website Evidence Collection
 
 ![Screencast Call](screencast-call.svg "Screencast Call")
@@ -27,6 +35,15 @@ The tool can be uninstalled with `npm uninstall --global website-evidence-collec
 To start the collection for e.g. <https://example.com>, open the terminal and run `website-evidence-collector https://example.com`. The folder `output` contains the gathered evidence.
 
 **Notice on the Processing of Personal Data:** This tool carries out automated processing of data of websites for the purpose of identifying their processing of personal data. If you run the tool to visit web pages containing personal data, this tool will download, display, and store these personal data in the form of text files and screenshots, and you will therefore process personal data.
+
+**Hint:**
+If you run into command not found errors you have to add the `.npm-packages` to your `PATH`.  
+Run the following commands:
+
+`NPM_PACKAGES="${HOME}/.npm-packages"`  
+`export PATH="$PATH:$NPM_PACKAGES/bin"`
+
+You can check your `PATH` with this command: `echo $PATH`.
 
 ### Examples with Command Line Options
 
