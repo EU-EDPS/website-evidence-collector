@@ -595,11 +595,16 @@ var refs_regexp = new RegExp(`^(${uri_refs_stripped.join('|')})\\b`, 'i');
       let cmd = `${testsslExecutable} ${testsslArgs.join(' ')}`;
       logger.log('info', `launching testSSL: ${cmd}`, {type: 'testSSL'});
       execSync(cmd);
-      output.testSSL = JSON.parse(fs.readFileSync(json_file, 'utf8'));
     } catch (e) {
-      logger.log('warn', e.message.toString(), {type: 'testSSL'});
-      output.testSSLError = e.message.toString();
-      output.testSSLErrorOutput = e.stderr.toString();
+      if(e.status > 200) { // https://github.com/drwetter/testssl.sh/blob/3.1dev/doc/testssl.1.md#exit-status
+        logger.log('warn', e.message.toString(), {type: 'testSSL'});
+        output.testSSLError = e.message.toString();
+        output.testSSLErrorOutput = e.stderr.toString();
+      }
+      output.testSSLErrorCode = e.status;
+    }
+    if(fs.existsSync(json_file)) {
+      output.testSSL = JSON.parse(fs.readFileSync(json_file, 'utf8'));
     }
 
     if(!argv.output) {
