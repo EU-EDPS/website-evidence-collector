@@ -366,8 +366,13 @@ var refs_regexp = new RegExp(`^(${uri_refs_stripped.join('|')})\\b`, 'i');
       continue;
     }
 
+    try {
     await page.waitFor(argv.sleep); // in ms
     localStorage = await getLocalStorage(page, localStorage);
+    } catch (error) {
+      logger.log('warn', error.message, {type: 'Browser'});
+      continue;
+    }
   }
 
 
