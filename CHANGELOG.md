@@ -23,6 +23,9 @@
 * feature: introduce option `--browser-options <browser options>` as an alternative to the `-- <browser options>` syntax (required for Docker setup)
 * bugfix: update yargs dependency to get bugfix https://github.com/yargs/yargs-parser/issues/261 for `--browser-options` starting with double dash `--`
 * feature: add commandline option `--browser-profile` (`-p`) to allow the reuse of existing browser profiles (thanks to Hamburg DPA staff!)
+* feature: include medium.com and tiktok.com links in social media subsection of output link list
+* bugfix: handle non-zero testSSL error codes according to https://github.com/drwetter/testssl.sh/blob/3.1dev/doc/testssl.1.md#exit-status
+* bugfix: catch and log error "Frame not found for the given security origin" (thanks to Hamburg DPA staff!)
 
 ## 0.4.0 / 2020-01-17
 
