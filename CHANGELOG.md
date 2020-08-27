@@ -22,6 +22,7 @@
 * feature: respect environment variables such as `WEC_MAX=10` or `WEC_headless=false`
 * feature: introduce option `--browser-options <browser options>` as an alternative to the `-- <browser options>` syntax (required for Docker setup)
 * bugfix: update yargs dependency to get bugfix https://github.com/yargs/yargs-parser/issues/261 for `--browser-options` starting with double dash `--`
+* feature: add commandline option `--browser-profile` (`-p`) to allow the reuse of existing browser profiles (thanks to Hamburg DPA staff!)
 
 ## 0.4.0 / 2020-01-17
 
