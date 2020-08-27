@@ -77,7 +77,9 @@ var refs_regexp = new RegExp(`^(${uri_refs_stripped.join('|')})\\b`, 'i');
       width: WindowSize.width,
       height: WindowSize.height,
     },
-    userDataDir: argv.output ? path.join(argv.output, 'browser-profile') : undefined,
+    userDataDir: argv.browserProfile ? argv.browserProfile :
+                   argv.output ? path.join(argv.output, 'browser-profile') :
+                     undefined,
     args: [
       `--user-agent=${UserAgent}`,
       `--window-size=${WindowSize.width},${WindowSize.height}`,
