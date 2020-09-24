@@ -491,7 +491,6 @@ async function run(args) {
     });
 
   await har.stop();
-
   await browser.close();
 
   output.end_time = new Date();
@@ -793,6 +792,8 @@ async function run(args) {
       fs.writeFileSync(path.join(args.output, "inspection.html"), html_dump);
     }
   }
+
+  return output;
 }
 
 module.exports = run;
