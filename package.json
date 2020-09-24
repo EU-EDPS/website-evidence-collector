@@ -29,12 +29,12 @@
     "pino-pretty": "^3.6.1"
   },
   "scripts": {
-    "start": "node ./website-evidence-collector.js",
+    "start": "node ./website-evidence-cli.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "pretty-print": "node node_modules/.bin/pino-pretty --timestampKey timestamp --messageKey type --ignore stack,raw,origin"
   },
   "bin": {
-    "website-evidence-collector": "./website-evidence-collector.js",
+    "website-evidence-collector": "./website-evidence-cli.js",
     "website-evidence-reporter": "./website-evidence-reporter.js"
   },
   "keywords": [
