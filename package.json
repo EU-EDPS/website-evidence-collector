@@ -34,7 +34,9 @@
     "pretty-print": "node node_modules/.bin/pino-pretty --timestampKey timestamp --messageKey type --ignore stack,raw,origin"
   },
   "bin": {
-    "website-evidence-collector": "./website-evidence-collector.js"
+    "website-evidence-collector-lib": "./website-evidence-collector.js",
+    "website-evidence-collector": "./website-evidence-cli.js",
+    "website-evidence-reporter": "./website-evidence-reporter.js"
   },
   "keywords": [
     "privacy",
