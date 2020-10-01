@@ -28,7 +28,7 @@ The tool can be uninstalled with `npm uninstall --global website-evidence-collec
 Now repeat step 2.
 
 
-## Run Website Evidence Collection
+## Run Website Evidence Collector
 
 ![Screencast Call](screencast-call.svg "Screencast Call")
 
