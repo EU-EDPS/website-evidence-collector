@@ -65,9 +65,9 @@ async function createBrowserSession(browser_args, browser_logger) {
     var refs_regexp = new RegExp(`^(${uri_refs_stripped.join("|")})\\b`, "i");
 
     // load the page to traverse
-    //page = (await browser.pages())[0];
-    browser_context = await browser.createIncognitoBrowserContext();
-    page = await browser_context.newPage();
+    page = (await browser.pages())[0];
+    //browser_context = await browser.new .createIncognitoBrowserContext();
+    //page = await browser_context.newPage();
 
     if (args.dntJs) {
       args.dnt = true; // imply Do-Not-Track HTTP Header
@@ -261,7 +261,7 @@ async function createBrowserSession(browser_args, browser_logger) {
       await har.stop();
     }
 
-    await browser_context.close();
+    // await browser_context.close();
     await browser.close();
     browser;
   }
