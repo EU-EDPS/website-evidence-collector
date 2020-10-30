@@ -94,10 +94,10 @@ async function createBrowserSession(browser_args, browser_logger) {
     );
 
     // setup tracking
-    await setup_cookie_recording(page);
-    await setup_beacon_recording(page);
+    await setup_cookie_recording(page, logger);
+    await setup_beacon_recording(page, logger);
 
-    webSocketLog = setup_websocket_recording(page);
+    webSocketLog = setup_websocket_recording(page, logger);
 
     hosts = {
       requests: {

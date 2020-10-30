@@ -1,6 +1,7 @@
 const StandardConfig = require("../config.js");
 const WebsiteEvidenceCollector = require("../website-evidence-collector.js");
 const logger = require("../lib/logger");
+const tmplogger = require("../lib/tmplogger");
 
 const run = async function () {
   var args = StandardConfig("https://en.zalando.de");
@@ -13,7 +14,10 @@ const run = async function () {
   args.overwrite = true;
   args.dnt = true;
 
-  var json = await WebsiteEvidenceCollector(args, logger);
+  var logsy = tmplogger.newLogger();
+
+  var json = await WebsiteEvidenceCollector(args, logsy);
+  console.log(json.beacons);
 };
 
 run();
