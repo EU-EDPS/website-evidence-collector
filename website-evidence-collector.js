@@ -97,7 +97,9 @@ async function run(args, logger) {
   output.links.keywords = await collector_inspect.filterKeywords(links);
 
   // unsafe webforms
-  output.unsafeForms = await collector_inspect.unsafeWebforms(page);
+  output.unsafeForms = await collector_inspect.unsafeWebforms(
+    page_session.page
+  );
 
   // browse sample history and log to localstorage
   let browse_user_set = args.browseLink || [];
@@ -118,7 +120,10 @@ async function run(args, logger) {
   // Collect Cookies
   // ########################################################
 
-  const cookies = collector_inspect.collectCookies(page, output.start_time);
+  const cookies = await collector_inspect.collectCookies(
+    page_session.page,
+    output.start_time
+  );
 
   // END OF BROWSING
   await browser_session.end();

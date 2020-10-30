@@ -26,8 +26,11 @@ const {
   safeJSONParse,
 } = require("../lib/tools");
 
-async function createBrowserSession(args, logger) {
-  let page, hosts, har, webSocketLog, browser_context;
+async function createBrowserSession(browser_args, browser_logger) {
+  let page, hosts, har, webSocketLog, browser_context, logger, args;
+
+  args = browser_args;
+  logger = browser_logger;
 
   const browser = await puppeteer.launch({
     headless: args.headless,
