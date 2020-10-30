@@ -10,15 +10,6 @@
 
 //const argv = require('./lib/argv');
 
-const UserAgent =
-  "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3617.0 Safari/537.36";
-const WindowSize = {
-  width: 1680,
-  height: 927, // arbitrary value close to 1050
-};
-
-const puppeteer = require("puppeteer");
-const PuppeteerHar = require("puppeteer-har");
 const fs = require("fs-extra");
 const os = require("os");
 const url = require("url");
@@ -37,474 +28,116 @@ const pickBy = require("lodash/pickBy");
 
 const { isFirstParty, getLocalStorage, safeJSONParse } = require("./lib/tools");
 
-async function run(args) {
-  const uri_ins = args.url;
-  const uri_ins_host = url.parse(uri_ins).hostname; // hostname does not include port unlike host
+const output_lib = require("./collector/output");
+const browsersession = require("./collector/browser-session");
+const collector_io = require("./collector/io");
+const collector_connection = require("./collector/connection");
+const collector_inspect = require("./collector/inspector");
 
-  var uri_refs = [uri_ins].concat(args.firstPartyUri);
+async function run(args, logger) {
+  // create the root folder structure
+  collector_io.init(args);
+  // create the output hash...
+  const output = await output_lib.createOutput(args);
 
-  let uri_refs_stripped = uri_refs.map((uri_ref) => {
-    let uri_ref_parsed = url.parse(uri_ref);
-    return escapeRegExp(
-      `${uri_ref_parsed.hostname}${uri_ref_parsed.pathname.replace(/\/$/, "")}`
-    );
-  });
-
-  var refs_regexp = new RegExp(`^(${uri_refs_stripped.join("|")})\\b`, "i");
-
-  if (args.output) {
-    if (fs.existsSync(args.output)) {
-      if (fs.readdirSync(args.output).length > 0) {
-        if (args.overwrite) {
-          fs.emptyDirSync(args.output);
-        } else {
-          console.error(
-            `Error: Output folder or file ${args.output} is not empty. Delete/empty manually or call with --overwrite.`
-          );
-          process.exit(1);
-        }
-      }
-    } else {
-      fs.mkdirSync(args.output);
-    }
-  }
-
-  // logger involves file access and should initate after overwrite check
-  const logger = require("./lib/logger");
-  const { setup_cookie_recording } = require("./lib/setup-cookie-recording");
-  const { setup_beacon_recording } = require("./lib/setup-beacon-recording");
-  const {
-    setup_websocket_recording,
-  } = require("./lib/setup-websocket-recording");
-
-  const { set_cookies } = require("./lib/set-cookies");
-
-  const browser = await puppeteer.launch({
-    headless: args.headless,
-    defaultViewport: {
-      width: WindowSize.width,
-      height: WindowSize.height,
-    },
-    userDataDir: args.browserProfile
-      ? args.browserProfile
-      : args.output
-      ? path.join(args.output, "browser-profile")
-      : undefined,
-    args: [
-      `--user-agent=${UserAgent}`,
-      `--window-size=${WindowSize.width},${WindowSize.height}`,
-    ].concat(args.browserOptions, args["--"] || []),
-  });
-
-  // prepare hash to store data for output
-  const output = {
-    title: args.title || `Website Evidence Collection`,
-    task_description: safeJSONParse(args.taskDescription),
-    uri_ins: uri_ins,
-    uri_refs: uri_refs,
-    uri_dest: null,
-    uri_redirects: null,
-    secure_connection: {
-      https_redirect: false,
-      redirects: [],
-      https_support: false,
-      https_error: null,
-      http_error: null,
-    },
-    testSSLError: null,
-    testSSLErrorOutput: null,
-    testSSLErrorCode: null,
-    testSSL: null,
-
-    host: uri_ins_host,
-    script: {
-      host: os.hostname(),
-      version: {
-        npm: require("./package.json").version,
-        commit: null,
-      },
-      cmd_args: process.argv.slice(2).join(" "),
-      environment: pickBy(process.env, (_value, key) => {
-        return (
-          key.startsWith("WEC") ||
-          key.startsWith("PUPPETEER") ||
-          key.startsWith("CHROM")
-        );
-      }),
-      node_version: process.version,
-    },
-    localStorage: null,
-    cookies: [],
-    beacons: [],
-    links: {
-      firstParty: [],
-      thirdParty: [],
-      social: [],
-      keywords: [],
-    },
-    unsafeForms: [],
-    browser: {
-      name: "Chromium",
-      version: await browser.version(),
-      user_agent: await browser.userAgent(),
-      platform: {
-        name: os.type(),
-        version: os.release(),
-      },
-      extra_headers: { dnt: 0 },
-      preset_cookies: {},
-    },
-    browsing_history: [],
-    hosts: {},
-    websockets: {},
-    start_time: new Date(),
-    end_time: null,
-  };
-
-  // log git version if git is installed
-  try {
-    const gitInfo = gitDescribeSync(__dirname);
-    output.script.version.commit = gitInfo.raw;
-  } catch (e) {}
-
-  const page = (await browser.pages())[0];
-
-  if (args.dntJs) {
-    args.dnt = true; // imply Do-Not-Track HTTP Header
-  }
-
-  if (args.dnt) {
-    // source: https://stackoverflow.com/a/47973485/1407622 (setting extra headers)
-    // source: https://stackoverflow.com/a/5259004/1407622 (headers are case-insensitive)
-    output.browser.extra_headers.dnt = 1;
-    page.setExtraHTTPHeaders({ dnt: "1" });
-
-    // do not use by default, as it is not implemented by all major browsers,
-    // see: https://caniuse.com/#feat=do-not-track
-    if (args.dntJs) {
-      await page.evaluateOnNewDocument(() => {
-        Object.defineProperty(navigator, "doNotTrack", { value: "1" });
-      });
-    }
-  }
-
-  // forward logs from the browser console
-  page.on("console", (msg) =>
-    logger.log("debug", msg.text(), { type: "Browser.Console" })
+  // return browser, page and har in one object to have it all in one place
+  const browser_session = await browsersession.createBrowserSession(
+    args,
+    logger
   );
+  output.browser.version = await browser_session.browser.version();
+  output.browser.user_agent = await browser_session.browser.userAgent();
 
-  // setup tracking
-  await setup_cookie_recording(page);
-  await setup_beacon_recording(page);
-  let webSocketLog = setup_websocket_recording(page);
-  let hosts = {
-    requests: {
-      firstParty: new Set(),
-      thirdParty: new Set(),
-    },
-    beacons: {
-      firstParty: new Set(),
-      thirdParty: new Set(),
-    },
-    cookies: {
-      firstParty: new Set(),
-      thirdParty: new Set(),
-    },
-    localStorage: {
-      firstParty: new Set(),
-      thirdParty: new Set(),
-    },
-    links: {
-      firstParty: new Set(),
-      thirdParty: new Set(),
-    },
-  };
+  // ########################################################
+  // HTTPS and SSL Tests
+  // ########################################################
+  await collector_connection.testHttps(output.uri_ins, output);
+  await collector_connection.testSSL(output.uri_ins, args, logger, output);
 
-  // record all requested hosts
-  await page.on("request", (request) => {
-    const l = url.parse(request.url());
-    // note that hosts may appear as first and third party depending on the path
-    if (isFirstParty(refs_regexp, l)) {
-      hosts.requests.firstParty.add(l.hostname);
-    } else {
-      if (l.protocol != "data:") {
-        hosts.requests.thirdParty.add(l.hostname);
-      }
-    }
-  });
+  // ########################################################
+  // Start browser and goto the first uri
+  // ########################################################
+  const page_session = await browser_session.start(output);
+  const response = await page_session.gotoPage(output.uri_ins);
 
-  // set predefined cookies if any
-  set_cookies(page, uri_ins, output);
-
-  const har = new PuppeteerHar(page);
-  await har.start({
-    path: args.output ? path.join(args.output, "requests.har") : undefined,
-  });
-
-  logger.log("info", `browsing now to ${uri_ins}`, { type: "Browser" });
-
-  let page_response;
-  try {
-    page_response = await page.goto(uri_ins, {
-      timeout: args.pageTimeout,
-      waitUntil: "networkidle2",
-    });
-    if (page_response === null) {
-      // see: https://github.com/puppeteer/puppeteer/issues/2479#issuecomment-408263504
-      page_response = await page.waitForResponse(() => true);
-    }
-  } catch (error) {
-    logger.log("error", error.message, { type: "Browser" });
-    process.exit(2);
-  }
-  output.uri_redirects = page_response
+  // log redirects
+  output.uri_redirects = response
     .request()
     .redirectChain()
     .map((req) => {
       return req.url();
     });
 
-  output.uri_dest = page.url();
+  // log the destination uri after redirections
+  output.uri_dest = page_session.page.url();
+  await page_session.page.waitFor(args.sleep); // in ms
 
-  // secure connection
+  //localstorage? - is this needed - seems like it is overwriten later
+  let localStorage = await getLocalStorage(page_session.page);
 
-  // test if server responds to https
-  let uri_ins_https;
-  try {
-    uri_ins_https = new url.URL(uri_ins);
-    uri_ins_https.protocol = "https:";
-    await request(uri_ins_https.toString(), {
-      followRedirect: false,
-      resolveWithFullResponse: true,
-      simple: false,
-    });
-    output.secure_connection.https_support = true;
-  } catch (error) {
-    output.secure_connection.https_support = false;
-    output.secure_connection.https_error = error.toString();
-  }
+  // ########################################################
+  // Collect Links
+  // ########################################################
 
-  // test if server redirects http to https
-  try {
-    let uri_ins_http = new url.URL(uri_ins);
-    uri_ins_http.protocol = "http:";
-    let res = await request(uri_ins_http.toString(), {
-      followRedirect: true,
-      resolveWithFullResponse: true,
-      simple: false,
-      // ignore missing/wrongly configured SSL certificates when redirecting to
-      // HTTPS to avoid reporting SSL errors in the output field http_error
-      strictSSL: false,
-    });
-    output.secure_connection.redirects = res.request._redirect.redirects.map(
-      (r) => r.redirectUri
-    );
-    if (output.secure_connection.redirects.length > 0) {
-      let last_redirect_url = new url.URL(
-        output.secure_connection.redirects[
-          output.secure_connection.redirects.length - 1
-        ]
-      );
-      output.secure_connection.https_redirect = last_redirect_url.protocol.includes(
-        "https"
-      );
-    } else {
-      output.secure_connection.https_redirect = false;
-    }
-  } catch (error) {
-    output.secure_connection.http_error = error.toString();
-  }
-
-  await page.waitFor(args.sleep); // in ms
-  let localStorage = await getLocalStorage(page);
-
-  const links_with_duplicates = await page.evaluate(() => {
-    return [].map
-      .call(Array.from(document.querySelectorAll("a[href]")), (a) => {
-        return {
-          href: a.href.split("#")[0], // link without fragment
-          inner_text: a.innerText,
-          inner_html: a.innerHTML.trim(),
-        };
-      })
-      .filter((link) => {
-        return link.href.startsWith("http");
-      });
-  });
-
-  // https://lodash.com/docs/4.17.15#uniqWith
-  const links = uniqWith(links_with_duplicates, (l1, l2) => {
-    // consider URLs equal if only fragment (part after #) differs.
-    return l1.href.split("#").shift() === l2.href.split("#").shift();
-  });
-
-  for (const li of links) {
-    const l = url.parse(li.href);
-
-    if (isFirstParty(refs_regexp, l)) {
-      output.links.firstParty.push(li);
-      hosts.links.firstParty.add(l.hostname);
-    } else {
-      output.links.thirdParty.push(li);
-      hosts.links.thirdParty.add(l.hostname);
-    }
-  }
-
-  // prepare regexp to match social media platforms
-  let social_platforms = yaml
-    .safeLoad(
-      fs.readFileSync(
-        path.join(__dirname, "assets/social-media-platforms.yml"),
-        "utf8"
-      )
-    )
-    .map((platform) => {
-      return escapeRegExp(platform);
-    });
-  let social_platforms_regexp = new RegExp(
-    `\\b(${social_platforms.join("|")})\\b`,
-    "i"
+  // get all links from page
+  const links = await collector_inspect.collectLinks(page_session.page);
+  var mappedLinks = await collector_inspect.mapLinksToParties(
+    links,
+    page_session.hosts,
+    page_session.refs_regexp
   );
-  output.links.social = links.filter((link) => {
-    return link.href.match(social_platforms_regexp);
-  });
+  output.links.firstParty = mappedLinks.firstParty;
+  output.links.thirdParty = mappedLinks.thirdParty;
+
+  output.links.social = await collector_inspect.filterSocialPlatforms(links);
 
   // prepare regexp to match links by their href or their caption
-  let keywords = yaml
-    .safeLoad(
-      fs.readFileSync(path.join(__dirname, "assets/keywords.yml"), "utf8")
-    )
-    .map((keyword) => {
-      return escapeRegExp(keyword);
-    });
-  let keywords_regexp = new RegExp(keywords.join("|"), "i");
-  output.links.keywords = links.filter((link) => {
-    return (
-      link.href.match(keywords_regexp) || link.inner_html.match(keywords_regexp)
-    );
-  });
-
-  // record screenshots
-  if (args.output) {
-    try {
-      await page.screenshot({
-        path: path.join(args.output, "screenshot-top.png"),
-      });
-      await page.evaluate(() => {
-        window.scrollTo(0, document.body.scrollHeight);
-      });
-      await page.screenshot({
-        path: path.join(args.output, "screenshot-bottom.png"),
-      });
-      await page.screenshot({
-        path: path.join(args.output, "screenshot-full.png"),
-        fullPage: true,
-      });
-    } catch (error) {
-      // see: https://github.com/EU-EDPS/website-evidence-collector/issues/21 and https://github.com/puppeteer/puppeteer/issues/2569
-      logger.log(
-        "info",
-        `not saving some screenshots due to software limitations`,
-        { type: "Browser" }
-      );
-    }
-  }
+  output.links.keywords = await collector_inspect.filterKeywords(links);
 
   // unsafe webforms
-  output.unsafeForms = await page.evaluate(() => {
-    return [].map
-      .call(Array.from(document.querySelectorAll("form")), (form) => {
-        return {
-          id: form.id,
-          action: new URL(form.getAttribute("action"), form.baseURI).toString(),
-          method: form.method,
-        };
-      })
-      .filter((form) => {
-        return form.action.startsWith("http:");
-      });
-  });
+  output.unsafeForms = await collector_inspect.unsafeWebforms(page);
 
-  // browsing
+  // browse sample history and log to localstorage
   let browse_user_set = args.browseLink || [];
-  let browse_links = sampleSize(
+  output.browsing_history = await page_session.browseSamples(
+    page_session.page,
+    localStorage,
+    output.uri_dest,
     output.links.firstParty,
-    args.max - browse_user_set.length
-  );
-  output.browsing_history = [output.uri_dest].concat(
-    browse_user_set,
-    browse_links.map((l) => l.href)
+    browse_user_set
   );
 
-  for (const link of output.browsing_history.slice(1)) {
-    try {
-      // check mime-type and skip if not html
-      const head = await request({
-        method: "HEAD",
-        uri: link,
-      });
-
-      if (!head["content-type"].startsWith("text/html")) {
-        logger.log(
-          "info",
-          `skipping now ${link} of mime-type ${head["content-type"]}`,
-          { type: "Browser" }
-        );
-        continue;
-      }
-
-      logger.log("info", `browsing now to ${link}`, { type: "Browser" });
-
-      await page.goto(link, {
-        timeout: args.pageTimeout,
-        waitUntil: "networkidle2",
-      });
-    } catch (error) {
-      logger.log("warn", error.message, { type: "Browser" });
-      continue;
-    }
-
-    await page.waitFor(args.sleep); // in ms
-    localStorage = await getLocalStorage(page, localStorage);
+  // record screenshots
+  if (args.output && args.screenshots) {
+    await page_session.screenshot();
   }
 
-  // example from https://stackoverflow.com/a/50290081/1407622
-  const cookies = (await page._client.send("Network.getAllCookies")).cookies
-    .filter((cookie) => {
-      // work-around: Chromium retains cookies with empty name and value
-      // if web servers send empty HTTP Cookie Header, i.e. "Set-Cookie: "
-      return cookie.name != "";
-    })
-    .map((cookie) => {
-      if (cookie.expires > -1) {
-        // add derived attributes for convenience
-        cookie.expiresUTC = new Date(cookie.expires * 1000);
-        cookie.expiresDays =
-          Math.round(
-            (cookie.expiresUTC - output.start_time) / (10 * 60 * 60 * 24)
-          ) / 100;
-      }
+  // ########################################################
+  // Collect Cookies
+  // ########################################################
 
-      cookie.domain = cookie.domain.replace(/^\./, ""); // normalise domain value
+  const cookies = collector_inspect.collectCookies(page, output.start_time);
 
-      return cookie;
-    });
-
-  await har.stop();
-  await browser.close();
-
+  // END OF BROWSING
+  await browser_session.end();
   output.end_time = new Date();
 
-  // reporting
-  if (args.output) {
+  // ########################################################
+  // Websockets Reporting
+  // ########################################################
+  if (args.output && args.json) {
     fs.writeFileSync(
       path.join(args.output, "websockets-log.json"),
-      JSON.stringify(webSocketLog, null, 2)
+      JSON.stringify(page_session.webSocketLog, null, 2)
     );
   }
-  output.websockets = webSocketLog;
 
-  // analyse cookies and web beacons
+  output.websockets = page_session.webSocketLog;
+
+  // ########################################################
+  // Cookies  reporting
+  // ########################################################
+
   let event_data_all = await new Promise((resolve, reject) => {
     logger.query(
       {
@@ -554,12 +187,17 @@ async function run(args) {
       cookie.log = matched_event.log;
     }
 
-    if (isFirstParty(refs_regexp, `cookie://${cookie.domain}${cookie.path}`)) {
+    if (
+      isFirstParty(
+        page_session.refs_regexp,
+        `cookie://${cookie.domain}${cookie.path}`
+      )
+    ) {
       cookie.firstPartyStorage = true;
-      hosts.cookies.firstParty.add(cookie.domain);
+      page_session.hosts.cookies.firstParty.add(cookie.domain);
     } else {
       cookie.firstPartyStorage = false;
-      hosts.cookies.thirdParty.add(cookie.domain);
+      page_session.hosts.cookies.thirdParty.add(cookie.domain);
     }
   });
 
@@ -567,10 +205,14 @@ async function run(args) {
     return b.expires - a.expires;
   });
 
-  if (args.output) {
+  if (args.output && args.yaml) {
     let yaml_dump = yaml.safeDump(cookies, { noRefs: true });
     fs.writeFileSync(path.join(args.output, "cookies.yml"), yaml_dump);
   }
+
+  // ########################################################
+  // LocalStorage Reporting
+  // ########################################################
 
   let storage_from_events = event_data.filter((event) => {
     return event.type.startsWith("Storage");
@@ -578,11 +220,11 @@ async function run(args) {
 
   Object.keys(localStorage).forEach((origin) => {
     let hostname = new url.URL(origin).hostname;
-    let isFirstPartyStorage = isFirstParty(refs_regexp, origin);
+    let isFirstPartyStorage = isFirstParty(page_session.refs_regexp, origin);
     if (isFirstPartyStorage) {
-      hosts.localStorage.firstParty.add(hostname);
+      page_session.hosts.localStorage.firstParty.add(hostname);
     } else {
-      hosts.localStorage.thirdParty.add(hostname);
+      page_session.hosts.localStorage.thirdParty.add(hostname);
     }
 
     let originStorage = localStorage[origin];
@@ -605,11 +247,15 @@ async function run(args) {
   });
 
   output.localStorage = localStorage;
-  if (args.output) {
+
+  if (args.output && args.yaml) {
     let yaml_dump = yaml.safeDump(localStorage, { noRefs: true });
     fs.writeFileSync(path.join(args.output, "local-storage.yml"), yaml_dump);
   }
 
+  // ########################################################
+  // Beacons Reporting
+  // ########################################################
   let beacons_from_events = flatten(
     event_data
       .filter((event) => {
@@ -630,10 +276,10 @@ async function run(args) {
     const l = url.parse(beacon.url);
 
     if (beacon.listName == "easyprivacy.txt") {
-      if (isFirstParty(refs_regexp, l)) {
-        hosts.beacons.firstParty.add(l.hostname);
+      if (isFirstParty(page_session.refs_regexp, l)) {
+        page_session.hosts.beacons.firstParty.add(l.hostname);
       } else {
-        hosts.beacons.thirdParty.add(l.hostname);
+        page_session.hosts.beacons.thirdParty.add(l.hostname);
       }
     }
   }
@@ -661,6 +307,9 @@ async function run(args) {
 
   output.beacons = beacons_summary;
 
+  // ########################################################
+  // Hosts Reporting
+  // ########################################################
   let arrayFromParties = function (array) {
     return {
       firstParty: Array.from(array.firstParty),
@@ -669,74 +318,12 @@ async function run(args) {
   };
 
   output.hosts = {
-    requests: arrayFromParties(hosts.requests),
-    beacons: arrayFromParties(hosts.beacons),
-    cookies: arrayFromParties(hosts.cookies),
-    localStorage: arrayFromParties(hosts.localStorage),
-    links: arrayFromParties(hosts.links),
+    requests: arrayFromParties(page_session.hosts.requests),
+    beacons: arrayFromParties(page_session.hosts.beacons),
+    cookies: arrayFromParties(page_session.hosts.cookies),
+    localStorage: arrayFromParties(page_session.hosts.localStorage),
+    links: arrayFromParties(page_session.hosts.links),
   };
-
-  // testssl integration
-  if (args.testsslExecutable) {
-    args.testssl = true; // imply testssl if executable file is configured
-  }
-
-  if (args.testssl) {
-    let testsslExecutable = args.testsslExecutable || "testssl.sh"; // set default location
-    let testsslArgs = [
-      "--ip one", // speed up testssl: just test the first DNS returns (useful for multiple IPs)
-      "--quiet", // no banner
-      "--hints", // additional hints to findings
-      "--fast", // omits some checks: using openssl for all ciphers (-e), show only first preferred cipher.
-      "--vulnerable", // tests vulnerabilities (if applicable)
-      "--headers", // tests HSTS, HPKP, server/app banner, security headers, cookie, reverse proxy, IPv4 address
-      "--protocols", // checks TLS/SSL protocols (including SPDY/HTTP2)
-      "--standard", // tests certain lists of cipher suites by strength
-      "--server-defaults", // displays the server's default picks and certificate info
-      "--server-defaults", // displays the server's default picks and certificate info
-      "--server-preference", // displays the server's picks: protocol+cipher
-    ];
-
-    let json_file;
-
-    if (args.output) {
-      let output_testssl = path.join(args.output, "testssl");
-      fs.mkdirSync(output_testssl);
-
-      json_file = `${output_testssl}/testssl.json`;
-      testsslArgs.push(`--htmlfile ${output_testssl}/testssl.html`);
-      testsslArgs.push(`--logfile ${output_testssl}/testssl.log`);
-    } else {
-      // case with --no-ouput and --testssl
-      json_file = path.join(os.tmpdir(), `testssl.${Date.now()}.json`);
-    }
-    testsslArgs.push(`--jsonfile-pretty ${json_file}`);
-    testsslArgs.push(uri_ins_https.toString());
-
-    const { execSync } = require("child_process");
-    try {
-      let cmd = `${testsslExecutable} ${testsslArgs.join(" ")}`;
-      logger.log("info", `launching testSSL: ${cmd}`, { type: "testSSL" });
-      execSync(cmd);
-    } catch (e) {
-      if (e.status > 200) {
-        // https://github.com/drwetter/testssl.sh/blob/3.1dev/doc/testssl.1.md#exit-status
-        logger.log("warn", e.message.toString(), { type: "testSSL" });
-        output.testSSLError = e.message.toString();
-        output.testSSLErrorOutput = e.stderr.toString();
-      }
-      output.testSSLErrorCode = e.status;
-    }
-    if (fs.existsSync(json_file)) {
-      output.testSSL = JSON.parse(fs.readFileSync(json_file, "utf8"));
-    }
-
-    if (!args.output) {
-      fs.removeSync(json_file);
-    }
-  } else if (args.testsslFile) {
-    output.testSSL = JSON.parse(fs.readFileSync(args.testssl_file), "utf8");
-  }
 
   // output to various formats
 
@@ -748,7 +335,7 @@ async function run(args) {
   if (args.output || args.yaml) {
     let yaml_dump = yaml.safeDump(output, { noRefs: true });
 
-    if (args.yaml) {
+    if (args.yaml && !args.quiet) {
       console.log(yaml_dump);
     }
 
@@ -760,7 +347,7 @@ async function run(args) {
   if (args.output || args.json) {
     let json_dump = JSON.stringify(output, null, 2);
 
-    if (args.json) {
+    if (args.json && !args.quiet) {
       console.log(json_dump);
     }
 

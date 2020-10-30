@@ -29,7 +29,7 @@
     "pino-pretty": "^3.6.1"
   },
   "scripts": {
-    "start": "node ./website-evidence-cli.js",
+    "start": "node ./website-evidence-cli.js http://dr.dk --overwrite",
     "test": "echo \"Error: no test specified\" && exit 1",
     "pretty-print": "node node_modules/.bin/pino-pretty --timestampKey timestamp --messageKey type --ignore stack,raw,origin"
   },
