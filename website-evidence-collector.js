@@ -37,6 +37,7 @@ const collector_inspect = require("./collector/inspector");
 async function run(args, logger) {
   // create the root folder structure
   collector_io.init(args);
+
   // create the output hash...
   const output = await output_lib.createOutput(args);
 
@@ -45,6 +46,7 @@ async function run(args, logger) {
     args,
     logger
   );
+
   output.browser.version = await browser_session.browser.version();
   output.browser.user_agent = await browser_session.browser.userAgent();
 

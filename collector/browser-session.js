@@ -27,7 +27,7 @@ const {
 } = require("../lib/tools");
 
 async function createBrowserSession(args, logger) {
-  let page, hosts, har, webSocketLog;
+  let page, hosts, har, webSocketLog, browser_context;
 
   const browser = await puppeteer.launch({
     headless: args.headless,
@@ -62,7 +62,9 @@ async function createBrowserSession(args, logger) {
     var refs_regexp = new RegExp(`^(${uri_refs_stripped.join("|")})\\b`, "i");
 
     // load the page to traverse
-    page = (await browser.pages())[0];
+    //page = (await browser.pages())[0];
+    browser_context = await browser.createIncognitoBrowserContext();
+    page = (await browser_context.pages())[0];
 
     if (args.dntJs) {
       args.dnt = true; // imply Do-Not-Track HTTP Header
@@ -91,6 +93,7 @@ async function createBrowserSession(args, logger) {
     // setup tracking
     await setup_cookie_recording(page);
     await setup_beacon_recording(page);
+
     webSocketLog = setup_websocket_recording(page);
 
     hosts = {
@@ -133,6 +136,7 @@ async function createBrowserSession(args, logger) {
     set_cookies(page, output.uri_ins, output);
 
     har = new PuppeteerHar(page);
+
     await har.start({
       path: args.output ? path.join(args.output, "requests.har") : undefined,
     });
@@ -141,6 +145,7 @@ async function createBrowserSession(args, logger) {
       logger.log("info", `browsing now to ${u}`, { type: "Browser" });
 
       let page_response;
+
       try {
         page_response = await page.goto(u, {
           timeout: args.pageTimeout,
@@ -252,7 +257,10 @@ async function createBrowserSession(args, logger) {
     if (har) {
       await har.stop();
     }
+
+    await browser_context.close();
     await browser.close();
+    browser;
   }
 
   return { browser, page, har, hosts, start, end };
