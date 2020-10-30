@@ -64,7 +64,7 @@ async function createBrowserSession(args, logger) {
     // load the page to traverse
     //page = (await browser.pages())[0];
     browser_context = await browser.createIncognitoBrowserContext();
-    page = (await browser_context.pages())[0];
+    page = await browser_context.newPage();
 
     if (args.dntJs) {
       args.dnt = true; // imply Do-Not-Track HTTP Header
