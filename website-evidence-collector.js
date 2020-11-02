@@ -46,6 +46,14 @@ let uri_refs_stripped = uri_refs.map((uri_ref) => {
   return escapeRegExp(`${uri_ref_parsed.hostname}${uri_ref_parsed.pathname.replace(/\/$/, "")}`);
 });
 
+if (argv.firstPartySubdomains) {
+  uri_refs_stripped.forEach((uri_ref) => {
+    let u = uri_ref.split('.');
+    let uri_base = `${u[u.length-2]}.${u[u.length-1]}`;
+    uri_refs_stripped.push(`([a-z0-9-]*[.])*${uri_base}`);
+  });
+}
+
 var refs_regexp = new RegExp(`^(${uri_refs_stripped.join('|')})\\b`, 'i');
 
 (async() => {
@@ -92,6 +100,7 @@ var refs_regexp = new RegExp(`^(${uri_refs_stripped.join('|')})\\b`, 'i');
     task_description: safeJSONParse(argv.taskDescription),
     uri_ins: uri_ins,
     uri_refs: uri_refs,
+    uri_fp: new Set(),
     uri_dest: null,
     uri_redirects: null,
     secure_connection: {},
@@ -187,6 +196,7 @@ var refs_regexp = new RegExp(`^(${uri_refs_stripped.join('|')})\\b`, 'i');
     const l = url.parse(request.url());
     // note that hosts may appear as first and third party depending on the path
     if (isFirstParty(refs_regexp, l)) {
+      output.uri_fp.add(`${l.protocol}//${l.hostname}`);
       hosts.requests.firstParty.add(l.hostname);
     } else {
       if(l.protocol != 'data:') {
@@ -555,6 +565,8 @@ var refs_regexp = new RegExp(`^(${uri_refs_stripped.join('|')})\\b`, 'i');
     localStorage: arrayFromParties(hosts.localStorage),
     links: arrayFromParties(hosts.links),
   };
+  //convert uri_fp Set to Array
+  output.uri_fp = Array.from(output.uri_fp);
 
   // testssl integration
   if (argv.testsslExecutable) {
@@ -654,6 +666,7 @@ var refs_regexp = new RegExp(`^(${uri_refs_stripped.join('|')})\\b`, 'i');
       basedir: __dirname,
       groupBy: groupBy,
       inlineCSS: fs.readFileSync(require.resolve('github-markdown-css/github-markdown.css')),
+      firstPartySubdomains: argv.firstPartySubdomains,
     }));
 
     if (argv.html) {

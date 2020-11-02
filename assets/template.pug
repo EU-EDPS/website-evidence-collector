@@ -12,7 +12,7 @@ html(xmlns='http://www.w3.org/1999/xhtml', xml:lang='en', lang='en')
       span.smallcaps{font-variant: small-caps;}
       span.underline{text-decoration: underline;}
       div.column{display: inline-block; vertical-align: top; width: 50%;}
-      
+
       /* github */
       .markdown-body {
         box-sizing: border-box;
@@ -27,47 +27,47 @@ html(xmlns='http://www.w3.org/1999/xhtml', xml:lang='en', lang='en')
           padding: 15px;
         }
       }
-      
+
       /* custom */
       #logo{
         width: 40%;
         float: right;
         background-color: white;
       }
-      
+
       .notrunc {
         white-space: nowrap;
       }
-      
+
       .trunc {
         white-space: nowrap;
         text-overflow:ellipsis;
         overflow: hidden;
         max-width:1px;
       }
-      
+
       .markdown-body table td.code {
         padding: 0px;
       }
-      
+
       .markdown-body table td.code pre {
         margin: 0px;
       }
-      
-      body {        
+
+      body {
           background-color: white;
       }
-      
+
       td.highlighted, td.highlighted pre, li.highlighted a {
         background-color: red;
         color: white;
       }
-      
+
       @media print {
         .markdown-body h1,h2,h3,h4,h5,h6 {
           break-after: avoid-page;
         }
-        
+
         .screen-only {
           display: none;
         }
@@ -81,7 +81,7 @@ html(xmlns='http://www.w3.org/1999/xhtml', xml:lang='en', lang='en')
       h2.subtitle: a(href=uri_ins)= uri_ins
 
     h1(id="sec:evidence-collection-organisation") Evidence Collection Organisation
-    
+
     table
       colgroup
         col(style='width: 50%')
@@ -104,13 +104,13 @@ html(xmlns='http://www.w3.org/1999/xhtml', xml:lang='en', lang='en')
           td= script['host']
 
     h1(id="sec:automated-evidence-collection") Automated Evidence Collection
-    
+
     p The automated evidence collection is carried out using the tool #[a(href="https://edps.europa.eu/press-publications/edps-inspection-software_en") website evidence collector] (also #[a(href="https://github.com/EU-EDPS/website-evidence-collector") on Github]) in version #{script.version.commit || script.version.npm} on the platform #{browser.platform.name} in version #{browser.platform.version}. The tool employs the browser #{browser.name} in version #{browser.version} for browsing the website.
-    
+
     p During the browsing, the tool gathers evidence and runs a number of checks. It takes screenshots from the browser to identify potential cookie banners. It tests the use of HTTPS/SSL to check whether the website enforces a HTTPS connection. Then, the evidence collection tool scans the first web page for links to common social media and collaboration platforms for statistics on the overall use of potentially privacy-intrusive third-party web services.
 
     p The analysis of the recorded traffic between the browser and both the target web service as well as involved third-party web services, and the browser’s persistent storage follows in a #[span.citation(data-cites="sec:traffic-and-persistent-data-analysis"): a(href="#traffic-and-persistent-data-analysis") subsequent section].
-    
+
     h2(id="sec:webpage-visit") Webpage Visit
 
     p On #{new Date(start_time).toLocaleString()}, the evidence collection tool navigated the browser to #[a(href=uri_ins)= uri_ins]. The final location after potential redirects was #[a(href=uri_dest)= uri_dest]. The evidence collection tool took two screenshots #[span.citation(data-cites="fig:screenshot-top") to cover the top of the webpage] and #[span.citation(data-cites="fig:screenshot-bottom") the bottom].
@@ -126,7 +126,7 @@ html(xmlns='http://www.w3.org/1999/xhtml', xml:lang='en', lang='en')
     h2(id="sec:use-of-httpsssl") Use of HTTPS/SSL
 
     p The evidence collection tool assessed the redirecting behaviour of #{host} with respect to the use of HTTPS.
-    
+
     table.use-of-httpsssl
       colgroup
         col(style='width: 50%')
@@ -153,7 +153,7 @@ html(xmlns='http://www.w3.org/1999/xhtml', xml:lang='en', lang='en')
           tr
             td Error when connecting with HTTPS
             td= secure_connection.https_error
-                
+
     if testSSL && testSSL.scanResult[0]
       - var results = testSSL.scanResult[0]
 
@@ -167,12 +167,12 @@ html(xmlns='http://www.w3.org/1999/xhtml', xml:lang='en', lang='en')
             OK: 4,
             INFO: 5,
           };
-          
+
           return severityToNumber[a.severity]-severityToNumber[b.severity];
         }
-        
+
       p The software TestSSL from #[a(href="https://testssl.sh") https://testssl.sh] inspected the HTTPS configuration of the web service host #{results.targetHost}. It classifies detected vulnerabilities by their level of severity #[em low], #[em medium], #[em high], or #[em critical]. The severity ratings are automatically computed by the TestSSL software without consideration of the specifics of the individual website. They do not reflect the opinions or views of the website evidence collector authors. Details on the findings are listed in #[span.citation(data-cites="app:testssl"): a(href="#app:testssl") the Annex].
-      
+
       table.testssl-summary(width="100%")
         colgroup
           col
@@ -197,8 +197,8 @@ html(xmlns='http://www.w3.org/1999/xhtml', xml:lang='en', lang='en')
             td= vulnerabilitiesBySeverity['LOW'] ? vulnerabilitiesBySeverity['LOW'].length : 0
 
     h2(id="sec:use-of-social-media") Use of Social Media and Collaboration Platforms
-    
-    if links.social.length > 0    
+
+    if links.social.length > 0
       table.use-of-social-media-and-collaboration-platforms
         colgroup
           col(style='width: 50%')
@@ -214,22 +214,25 @@ html(xmlns='http://www.w3.org/1999/xhtml', xml:lang='en', lang='en')
               td= social.inner_text
     else
       p No corresponding links were found.
-    
+
     p Common social media and collaboration platforms linked from #[a(href=uri_dest)= uri_dest] have been considered.
-    
+
     h2(id="traffic-and-persistent-data-analysis") Traffic and Persistent Data Analysis
 
     p The evidence collection tool simulates a browsing session of the web service to analyse hereafter the recorded traffic between the browser and the Internet as well as the persistent data stored in the browser. First, the browser visited #[a(href=uri_dest)= uri_dest]. The evidence collection took #{browsing_history.length > 1 ? browsing_history.length - 1 : "no"} other web page(s) into account. Generally, predefined pages and a random subset of all firt-party link targets (URLs) from the initial web page #[a(href=uri_dest)= uri_dest] are considered. The exhaustive list of browsed web pages is given in #[span.citation(data-cites="app:history"): a(href="#app:history") the Annex].
 
     p The web page(s) were browsed consecutively between #{new Date(start_time).toLocaleString()} and #{new Date(end_time).toLocaleString()}.
-    
+
     p During the browsing, the HTTP Header #[a(href="https://en.wikipedia.org/wiki/Do_Not_Track") Do Not Track] was #{browser.extra_headers.dnt ? 'set' : 'not set'}.
-        
-    p For the subsequent analysis, the following hosts (with their path) were defined as first-party:
-    
+
+    p For the subsequent analysis, the following hosts (with their path) were #{firstPartySubdomains ? 'explicitly' : ''} defined as first-party:
+
     ol
       each uri in uri_refs
         li: a(href=uri)= uri.replace(/(^\w+:|^)\/\//, '')
+
+    if firstPartySubdomains
+      p Subdomains of #{uri_refs.length == 1 ? 'this domain' : 'these domains'} will be treated as first-party resources.
 
     h3(id="sec:traffic-analysis") Traffic Analysis
 
@@ -244,15 +247,15 @@ html(xmlns='http://www.w3.org/1999/xhtml', xml:lang='en', lang='en')
     p Eventually, the evidence collection tool logged all identified web forms that potentially transmit web form data using an unencrypted connection.
 
     h4 First-Party Hosts
-    
+
     ol
       each host in hosts.requests.firstParty
         li: a(href=`http://${host}`)= host
 
     p Requests have been made to #{hosts.requests.firstParty.length} distinct first-party hosts.
-    
+
     h4 Third-Party Hosts
-    
+
     ol
       each host in hosts.requests.thirdParty
         li: a(href=`http://${host}`)= host
@@ -260,7 +263,7 @@ html(xmlns='http://www.w3.org/1999/xhtml', xml:lang='en', lang='en')
     p Requests have been made to #{hosts.requests.thirdParty.length} distinct third-party hosts.
 
     h4 First-Party Web Beacon Hosts
-    
+
     ol
       each host in hosts.beacons.firstParty
         li: a(href=`http://${host}`)= host
@@ -271,18 +274,18 @@ html(xmlns='http://www.w3.org/1999/xhtml', xml:lang='en', lang='en')
       p No first-party web beacons were found.
 
     h4 Third-Party Web Beacon Hosts
-    
+
     ol
       each host in hosts.beacons.thirdParty
         li: a(href=`http://${host}`)= host
-        
+
     if hosts.beacons.thirdParty.length > 0
       p Potential third-party web beacons were sent to #{hosts.beacons.thirdParty.length} distinct hosts. Corresponding HTTP requests for first- and third-parties are listed in #[span.citation(data-cites="app:annex-beacons"): a(href="#app:annex-beacons") the Annex].
     else
       p No third-party web beacons were found.
 
     h4(id="sec:unsecure-forms") Web Forms with non-encrypted Transmission
-    
+
     if unsafeForms.length > 0
       table.unfase-webforms
         colgroup
@@ -309,12 +312,12 @@ html(xmlns='http://www.w3.org/1999/xhtml', xml:lang='en', lang='en')
     h3(id="sec:persistent-data-analysis") Persistent Data Analysis
 
     p The evidence collection tool analysed persistent cookies after the browsing session. Web pages can also use the persistent HTML5 #[em local storage]. #[span.citation(data-cites="sec:local-storage"): a(href="#sec:local-storage") The subsequent section] lists its content after the browsing.
-    
+
     - var cookiesByStorage = groupBy(cookies, 'firstPartyStorage')
-    
+
     each cookieList,index in {'First-Party': cookiesByStorage['true'] || [], 'Third-Party': cookiesByStorage['false'] || []}
       h4 Cookies linked to #{index} Hosts
-    
+
       if cookieList.length > 0
         table.cookies(width="100%")
           colgroup
@@ -348,7 +351,7 @@ html(xmlns='http://www.w3.org/1999/xhtml', xml:lang='en', lang='en')
         p No #{cookieList.length} #{index.toLowerCase()} cookies were found.
 
     h4(id="sec:local-storage") Local Storage
-    
+
     if Object.keys(localStorage).length > 0
       table(width="100%").local-storage
         colgroup
@@ -375,22 +378,22 @@ html(xmlns='http://www.w3.org/1999/xhtml', xml:lang='en', lang='en')
       p The local storage has found to be empty.
 
     h1(id="app:annex") Annex
-    
+
     h2(id="app:history") Browsing History
-    
+
     p For the collection of evidence, the browser navigated consecutively to the following #{browsing_history.length} webpage(s):
-    
+
     ol
       each link in browsing_history
         li: a(href=link)= link
-            
+
     h2(id="app:annex-beacons") All Beacons
-    
+
     p The data transmitted by beacons using HTTP GET parameters are decoded for improved readability and displayed beneath the beacon URL.
-    
+
     each beaconsByList, listName in groupBy(beacons, 'listName')
       h5(id=`annex-beacons-${listName}`)= listName
-    
+
       table.adblock-findings(style="width: 100%;")
         colgroup
           col(width="0%")
@@ -411,16 +414,16 @@ html(xmlns='http://www.w3.org/1999/xhtml', xml:lang='en', lang='en')
               tr
                 td.notrunc
                 td.trunc.code(colspan=2): pre: code= JSON.stringify(beacon.query, null, 2).split("\n").slice(1,-1).join("\n").replace(/^  /mg , '')
-    
+
     if testSSL
       - var results = testSSL.scanResult[0]
-      
+
       h2(id="app:testssl") TestSSL Scan
-      
+
       p The following data stems from a #[a(href="https://testssl.sh/") TestSSL] scan. The severity ratings are automatically computed by the TestSSL software without consideration of the specifics of the individual website. They do not reflect the opinions or views of the website evidence collector authors.
-      
+
       p.screen-only #[a(href="testssl/testssl.html") Click here] to check wether the full TestSSL scan report is available.
-      
+
       table(width="100%")
         colgroup
           col
@@ -435,13 +438,13 @@ html(xmlns='http://www.w3.org/1999/xhtml', xml:lang='en', lang='en')
           tr
             td Target Host
             td #{results.targetHost} (#{results.ip})
-        
+
       h3 Protocols
-      
+
       table(width="100%")
         colgroup
           col(style='width: 0%')
-          col(style='width: 100%') 
+          col(style='width: 100%')
           col(style='width: 0%')
         thead
           tr
@@ -454,13 +457,13 @@ html(xmlns='http://www.w3.org/1999/xhtml', xml:lang='en', lang='en')
               td.notrunc= protocol.id
               td= protocol.finding
               td.notrunc= protocol.severity
-              
+
       h3 HTTPS/SSL Vulnerabilities
 
       table(width="100%")
         colgroup
           col(style='width: 0%')
-          col(style='width: 80%') 
+          col(style='width: 80%')
           col(style='width: 20%')
           col(style='width: 0%')
         thead
@@ -474,19 +477,19 @@ html(xmlns='http://www.w3.org/1999/xhtml', xml:lang='en', lang='en')
             tr
               td.notrunc= vulnerability.id
               td.trunc(title=vulnerability.finding)= vulnerability.finding
-              td.trunc(title=vulnerability.cve).trunc                  
+              td.trunc(title=vulnerability.cve).trunc
                 if vulnerability.cve
                   each cve in vulnerability.cve.split(' ')
                     a(href=`https://cve.mitre.org/cgi-bin/cvename.cgi?name=${cve}`)= cve
                     |
               td.notrunc= vulnerability.severity
-              
+
       h3 Cipher Categories
-      
+
       table(width="100%")
         colgroup
           col(style='width: 0%')
-          col(style='width: 100%') 
+          col(style='width: 100%')
           col(style='width: 0%')
           col(style='width: 0%')
         thead
@@ -504,13 +507,13 @@ html(xmlns='http://www.w3.org/1999/xhtml', xml:lang='en', lang='en')
                 if cipher.cwe
                   a(href=`https://cwe.mitre.org/cgi-bin/jumpmenu.cgi?id=${cipher.cwe.replace('CWE-','')}`)= cipher.cwe
               td.notrunc= cipher.severity
-      
+
       h3 HTTP Header Responses
 
       table(width="100%")
         colgroup
           col(style='width: 0%')
-          col(style='width: 100%') 
+          col(style='width: 100%')
           col(style='width: 0%')
         thead
           tr
@@ -523,7 +526,7 @@ html(xmlns='http://www.w3.org/1999/xhtml', xml:lang='en', lang='en')
               td.notrunc= response.id
               td.trunc(title=response.finding)= response.finding
               td.notrunc= response.severity
-          
+
     h2(id='app:glossary') Glossary
     dl
       dt Filter Lists
@@ -548,13 +551,13 @@ html(xmlns='http://www.w3.org/1999/xhtml', xml:lang='en', lang='en')
       dd The #[em host] in the URL of a #[em request] of a #[em Web Beacon] is called #[em Web Beacon host].
 
     script.
-      function highlighter(item) { 
+      function highlighter(item) {
          item.addEventListener('dblclick', function() {
              item.classList.toggle('highlighted');
-         }, false);    
+         }, false);
       }
       // highlighting for table cells
       [].forEach.call(document.getElementsByTagName('td'), highlighter);
       // highlighting for list items
       [].forEach.call(document.getElementsByTagName('li'), highlighter);
-  
+
