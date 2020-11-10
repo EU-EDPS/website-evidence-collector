@@ -648,7 +648,7 @@ var refs_regexp = new RegExp(`^(${uri_refs_stripped.join('|')})\\b`, 'i');
   }
 
   if (argv.output || argv.html) {
-    let html_template = argv.html_template || path.join(__dirname, 'assets/template.pug');
+    let html_template = argv['html-template'] || path.join(__dirname, 'assets/template.pug');
     let html_dump = pug.renderFile(html_template, Object.assign({}, output, {
       pretty: true,
       basedir: __dirname,
