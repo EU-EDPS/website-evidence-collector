@@ -26,6 +26,7 @@
 * feature: include medium.com and tiktok.com links in social media subsection of output link list
 * bugfix: handle non-zero testSSL error codes according to https://github.com/drwetter/testssl.sh/blob/3.1dev/doc/testssl.1.md#exit-status
 * bugfix: catch and log error "Frame not found for the given security origin" (thanks to Hamburg DPA staff!)
+* bugfix: fix CLI option to pass custom templates (https://github.com/EU-EDPS/website-evidence-collector/issues/38) 
 
 ## 0.4.0 / 2020-01-17
 
