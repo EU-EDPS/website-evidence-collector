@@ -2,7 +2,7 @@
 #
 # Usage:
 #
-# build from source code folder: docker build -t website-evidence-collector
+# build from source code folder: docker build -t website-evidence-collector .
 # run container with e.g.:
 # docker run --rm -it --cap-add=SYS_ADMIN -v $(pwd)/output:/output \
 #   website-evidene-collector http://example.com/about
