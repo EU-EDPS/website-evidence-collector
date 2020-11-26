@@ -6,6 +6,8 @@
 # run container with e.g.:
 # docker run --rm -it --cap-add=SYS_ADMIN -v $(pwd)/output:/output \
 #   website-evidene-collector http://example.com/about
+# If you hit the Error: EACCES: permission denied,
+# then try "mkdir output && chown 1000 output"
 
 FROM alpine:edge
 
@@ -20,7 +22,7 @@ LABEL org.label-schema.description="Website Evidence Collector running in a tiny
 
 # Installs latest Chromium (77) package.
 RUN apk add --no-cache \
-      chromium~=80.0.3987 \
+      chromium \
       nss \
       freetype \
       freetype-dev \
@@ -28,7 +30,7 @@ RUN apk add --no-cache \
       ca-certificates \
       ttf-freefont \
       nodejs \
-      yarn~=1.22.4 \
+      yarn~=1.22.10 \
 # Packages linked to testssl.sh
       bash procps drill coreutils libidn curl \
 # Toolbox for advanced interactive use of WEC in container
