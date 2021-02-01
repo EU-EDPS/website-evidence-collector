@@ -135,6 +135,15 @@ The configuration is compatible with the cookie option (`--cookie` or `-b`) of t
 - Image files (here only `*.png`) can be opened with any image view bundled with your operating system and with modern Web browsers.
 - HAR files (`*.har`) can be opened with modern web browsers. For this, open the web developer toolbar, switch to the network tab and drag'n'drop the HAR file in here.
 
+#### How do I change the `User-Agent` request header?
+
+The website evidence collector uses a user agent header of Chrome that is defined in the top of the file `website-evidence-collector.js`. However, the value can be overwritten any other value, e.g. `WEC`:
+
+1. `WEC_BROWSER_OPTIONS="--user-agent=WEC" website-evidence-collector https://example.com`
+2. `website-evidence-collector https://example.com -- --user-agent=WEC`
+
+**Note:** The website may behave differently with different user agent headers.
+
 #### What is the meaning of the files and directories in the output?
 
 The website evidence collector stores a number of files in an output directory unless the option `--no-output` has been used. The following files are stored:

@@ -1,5 +1,7 @@
 ## HEAD
 
+* documentation: explain in FAQ how to change the `User-Agent` request header
+
 ## 1.0.0 / 2021-01-07
 
 * fix an issue when tool crashes when the browsing of multiple random pages with `--max` includes PDF files and other downloads: selected links are tested first to have mime type `text/html` using a HEAD HTTP request outside of the browser.
@@ -28,7 +30,7 @@
 * feature: include medium.com and tiktok.com links in social media subsection of output link list
 * bugfix: handle non-zero testSSL error codes according to https://github.com/drwetter/testssl.sh/blob/3.1dev/doc/testssl.1.md#exit-status
 * bugfix: catch and log error "Frame not found for the given security origin" (thanks to Hamburg DPA staff!)
-* bugfix: fix CLI option to pass custom templates (https://github.com/EU-EDPS/website-evidence-collector/issues/38) 
+* bugfix: fix CLI option to pass custom templates (https://github.com/EU-EDPS/website-evidence-collector/issues/38)
 
 ## 0.4.0 / 2020-01-17
 
