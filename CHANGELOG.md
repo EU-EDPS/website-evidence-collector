@@ -1,5 +1,6 @@
 ## HEAD
 
+* update: node dependencies, most importantly puppeteer to v7 that embeds Chromium browser to v90
 * documentation: explain in FAQ how to change the `User-Agent` request header
 
 ## 1.0.0 / 2021-01-07
