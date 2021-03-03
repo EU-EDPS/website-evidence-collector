@@ -14,7 +14,7 @@
     "github-markdown-css": "^3.0.1",
     "js-yaml": "^3.14.1",
     "lodash": "^4.17.20",
-    "pug": "^3.0.0",
+    "pug": "^3.0.2",
     "puppeteer": "~7.1.0",
     "puppeteer-har": "^1.1.2",
     "request": "^2.88.2",
