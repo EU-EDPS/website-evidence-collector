@@ -5,7 +5,7 @@
 # build from source code folder: docker build -t website-evidence-collector .
 # run container with e.g.:
 # docker run --rm -it --cap-add=SYS_ADMIN -v $(pwd)/output:/output \
-#   website-evidene-collector http://example.com/about
+#   website-evidence-collector http://example.com/about
 # If you hit the Error: EACCES: permission denied,
 # then try "mkdir output && chown 1000 output"
 
