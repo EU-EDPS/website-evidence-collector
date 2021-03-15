@@ -258,7 +258,7 @@ var refs_regexp = new RegExp(`^(${uri_refs_stripped.join('|')})\\b`, 'i');
     output.secure_connection.http_error = error.toString();
   }
 
-  await page.waitFor(argv.sleep); // in ms
+  await page.waitForTimeout(argv.sleep); // in ms
   let localStorage = await getLocalStorage(page);
 
   const links_with_duplicates = await page.evaluate( () => {
@@ -368,7 +368,7 @@ var refs_regexp = new RegExp(`^(${uri_refs_stripped.join('|')})\\b`, 'i');
       continue;
     }
 
-    await page.waitFor(argv.sleep); // in ms
+    await page.waitForTimeout(argv.sleep); // in ms
     localStorage = await getLocalStorage(page, localStorage);
   }
 

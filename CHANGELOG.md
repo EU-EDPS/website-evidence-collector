@@ -1,5 +1,6 @@
 ## HEAD
 
+* update: puppeteer API calls: migrate away from `waitFor`, see https://github.com/puppeteer/puppeteer/issues/6214
 * update: node dependencies, most importantly puppeteer to v7 that embeds Chromium browser to v90
 * documentation: explain in FAQ how to change the `User-Agent` request header
 * fix: improved support for Netscape cookie file format ([#53](https://github.com/EU-EDPS/website-evidence-collector/issues/53))
