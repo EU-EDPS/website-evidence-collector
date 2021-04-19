@@ -1,5 +1,6 @@
 ## HEAD
 
+* update: update bundled filterlists easyprivacy.txt and fanboy-annoyance.txt to the most recent version as of 2021-04-19
 * fix: catch crash when `request.frame()` evaluates to `null` (some error pages).
 * dependency: require node version >= 14.2.0 (released April 2020)
 * update: puppeteer API calls: migrate away from `waitFor`, see https://github.com/puppeteer/puppeteer/issues/6214
