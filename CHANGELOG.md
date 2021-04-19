@@ -1,5 +1,7 @@
 ## HEAD
 
+* fix: catch crash when `request.frame()` evaluates to `null` (some error pages).
+* dependency: require node version >= 14.2.0 (released April 2020)
 * update: puppeteer API calls: migrate away from `waitFor`, see https://github.com/puppeteer/puppeteer/issues/6214
 * update: node dependencies, most importantly puppeteer to v7 that embeds Chromium browser to v90
 * documentation: explain in FAQ how to change the `User-Agent` request header
