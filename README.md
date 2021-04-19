@@ -142,6 +142,7 @@ Please find a collection of frequently asked questions with answers in [FAQ.md](
 
 - Robert Riemann (European Data Protection Supervisor, initial author)
 - Company BitnessWise <https://www.bitnesswise.com/> (code to preset cookies)
+- Roland Schilling ([DPA Hamburg](https://datenschutz-hamburg.de/))
 
 ## License
 
