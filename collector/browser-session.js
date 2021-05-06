@@ -209,7 +209,7 @@ async function createBrowserSession(browser_args, browser_logger) {
           continue;
         }
 
-        await page.waitFor(args.sleep); // in ms
+        await page.waitForTimeout(args.sleep); // in ms
         localStorage = await getLocalStorage(page, localStorage);
       }
 
