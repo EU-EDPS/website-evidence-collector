@@ -1,5 +1,5 @@
 const StandardConfig = require("../config.js");
-const WebsiteEvidenceCollector = require("../website-evidence-collector.js");
+const WebsiteEvidenceCollector = require("../website-evidence-collector-lib.js");
 const logger = require("../lib/logger");
 const tmplogger = require("../lib/tmplogger");
 
