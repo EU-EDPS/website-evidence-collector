@@ -1,5 +1,6 @@
 ## HEAD
 
+* update: node dependency *yargs* and *tough-cookie*
 * update: migrate from depreciated NPM package *request* to *got*
 * fix: ignore `Error: unable to verify the first certificate` during mime-type test
 * update: update bundled filterlists easyprivacy.txt and fanboy-annoyance.txt to the most recent version as of 2021-04-19
