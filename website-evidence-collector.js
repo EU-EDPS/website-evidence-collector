@@ -357,8 +357,8 @@ var refs_regexp = new RegExp(`^(${uri_refs_stripped.join('|')})\\b`, 'i');
         },
       });
 
-      if(!head['content-type'].startsWith('text/html')) {
-        logger.log('info', `skipping now ${link} of mime-type ${head['content-type']}`, {type: 'Browser'});
+      if(!head.headers['content-type'].startsWith('text/html')) {
+        logger.log('info', `skipping now ${link} of mime-type ${head.headers['content-type']}`, {type: 'Browser'});
         continue;
       }
 
