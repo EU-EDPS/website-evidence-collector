@@ -24,7 +24,7 @@ const url = require('url');
 const yaml = require('js-yaml');
 const path = require('path');
 const pug = require('pug');
-const request = require('request-promise-native');
+const got = require('got');
 const {gitDescribeSync} = require('git-describe');
 
 const escapeRegExp = require('lodash/escapeRegExp');
@@ -224,10 +224,8 @@ var refs_regexp = new RegExp(`^(${uri_refs_stripped.join('|')})\\b`, 'i');
   try {
     uri_ins_https = new url.URL(uri_ins);
     uri_ins_https.protocol = 'https:';
-    await request(uri_ins_https.toString(), {
+    await got(uri_ins_https, {
       followRedirect: false,
-      resolveWithFullResponse: true,
-      simple: false,
     });
     output.secure_connection.https_support = true;
   } catch(error) {
@@ -239,15 +237,15 @@ var refs_regexp = new RegExp(`^(${uri_refs_stripped.join('|')})\\b`, 'i');
   try {
     let uri_ins_http = new url.URL(uri_ins);
     uri_ins_http.protocol = 'http:';
-    let res = await request(uri_ins_http.toString(), {
+    let res = await got(uri_ins_http, {
       followRedirect: true,
-      resolveWithFullResponse: true,
-      simple: false,
       // ignore missing/wrongly configured SSL certificates when redirecting to
       // HTTPS to avoid reporting SSL errors in the output field http_error
-      strictSSL: false,
+      https: {
+        rejectUnauthorized: false,
+      },
     });
-    output.secure_connection.redirects = res.request._redirect.redirects.map(r => r.redirectUri);
+    output.secure_connection.redirects = res.redirectUrls;
     if (output.secure_connection.redirects.length > 0) {
       let last_redirect_url = new url.URL(output.secure_connection.redirects[output.secure_connection.redirects.length-1]);
       output.secure_connection.https_redirect = last_redirect_url.protocol.includes('https');
@@ -350,12 +348,13 @@ var refs_regexp = new RegExp(`^(${uri_refs_stripped.join('|')})\\b`, 'i');
   for (const link of output.browsing_history.slice(1)) {
     try {
       // check mime-type and skip if not html
-      const head = await request({
+      const head = await got(link, {
         method: 'HEAD',
-        uri: link,
         // ignore Error: unable to verify the first certificate (https://stackoverflow.com/a/36194483)
         // certificate errors should be checked in the context of the browsing and not during the mime-type check
-        rejectUnauthorized: false,
+        https: {
+          rejectUnauthorized: false,
+        },
       });
 
       if(!head['content-type'].startsWith('text/html')) {
