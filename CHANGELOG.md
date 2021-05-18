@@ -1,5 +1,6 @@
 ## HEAD
 
+* fix: ignore `Error: unable to verify the first certificate` during mime-type test
 * update: update bundled filterlists easyprivacy.txt and fanboy-annoyance.txt to the most recent version as of 2021-04-19
 * fix: catch crash when `request.frame()` evaluates to `null` (some error pages).
 * dependency: require node version >= 14.2.0 (released April 2020)

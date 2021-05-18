@@ -353,6 +353,9 @@ var refs_regexp = new RegExp(`^(${uri_refs_stripped.join('|')})\\b`, 'i');
       const head = await request({
         method: 'HEAD',
         uri: link,
+        // ignore Error: unable to verify the first certificate (https://stackoverflow.com/a/36194483)
+        // certificate errors should be checked in the context of the browsing and not during the mime-type check
+        rejectUnauthorized: false,
       });
 
       if(!head['content-type'].startsWith('text/html')) {
