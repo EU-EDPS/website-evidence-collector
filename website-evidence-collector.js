@@ -321,12 +321,10 @@ var refs_regexp = new RegExp(`^(${uri_refs_stripped.join('|')})\\b`, 'i');
   output.browsing_history = [output.uri_dest].concat(browse_user_set, browse_links.map( l => l.href ));
 
   browse_pages = output.browsing_history;
-  p = 0;
+  var p = 0, spider_pages = 0;
   while (p < browse_pages.length) {
     link = browse_pages[p];
     p++;
-
-    //logger.info(output.browsing_history.length);
 
     try {
       // check mime-type and skip if not html
@@ -356,16 +354,22 @@ var refs_regexp = new RegExp(`^(${uri_refs_stripped.join('|')})\\b`, 'i');
     localStorage = await getLocalStorage(page, localStorage);
 
     const spider = getSpiderValue();
-    // If spider is zero, don't activate it
-    if (spider != 0) {
+    // If spider is zero or if we reached the maximum number of pages to spider, don't activate it
+    if (spider != 0 && spider_pages < spider) {
       let pageLinks = await getPageLinks(page);
       for (const link of pageLinks.firstParty) {
         if (!browse_pages.includes(link.href)) {
           //logger.log('info', 'Adding '+link.href);
           browse_pages.push(link.href);
+	  spider_pages++;
         }
+	if (spider_pages >= spider) {
+	  // we reached the maximum number of pages to spider
+	  break;
+	}
       }
-
+    }
+    if (spider != 0) {
       if (spider > 0 && spider <= p) {
         logger.log('info', 'reached the maximum urls to spider ('+spider+')')
         break;
