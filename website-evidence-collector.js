@@ -324,6 +324,7 @@ var refs_regexp = new RegExp(`^(${uri_refs_stripped.join('|')})\\b`, 'i');
   p = 0;
   while (p < browse_pages.length) {
     link = browse_pages[p];
+    p++;
 
     //logger.info(output.browsing_history.length);
 
@@ -355,7 +356,6 @@ var refs_regexp = new RegExp(`^(${uri_refs_stripped.join('|')})\\b`, 'i');
     localStorage = await getLocalStorage(page, localStorage);
 
     const spider = getSpiderValue();
-    p++;
     // If spider is zero, don't activate it
     if (spider != 0) {
       let pageLinks = await getPageLinks(page);
