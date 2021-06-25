@@ -34,7 +34,7 @@ const sampleSize = require('lodash/sampleSize');
 const uniqWith = require('lodash/uniqWith');
 const pickBy = require('lodash/pickBy');
 
-const { isFirstParty, getLocalStorage, safeJSONParse, getPageLinks } = require('./lib/tools');
+const { isFirstParty, getLocalStorage, safeJSONParse, getPageLinks, getSpiderValue } = require('./lib/tools');
 
 const uri_ins = argv._[0];
 const uri_ins_host = url.parse(uri_ins).hostname; // hostname does not include port unlike host
@@ -354,9 +354,10 @@ var refs_regexp = new RegExp(`^(${uri_refs_stripped.join('|')})\\b`, 'i');
     await page.waitForTimeout(argv.sleep); // in ms
     localStorage = await getLocalStorage(page, localStorage);
 
+    const spider = getSpiderValue();
     p++;
-    // spider defaults to 0. If it's zero, don't activate it
-    if (argv.spider != 0) {
+    // If spider is zero, don't activate it
+    if (spider != 0) {
       let pageLinks = await getPageLinks(page);
       for (const link of pageLinks.firstParty) {
         if (!browse_pages.includes(link.href)) {
@@ -365,8 +366,8 @@ var refs_regexp = new RegExp(`^(${uri_refs_stripped.join('|')})\\b`, 'i');
         }
       }
 
-      if (argv.spider > 0 && argv.spider <= p) {
-        logger.log('info', 'reached the maximum urls to spider ('+argv.spider+')')
+      if (spider > 0 && spider <= p) {
+        logger.log('info', 'reached the maximum urls to spider ('+spider+')')
         break;
       }
       else {
@@ -375,7 +376,7 @@ var refs_regexp = new RegExp(`^(${uri_refs_stripped.join('|')})\\b`, 'i');
       }
     }
     else {
-      logger.info('spider is zero');
+      logger.info('not acting as spider');
     }
   }
 

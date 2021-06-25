@@ -121,6 +121,16 @@ The configuration is compatible with the cookie option (`--cookie` or `-b`) of t
 - <https://curl.haxx.se/docs/manpage.html#-b>
 - <https://curl.haxx.se/docs/http-cookies.html>
 
+#### How do I gather evidence of all the pages of a website?
+
+You can make the tool act like a spider (crawler), which is similar to what a search-engine does when visiting a website. In this mode, the website-evidence-collector will crawl every (unique) url it finds in the HTML source, thereby visiting every page of the website that has at least 1 link pointing to it. By default it will not stop until it has spidered every unique url.
+
+    website-evidence-collector http://edps.europa.eu -x
+
+Optionally, you can choose to cap this behaviour to a maximum amount of pages. For example, this will limit the spider functionality to a maximum of 100 pages
+
+    website-evidence-collector http://edps.europa.eu -x 100
+
 ## Evaluation of the Output
 
 #### Which applications do you recommend to open and display the output?
