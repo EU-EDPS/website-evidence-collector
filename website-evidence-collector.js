@@ -313,7 +313,7 @@ var refs_regexp = new RegExp(`^(${uri_refs_stripped.join('|')})\\b`, 'i');
   });
 
   // record screenshots
-  if (argv.output) {
+  if (argv.output && argv.screenshots) {
     try {
       await page.screenshot({path: path.join(argv.output, 'screenshot-top.png')});
       await page.evaluate( () => {
