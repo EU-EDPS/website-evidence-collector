@@ -98,6 +98,26 @@ website-evidence-collector --output https://example.com | pino-pretty --timestam
 
 The formatting and provided information for pretty printing is configured in the script section of the [package.json](./package.json).
 
+## Running as a Node script
+
+For some use cases it's preferrable to run the evidence-collector from within a node script. Here's how:
+
+```js
+const collector = require('website-evidence-collector');
+(async () => {
+  const uri = 'https://somewebsite.com/en/';
+  const options = {
+    // ... see index.js for default options
+    firstPartyUri: [ 'https://somewebsite.com/' ],
+  }
+
+  console.log('collecting data …');
+  const data = await collector(uri, options);
+  console.log('done!', Object.keys(data));
+
+})();
+```
+
 ## Frequently Asked Questions
 
 Please find a collection of frequently asked questions with answers in [FAQ.md](FAQ.md)
