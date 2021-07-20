@@ -11,6 +11,7 @@ const defaultOptions = {
   headless: true,
   dnt: false,
   dntJs: false,
+  headers: {}, // { name: 'value', }
   output: false, // './output',
   yaml: false,
   json: false,
