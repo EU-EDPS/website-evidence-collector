@@ -1,5 +1,6 @@
 ## HEAD
 
+* update: update puppeteer version to v10.1.0
 * fix: fix crash due to non-compliant cookies and log non-compliant cookies (thanks to Hamburg DPA staff!)
 * update: migrate from depreciated NPM package *request* to *got*
 * fix: ignore `Error: unable to verify the first certificate` during mime-type test
