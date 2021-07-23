@@ -1,4 +1,4 @@
-const collector = require('./collector');
+const collector = require('./lib/collector');
 
 // default options when running as a node script
 const defaultOptions = {

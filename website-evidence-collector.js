@@ -6,7 +6,7 @@
  * @copyright European Data Protection Supervisor (2019)
  * @license EUPL-1.2
  */
-const collector = require('./collector');
+const collector = require('./lib/collector');
 const argv = require('./lib/argv');
 
 collector(argv._[0], argv);
