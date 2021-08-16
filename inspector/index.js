@@ -1,5 +1,12 @@
 const groupBy = require("lodash/groupBy");
 const flatten = require("lodash/flatten");
+const url = require("url");
+
+const {
+  isFirstParty,
+  getLocalStorage,
+  safeJSONParse,
+} = require("../lib/tools");
 
 async function inspector(args, logger, pageSession, output) {
   const c = {
@@ -63,7 +70,7 @@ async function inspector(args, logger, pageSession, output) {
 
       if (
         isFirstParty(
-          page_session.refs_regexp,
+          c.pageSession.refs_regexp,
           `cookie://${cookie.domain}${cookie.path}`
         )
       ) {
