@@ -3,25 +3,30 @@ const yaml = require("js-yaml");
 const path = require("path");
 const pug = require("pug");
 
-function inspector(args) {
+const groupBy = require("lodash/groupBy");
+const flatten = require("lodash/flatten");
+
+function reporter(args) {
   const c = {
     args: args,
   };
 
-  c.saveJson = function (filename, data) {
+  console.log(c.args);
+
+  c.saveJson = function (data, filename) {
     let json_dump = JSON.stringify(data, null, 2);
     fs.writeFileSync(path.join(c.args.output, filename), json_dump);
   };
 
-  c.saveYaml = function (filename, data) {
+  c.saveYaml = function (data, filename) {
     let yaml_dump = yaml.safeDump(data, { noRefs: true });
-    fs.writeFileSync(path.join(c.args.output, filname), yaml_dump);
+    fs.writeFileSync(path.join(c.args.output, filename), yaml_dump);
   };
 
   c.generateHtml = function (
     data,
     filename = "inspection.html",
-    template = "assets/template.pug"
+    template = "../assets/template.pug"
   ) {
     let html_template =
       c.args["html-template"] || path.join(__dirname, template);
@@ -29,7 +34,7 @@ function inspector(args) {
       html_template,
       Object.assign({}, data, {
         pretty: true,
-        basedir: __dirname,
+        basedir: path.join(__dirname, "../assets"),
         groupBy: groupBy,
         inlineCSS: fs.readFileSync(
           require.resolve("github-markdown-css/github-markdown.css")
@@ -42,3 +47,5 @@ function inspector(args) {
 
   return c;
 }
+
+module.exports = reporter;
