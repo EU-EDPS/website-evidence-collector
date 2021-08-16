@@ -8,7 +8,7 @@ function cfg(url) {
     dnt: false,
     dntJs: false,
     output: "./output",
-    overwrite: false,
+    overwrite: true,
     yaml: false,
     json: false,
     html: false,
@@ -17,6 +17,7 @@ function cfg(url) {
     browserOptions: [],
     lang: "en",
     pageTimeout: 0,
+    screenshots: true,
   };
 }
 
