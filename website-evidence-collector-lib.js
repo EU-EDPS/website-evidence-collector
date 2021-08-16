@@ -39,7 +39,7 @@ async function run(args, logger) {
 
   // browse sample history and log to localstorage
   let browse_user_set = args.browseLink || [];
-  await collect.browseSamples(localStorage, browse_user_set);
+  await collect.browseSamples(collect.output.localStorage, browse_user_set);
 
   // END OF BROWSING - discard the browser and page
   await collect.endSession();
@@ -73,7 +73,6 @@ async function run(args, logger) {
       report.saveJson(collect.output.websocketLog, "websockets-log.json");
 
       // all
-      let json_dump = JSON.stringify(collect.output, null, 2);
       report.saveJson(collect.output, "inspection.json");
     }
 
@@ -85,7 +84,7 @@ async function run(args, logger) {
       report.saveYaml(collect.output.localStorage, "local-storage.yml");
 
       // beacons
-      report.saveYaml(collect.output.beacon, "beacons.yml");
+      report.saveYaml(collect.output.beacons, "beacons.yml");
 
       // all
       report.saveYaml(collect.output, "inspection.yml");
