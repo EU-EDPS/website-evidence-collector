@@ -1,0 +1,212 @@
+{
+  "title": "Website Evidence Collection",
+  "task_description": null,
+  "uri_ins": "https://www.test.com",
+  "uri_refs": [
+    "https://www.test.com"
+  ],
+  "uri_dest": "https://www.test.com/",
+  "uri_redirects": [],
+  "secure_connection": {
+    "https_redirect": false,
+    "redirects": [],
+    "https_support": false,
+    "https_error": null,
+    "http_error": null
+  },
+  "testSSLError": null,
+  "testSSLErrorOutput": null,
+  "testSSLErrorCode": null,
+  "testSSL": null,
+  "host": "www.test.com",
+  "script": {
+    "host": "ZALANDO-60642",
+    "version": {
+      "npm": "1.0.0",
+      "commit": "v0.4.0-85-g45a513d-dirty"
+    },
+    "cmd_args": "--detectOpenHandles",
+    "environment": {},
+    "node_version": "v11.8.0"
+  },
+  "localStorage": {
+    "https://www.youtube.com": {
+      "yt-remote-device-id": {
+        "value": {
+          "data": "9b895b13-3602-4445-8afb-285884afdd33",
+          "expiration": 1660635790134,
+          "creation": 1629099790134
+        }
+      },
+      "yt-remote-connected-devices": {
+        "value": {
+          "data": "[]",
+          "expiration": 1629186190146,
+          "creation": 1629099790146
+        }
+      }
+    }
+  },
+  "cookies": [
+    {
+      "name": "YPF8827340282Jdskjhfiw_928937459182JAX666",
+      "value": "176.63.12.7",
+      "domain": "www.test.com",
+      "path": "/",
+      "expires": 1629963788,
+      "size": 52,
+      "httpOnly": false,
+      "secure": false,
+      "session": false,
+      "priority": "Medium",
+      "sameParty": false,
+      "expiresUTC": "2021-08-26T07:43:08.000Z",
+      "expiresDays": 10
+    },
+    {
+      "name": "YSC",
+      "value": "FC1hi-UQI60",
+      "domain": "youtube.com",
+      "path": "/",
+      "expires": -1,
+      "size": 14,
+      "httpOnly": true,
+      "secure": true,
+      "session": true,
+      "sameSite": "None",
+      "priority": "Medium",
+      "sameParty": false
+    },
+    {
+      "name": "VISITOR_INFO1_LIVE",
+      "value": "u2d3rL0UVow",
+      "domain": "youtube.com",
+      "path": "/",
+      "expires": 1644651789.592744,
+      "size": 29,
+      "httpOnly": true,
+      "secure": true,
+      "session": false,
+      "sameSite": "None",
+      "priority": "Medium",
+      "sameParty": false,
+      "expiresUTC": "2022-02-12T07:43:09.592Z",
+      "expiresDays": 180
+    },
+    {
+      "name": "_ga",
+      "value": "GA1.2.2104503862.1629099790",
+      "domain": "test.com",
+      "path": "/",
+      "expires": 1692171789,
+      "size": 30,
+      "httpOnly": false,
+      "secure": false,
+      "session": false,
+      "priority": "Medium",
+      "sameParty": false,
+      "expiresUTC": "2023-08-16T07:43:09.000Z",
+      "expiresDays": 730
+    },
+    {
+      "name": "_gid",
+      "value": "GA1.2.1841601494.1629099790",
+      "domain": "test.com",
+      "path": "/",
+      "expires": 1629186189,
+      "size": 31,
+      "httpOnly": false,
+      "secure": false,
+      "session": false,
+      "priority": "Medium",
+      "sameParty": false,
+      "expiresUTC": "2021-08-17T07:43:09.000Z",
+      "expiresDays": 1
+    },
+    {
+      "name": "_gat_UA-3518049-1",
+      "value": "1",
+      "domain": "test.com",
+      "path": "/",
+      "expires": 1629099849,
+      "size": 18,
+      "httpOnly": false,
+      "secure": false,
+      "session": false,
+      "priority": "Medium",
+      "sameParty": false,
+      "expiresUTC": "2021-08-16T07:44:09.000Z",
+      "expiresDays": 0
+    },
+    {
+      "name": "IDE",
+      "value": "AHWqTUnuHTz_PvPBEgFX1IV9CM9DM6oFeTV1Byj1XZEKkBKLLP9CkjRUXN0_mwLE",
+      "domain": "doubleclick.net",
+      "path": "/",
+      "expires": 1662795790.234524,
+      "size": 67,
+      "httpOnly": true,
+      "secure": true,
+      "session": false,
+      "sameSite": "None",
+      "priority": "Medium",
+      "sameParty": false,
+      "expiresUTC": "2022-09-10T07:43:10.234Z",
+      "expiresDays": 390
+    }
+  ],
+  "beacons": [],
+  "links": {
+    "firstParty": [
+      {
+        "href": "https://www.test.com/",
+        "inner_text": "",
+        "inner_html": "<h1><img src=\"img/test.com-logo.png\" alt=\"Test.com create tests\"></h1>"
+      },
+      {
+        "href": "https://www.test.com/contact.html",
+        "inner_text": "Contact",
+        "inner_html": "Contact"
+      },
+      {
+        "href": "https://www.test.com/privacy-policy.html",
+        "inner_text": "Privacy Policy",
+        "inner_html": "Privacy Policy"
+      }
+    ],
+    "thirdParty": [
+      {
+        "href": "https://www.gaugeonline.com/",
+        "inner_text": "Learn More About Gauge",
+        "inner_html": "Learn More About Gauge"
+      }
+    ],
+    "social": [],
+    "keywords": [
+      {
+        "href": "https://www.test.com/privacy-policy.html",
+        "inner_text": "Privacy Policy",
+        "inner_html": "Privacy Policy"
+      }
+    ]
+  },
+  "unsafeForms": [],
+  "browser": {
+    "name": "Chromium",
+    "version": "HeadlessChrome/90.0.4403.0",
+    "user_agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3617.0 Safari/537.36",
+    "platform": {
+      "name": "Darwin",
+      "version": "20.3.0"
+    },
+    "extra_headers": {
+      "dnt": 0
+    },
+    "preset_cookies": {}
+  },
+  "browsing_history": [],
+  "hosts": {},
+  "websockets": {},
+  "start_time": "2021-08-16T07:43:07.896Z",
+  "end_time": "2021-08-16T07:43:10.956Z"
+}

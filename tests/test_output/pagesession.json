@@ -1,0 +1,24 @@
+{
+  "hosts": {
+    "requests": {
+      "firstParty": {},
+      "thirdParty": {}
+    },
+    "beacons": {
+      "firstParty": {},
+      "thirdParty": {}
+    },
+    "cookies": {
+      "firstParty": {},
+      "thirdParty": {}
+    },
+    "localStorage": {
+      "firstParty": {},
+      "thirdParty": {}
+    },
+    "links": {
+      "firstParty": {},
+      "thirdParty": {}
+    }
+  }
+}
