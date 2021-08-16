@@ -263,7 +263,6 @@ async function createBrowserSession(browser_args, browser_logger) {
 
     // await browser_context.close();
     await browser.close();
-    browser;
   }
 
   return { browser, page, har, hosts, start, end };

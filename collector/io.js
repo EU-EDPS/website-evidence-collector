@@ -9,7 +9,9 @@ function init(args) {
           fs.emptyDirSync(args.output);
         } else {
           console.error(
-            `Error: Output folder or file ${args.output} is not empty. Delete/empty manually or call with --overwrite.`
+            "Error: Output folder or file " +
+              args.output +
+              " is not empty. Delete/empty manually or call with --overwrite."
           );
           process.exit(1);
         }
