@@ -1,4 +1,4 @@
-![Website Evidence Collector Logo](wec_logo.svg)
+![Website Evidence Collector Logo](assets/wec_logo.svg)
 
 # Website Evidence Collector
 
