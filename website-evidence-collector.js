@@ -217,6 +217,14 @@ var refs_regexp = new RegExp(`^(${uri_refs_stripped.join('|')})\\b`, 'i');
 
   output.uri_dest = page.url();
 
+  let page_source;
+  if (argv.pageSource) {
+    try {
+      page_source = await page_response.text();
+    } catch(error) {
+      logger.log('error', error.message, {type: 'Browser'});
+    }
+  }
   // secure connection
 
   // test if server responds to https
@@ -647,6 +655,10 @@ var refs_regexp = new RegExp(`^(${uri_refs_stripped.join('|')})\\b`, 'i');
     if (argv.output) {
       fs.writeFileSync(path.join(argv.output, 'inspection.json'), json_dump);
     }
+  }
+
+  if (argv.pageSource) {
+      fs.writeFileSync(path.join(argv.output, 'page-source.html'), page_source);
   }
 
   if (argv.output || argv.html) {
