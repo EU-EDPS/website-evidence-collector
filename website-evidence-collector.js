@@ -657,9 +657,7 @@ var refs_regexp = new RegExp(`^(${uri_refs_stripped.join('|')})\\b`, 'i');
     }
   }
 
-  if (argv.pageSource) {
-      fs.writeFileSync(path.join(argv.output, 'page-source.html'), page_source);
-  }
+  fs.writeFileSync(path.join(argv.output, 'page-source.html'), page_source);
 
   if (argv.output || argv.html) {
     let html_template = argv['html-template'] || path.join(__dirname, 'assets/template.pug');
