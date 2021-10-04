@@ -217,8 +217,9 @@ var refs_regexp = new RegExp(`^(${uri_refs_stripped.join('|')})\\b`, 'i');
 
   output.uri_dest = page.url();
 
+  // if output to folder is activated, get webpage source code for later storage
   let page_source;
-  if (argv.pageSource) {
+  if (argv.output) {
     try {
       page_source = await page_response.text();
     } catch(error) {
@@ -657,7 +658,6 @@ var refs_regexp = new RegExp(`^(${uri_refs_stripped.join('|')})\\b`, 'i');
     }
   }
 
-  fs.writeFileSync(path.join(argv.output, 'page-source.html'), page_source);
 
   if (argv.output || argv.html) {
     let html_template = argv['html-template'] || path.join(__dirname, 'assets/template.pug');
@@ -674,6 +674,7 @@ var refs_regexp = new RegExp(`^(${uri_refs_stripped.join('|')})\\b`, 'i');
 
     if (argv.output)  {
       fs.writeFileSync(path.join(argv.output, 'inspection.html'), html_dump);
+      fs.writeFileSync(path.join(argv.output, 'source.html'), page_source);
     }
   }
 })();

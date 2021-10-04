@@ -143,6 +143,7 @@ Please find a collection of frequently asked questions with answers in [FAQ.md](
 - Robert Riemann (European Data Protection Supervisor, initial author)
 - Company BitnessWise <https://www.bitnesswise.com/> (code to preset cookies)
 - Roland Schilling ([DPA Hamburg](https://datenschutz-hamburg.de/))
+- Company Avast <https://www.avast.com> (store page source code in output folder [#68](https://github.com/EU-EDPS/website-evidence-collector/pull/68))
 
 ## License
 

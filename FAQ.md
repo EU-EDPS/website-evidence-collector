@@ -161,6 +161,7 @@ The website evidence collector stores a number of files in an output directory u
 ├── screenshot-bottom.png
 ├── screenshot-full.png
 ├── screenshot-top.png
+├── source.html
 └── websockets-log.json
 ```
 
@@ -172,6 +173,7 @@ The website evidence collector stores a number of files in an output directory u
   - hosts.
 - The `inspection.json` has the same content as `inspection.yml`, but in JSON format.
 - The `inspection.html` can be open in the browser to print a report or safe a PDF version it with the most relevant information from `inspection.yml`. The option `--html-template` allows to switch to a custom [pug template](https://pugjs.org). Please ensure that the screenshot images are the same folder as the HTML file.
+- The `source.html` contains the html source code of the first webpage visited. It is extracted with the pupeteer [`text()`](https://pptr.dev/#?product=Puppeteer&version=v8.0.0&show=api-httpresponsetext) method that delivers the "text representation of [the] response body".
 - The `beacons.yml` contains the subset on beacons from `inspection.yml`.
 - The `cookies.yml` contains the subset on cookies from `inspection.yml`.
 - The `local-storage.yml` contains the subset on [localStorage](https://en.wikipedia.org/wiki/LocalStorage) from `inspection.yml`
