@@ -34,7 +34,7 @@ const sampleSize = require('lodash/sampleSize');
 const uniqWith = require('lodash/uniqWith');
 const pickBy = require('lodash/pickBy');
 
-const { isFirstParty, getLocalStorage, safeJSONParse } = require('./lib/tools');
+const { isFirstParty, getLocalStorage, safeJSONParse, getPageLinks, getSpiderValue } = require('./lib/tools');
 
 const uri_ins = argv._[0];
 const uri_ins_host = url.parse(uri_ins).hostname; // hostname does not include port unlike host
@@ -268,39 +268,13 @@ var refs_regexp = new RegExp(`^(${uri_refs_stripped.join('|')})\\b`, 'i');
   await page.waitForTimeout(argv.sleep); // in ms
   let localStorage = await getLocalStorage(page);
 
-  const links_with_duplicates = await page.evaluate( () => {
-    return [].map.call(Array.from(document.querySelectorAll('a[href]')), a => {
-      return {
-        href: a.href.split('#')[0], // link without fragment
-        inner_text: a.innerText,
-        inner_html: a.innerHTML.trim(),
-      };
-    }).filter(link => {
-      return link.href.startsWith('http');
-    });
-  });
+  output.links = await getPageLinks(page);
 
-  // https://lodash.com/docs/4.17.15#uniqWith
-  const links = uniqWith(links_with_duplicates, (l1, l2) => {
-    // consider URLs equal if only fragment (part after #) differs.
-    return l1.href.split('#').shift() === l2.href.split('#').shift();
-  });
-
-  output.links = {
-    firstParty: [],
-    thirdParty: [],
-  };
-
-  for (const link of links) {
-    const l = url.parse(link.href);
-
-    if (isFirstParty(refs_regexp, l)) {
-      output.links.firstParty.push(link);
+  for (const l of output.links.firstParty) {
       hosts.links.firstParty.add(l.hostname);
-    } else {
-      output.links.thirdParty.push(link);
+  }
+  for (const l of output.links.thirdParty) {
       hosts.links.thirdParty.add(l.hostname);
-    }
   }
 
   // prepare regexp to match social media platforms
@@ -308,7 +282,8 @@ var refs_regexp = new RegExp(`^(${uri_refs_stripped.join('|')})\\b`, 'i');
     return escapeRegExp(platform);
   });
   let social_platforms_regexp = new RegExp(`\\b(${social_platforms.join('|')})\\b`, 'i');
-  output.links.social = links.filter( (link) => {
+  // I guess this can be thirdParty only?
+  output.links.social = output.links.all.filter( (link) => {
     return link.href.match(social_platforms_regexp);
   });
 
@@ -317,7 +292,7 @@ var refs_regexp = new RegExp(`^(${uri_refs_stripped.join('|')})\\b`, 'i');
     return escapeRegExp(keyword);
   });
   let keywords_regexp = new RegExp(keywords.join('|'), 'i');
-  output.links.keywords = links.filter( (link) => {
+  output.links.keywords = output.links.all.filter( (link) => {
     return link.href.match(keywords_regexp) || link.inner_html.match(keywords_regexp);
   });
 
@@ -354,7 +329,12 @@ var refs_regexp = new RegExp(`^(${uri_refs_stripped.join('|')})\\b`, 'i');
   let browse_links = sampleSize(output.links.firstParty, argv.max - browse_user_set.length);
   output.browsing_history = [output.uri_dest].concat(browse_user_set, browse_links.map( l => l.href ));
 
-  for (const link of output.browsing_history.slice(1)) {
+  browse_pages = output.browsing_history;
+  var p = 0, spider_pages = 0;
+  while (p < browse_pages.length) {
+    link = browse_pages[p];
+    p++;
+
     try {
       // check mime-type and skip if not html
       const head = await got(link, {
@@ -381,6 +361,36 @@ var refs_regexp = new RegExp(`^(${uri_refs_stripped.join('|')})\\b`, 'i');
 
     await page.waitForTimeout(argv.sleep); // in ms
     localStorage = await getLocalStorage(page, localStorage);
+
+    const spider = getSpiderValue();
+    // If spider is zero or if we reached the maximum number of pages to spider, don't activate it
+    if (spider != 0 && spider_pages < spider) {
+      let pageLinks = await getPageLinks(page);
+      for (const link of pageLinks.firstParty) {
+        if (!browse_pages.includes(link.href)) {
+          //logger.log('info', 'Adding '+link.href);
+          browse_pages.push(link.href);
+	  spider_pages++;
+        }
+	if (spider_pages >= spider) {
+	  // we reached the maximum number of pages to spider
+	  break;
+	}
+      }
+    }
+    if (spider != 0) {
+      if (spider > 0 && spider <= p) {
+        logger.log('info', 'reached the maximum urls to spider ('+spider+')')
+        break;
+      }
+      else {
+	// either spider param is below zero (infinite), or we have reached the maximum amount of loops
+        logger.log('info', 'spidered '+p+' pages')
+      }
+    }
+    else {
+      logger.info('not acting as spider');
+    }
   }
 
 
