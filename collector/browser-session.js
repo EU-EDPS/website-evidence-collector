@@ -136,7 +136,7 @@ async function createBrowserSession(browser_args, browser_logger) {
     });
 
     // set predefined cookies if any
-    set_cookies(page, output.uri_ins, output);
+    set_cookies(page, output.uri_ins, output, logger);
 
     har = new PuppeteerHar(page);
 
