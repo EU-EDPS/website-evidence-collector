@@ -62,7 +62,7 @@ test("collector loads the default url", async () => {
     c.endSession();
 
     // we will log redirects
-    console.log(c.output.uri_redirects);
+    //console.log(c.output.uri_redirects);
   } catch (ex) {
     console.error(ex);
   }
@@ -86,12 +86,12 @@ test("collector collects everything", async () => {
     await c.collectLinks();
     await c.collectForms();
     await c.collectCookies();
-    screenY;
     await c.collectLocalStorage();
     await c.collectWebsocketLog();
 
     c.endSession();
   } catch (ex) {
     console.error(ex);
+    throw ex;
   }
 });
