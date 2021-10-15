@@ -1,5 +1,19 @@
 ## HEAD
 
+* update: update puppeteer version to v10.1.0
+* fix: fix crash due to non-compliant cookies and log non-compliant cookies (thanks to Hamburg DPA staff!)
+* update: migrate from depreciated NPM package *request* to *got*
+* fix: ignore `Error: unable to verify the first certificate` during mime-type test
+* update: update bundled filterlists easyprivacy.txt and fanboy-annoyance.txt to the most recent version as of 2021-04-19
+* fix: catch crash when `request.frame()` evaluates to `null` (some error pages).
+* dependency: require node version >= 14.2.0 (released April 2020)
+* update: puppeteer API calls: migrate away from `waitFor`, see https://github.com/puppeteer/puppeteer/issues/6214
+* update: node dependencies, most importantly puppeteer to v7 that embeds Chromium browser to v90
+* documentation: explain in FAQ how to change the `User-Agent` request header
+* fix: improved support for Netscape cookie file format ([#53](https://github.com/EU-EDPS/website-evidence-collector/issues/53))
+
+## 1.0.0 / 2021-01-07
+
 * fix an issue when tool crashes when the browsing of multiple random pages with `--max` includes PDF files and other downloads: selected links are tested first to have mime type `text/html` using a HEAD HTTP request outside of the browser.
 * bugfix: stop script and log error in case of unreachable websites
 * feature: allow for custom page load timeouts, example: `--page-timeout=200` for a timeout of 200 ms.
@@ -26,6 +40,7 @@
 * feature: include medium.com and tiktok.com links in social media subsection of output link list
 * bugfix: handle non-zero testSSL error codes according to https://github.com/drwetter/testssl.sh/blob/3.1dev/doc/testssl.1.md#exit-status
 * bugfix: catch and log error "Frame not found for the given security origin" (thanks to Hamburg DPA staff!)
+* bugfix: fix CLI option to pass custom templates (https://github.com/EU-EDPS/website-evidence-collector/issues/38)
 
 ## 0.4.0 / 2020-01-17
 

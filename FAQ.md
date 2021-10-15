@@ -135,6 +135,15 @@ The configuration is compatible with the cookie option (`--cookie` or `-b`) of t
 - Image files (here only `*.png`) can be opened with any image view bundled with your operating system and with modern Web browsers.
 - HAR files (`*.har`) can be opened with modern web browsers. For this, open the web developer toolbar, switch to the network tab and drag'n'drop the HAR file in here.
 
+#### How do I change the `User-Agent` request header?
+
+The website evidence collector uses a user agent header of Chrome that is defined in the top of the file `website-evidence-collector.js`. However, the value can be overwritten any other value, e.g. `WEC`:
+
+1. `WEC_BROWSER_OPTIONS="--user-agent=WEC" website-evidence-collector https://example.com`
+2. `website-evidence-collector https://example.com -- --user-agent=WEC`
+
+**Note:** The website may behave differently with different user agent headers.
+
 #### What is the meaning of the files and directories in the output?
 
 The website evidence collector stores a number of files in an output directory unless the option `--no-output` has been used. The following files are stored:
@@ -152,6 +161,7 @@ The website evidence collector stores a number of files in an output directory u
 ├── screenshot-bottom.png
 ├── screenshot-full.png
 ├── screenshot-top.png
+├── source.html
 └── websockets-log.json
 ```
 
@@ -163,6 +173,7 @@ The website evidence collector stores a number of files in an output directory u
   - hosts.
 - The `inspection.json` has the same content as `inspection.yml`, but in JSON format.
 - The `inspection.html` can be open in the browser to print a report or safe a PDF version it with the most relevant information from `inspection.yml`. The option `--html-template` allows to switch to a custom [pug template](https://pugjs.org). Please ensure that the screenshot images are the same folder as the HTML file.
+- The `source.html` contains the html source code of the first webpage visited. It is extracted with the pupeteer [`text()`](https://pptr.dev/#?product=Puppeteer&version=v8.0.0&show=api-httpresponsetext) method that delivers the "text representation of [the] response body".
 - The `beacons.yml` contains the subset on beacons from `inspection.yml`.
 - The `cookies.yml` contains the subset on cookies from `inspection.yml`.
 - The `local-storage.yml` contains the subset on [localStorage](https://en.wikipedia.org/wiki/LocalStorage) from `inspection.yml`

@@ -219,7 +219,7 @@ html(xmlns='http://www.w3.org/1999/xhtml', xml:lang='en', lang='en')
     
     h2(id="traffic-and-persistent-data-analysis") Traffic and Persistent Data Analysis
 
-    p The evidence collection tool simulates a browsing session of the web service to analyse hereafter the recorded traffic between the browser and the Internet as well as the persistent data stored in the browser. First, the browser visited #[a(href=uri_dest)= uri_dest]. The evidence collection took #{browsing_history.length > 1 ? browsing_history.length - 1 : "no"} other web page(s) into account. Generally, predefined pages and a random subset of all firt-party link targets (URLs) from the initial web page #[a(href=uri_dest)= uri_dest] are considered. The exhaustive list of browsed web pages is given in #[span.citation(data-cites="app:history"): a(href="#app:history") the Annex].
+    p The evidence collection tool simulates a browsing session of the web service to analyse hereafter the recorded traffic between the browser and the Internet as well as the persistent data stored in the browser. First, the browser visited #[a(href=uri_dest)= uri_dest]. The evidence collection took #{browsing_history.length > 1 ? browsing_history.length - 1 : "no"} other web page(s) into account. Generally, predefined pages and a random subset of all first-party link targets (URLs) from the initial web page #[a(href=uri_dest)= uri_dest] are considered. The exhaustive list of browsed web pages is given in #[span.citation(data-cites="app:history"): a(href="#app:history") the Annex].
 
     p The web page(s) were browsed consecutively between #{new Date(start_time).toLocaleString()} and #{new Date(end_time).toLocaleString()}.
     
