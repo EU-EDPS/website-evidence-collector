@@ -1,5 +1,5 @@
 const url = require("url");
-const request = require("request-promise-native");
+const got = require("got");
 const fs = require("fs-extra");
 const os = require("os");
 const path = require("path");
@@ -76,10 +76,8 @@ async function testHttps(uri, output) {
     uri_ins_https = new url.URL(uri);
     uri_ins_https.protocol = "https:";
 
-    await request(uri_ins_https.toString(), {
+    await got(uri_ins_https, {
       followRedirect: false,
-      resolveWithFullResponse: true,
-      simple: false,
     });
 
     output.secure_connection.https_support = true;
@@ -90,28 +88,28 @@ async function testHttps(uri, output) {
 
   // test if server redirects http to https
   try {
-    let uri_ins_http = new url.URL(uri);
+    let uri_ins_http = new url.URL(uri_ins);
     uri_ins_http.protocol = "http:";
-    let res = await request(uri_ins_http.toString(), {
+
+    let res = await got(uri_ins_http, {
       followRedirect: true,
-      resolveWithFullResponse: true,
-      simple: false,
       // ignore missing/wrongly configured SSL certificates when redirecting to
       // HTTPS to avoid reporting SSL errors in the output field http_error
-      strictSSL: false,
+      https: {
+        rejectUnauthorized: false,
+      },
     });
-    output.secure_connection.redirects = res.request._redirect.redirects.map(
-      (r) => r.redirectUri
-    );
+
+    output.secure_connection.redirects = res.redirectUrls;
+
     if (output.secure_connection.redirects.length > 0) {
       let last_redirect_url = new url.URL(
         output.secure_connection.redirects[
           output.secure_connection.redirects.length - 1
         ]
       );
-      output.secure_connection.https_redirect = last_redirect_url.protocol.includes(
-        "https"
-      );
+      output.secure_connection.https_redirect =
+        last_redirect_url.protocol.includes("https");
     } else {
       output.secure_connection.https_redirect = false;
     }
