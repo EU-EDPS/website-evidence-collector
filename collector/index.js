@@ -61,7 +61,7 @@ async function collector(args, logger) {
 
     // log the destination uri after redirections
     c.output.uri_dest = c.pageSession.page.url();
-    c.output.source = c.pageSession.page.text();
+    c.output.source = await c.pageSession.page.content();
 
     await c.pageSession.page.waitForTimeout(args.sleep); // in ms
 
