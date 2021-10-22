@@ -20,6 +20,7 @@ async function collector(args, logger) {
 
     args: args,
     output: output,
+    source: null,
   };
 
   c.createSession = async function () {
@@ -60,6 +61,8 @@ async function collector(args, logger) {
 
     // log the destination uri after redirections
     c.output.uri_dest = c.pageSession.page.url();
+    c.output.source = c.pageSession.page.text();
+
     await c.pageSession.page.waitForTimeout(args.sleep); // in ms
 
     // record screenshots
