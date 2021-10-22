@@ -45,6 +45,10 @@ function reporter(args) {
     fs.writeFileSync(path.join(c.args.output, filename), html_dump);
   };
 
+  c.saveSource = function (source, filename = "source.html") {
+    fs.writeFileSync(path.join(c.args.output, filename), source);
+  };
+
   return c;
 }
 

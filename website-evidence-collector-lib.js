@@ -93,6 +93,8 @@ async function run(args, logger) {
     if (args.html) {
       report.generateHtml(collect.output);
     }
+
+    report.saveSource(collect.output.source);
   }
 
   return collect.output;
