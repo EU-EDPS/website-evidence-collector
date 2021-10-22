@@ -37,6 +37,7 @@ async function inspector(args, logger, pageSession, output) {
   });
 
   c.inspectCookies = async function () {
+    // we get all cookies from the log, which can be both JS and http cookies
     let cookies_from_events = flatten(
       c.eventData
         .filter((event) => {
@@ -55,6 +56,54 @@ async function inspector(args, logger, pageSession, output) {
         })
     );
 
+    cookies_from_events.forEach((event_cookie) => {
+      // we compare the eventlog with what was collected
+      let matched_cookie = c.output.cookies.find((cookie) => {
+        return (
+          cookie.name == event_cookie.key &&
+          cookie.domain == event_cookie.domain &&
+          cookie.path == event_cookie.path
+        );
+      });
+
+      // if there is a match, we enrich with the log entry
+      // else we add a nww entry to the output.cookies array
+      if (matched_cookie) {
+        matched_cookie.log = event_cookie.log;
+      } else {
+        c.output.cookies.push({
+          name: event_cookie.key,
+          domain: event_cookie.domain,
+          path: event_cookie.path,
+          log: event_cookie.log,
+        });
+      }
+    });
+
+    c.output.cookies.forEach((cookie) => {
+      // after the sync, we determine if its first party or 3rd
+      // if a domain is empty, its a JS cookie setup as first party
+      if (
+        isFirstParty(
+          c.pageSession.refs_regexp,
+          `cookie://${cookie.domain}${cookie.path}`
+        ) ||
+        cookie.domain === ""
+      ) {
+        cookie.firstPartyStorage = true;
+        c.pageSession.hosts.cookies.firstParty.add(cookie.domain);
+      } else {
+        cookie.firstPartyStorage = false;
+        c.pageSession.hosts.cookies.thirdParty.add(cookie.domain);
+      }
+    });
+
+    // finally we sort the cookies based on expire data - because ?
+    c.output.cookies = c.output.cookies.sort(function (a, b) {
+      return b.expires - a.expires;
+    });
+
+    /*
     c.output.cookies.forEach((cookie) => {
       let matched_event = cookies_from_events.find((cookie_from_events) => {
         return (
@@ -81,10 +130,7 @@ async function inspector(args, logger, pageSession, output) {
         c.pageSession.hosts.cookies.thirdParty.add(cookie.domain);
       }
     });
-
-    output.cookies = output.cookies.sort(function (a, b) {
-      return b.expires - a.expires;
-    });
+*/
   };
 
   c.inspectLocalStorage = async function () {
