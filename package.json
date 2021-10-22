@@ -31,7 +31,6 @@
   "scripts": {
     "start": "node ./website-evidence-collector.js https://www.test.com --overwrite --html --json --yaml --screenshots",
     "test": "jest --detectOpenHandles",
-    "end2end": "node ./tests/end2end.js",
     "pretty-print": "node node_modules/.bin/pino-pretty --timestampKey timestamp --messageKey type --ignore stack,raw,origin"
   },
   "bin": {

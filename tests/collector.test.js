@@ -9,9 +9,19 @@ const path = require("path");
 
 jest.setTimeout(50000);
 
+var logsy;
+
+beforeEach(() => {
+  logsy = logger.create({ console: { silent: true }, file: { silent: true } });
+});
+
+afterEach(() => {
+  logsy.close();
+  logsy = null;
+});
+
 test("collector is correctly instantiated", async () => {
   var args = StandardConfig("https://github.com");
-  var logsy = logger.newLogger();
   const c = await collector(args, logsy);
 
   expect(c.output).toBeDefined();
@@ -25,7 +35,6 @@ test("collector is correctly instantiated", async () => {
 
 test("collector browser session is correctly instantiated", async () => {
   var args = StandardConfig("https://github.com");
-  var logsy = logger.newLogger();
   const c = await collector(args, logsy);
   await c.createSession();
 
@@ -36,7 +45,7 @@ test("collector browser session is correctly instantiated", async () => {
 
 test("collector can test https + ssl connection", async () => {
   var args = StandardConfig("https://github.com");
-  var logsy = logger.newLogger();
+  //  var logsy = logger.newLogger();
   const c = await collector(args, logsy);
   await c.testConnection();
 
@@ -45,8 +54,7 @@ test("collector can test https + ssl connection", async () => {
 });
 
 test("collector can load html locally", async () => {
-  var args = StandardConfig("http://localhost");
-  var logsy = logger.newLogger();
+  var args = StandardConfig("https://localhost");
   const c = await collector(args, logsy);
 
   await c.createSession();
@@ -63,7 +71,6 @@ test("collector can load html locally", async () => {
 
 test("collector can collect links", async () => {
   var args = StandardConfig("http://localhost");
-  var logsy = logger.newLogger();
   const c = await collector(args, logsy);
 
   const bs = await c.createSession();
@@ -81,7 +88,7 @@ test("collector can collect links", async () => {
 
 test("collector can collect forms", async () => {
   var args = StandardConfig("http://localhost");
-  var logsy = logger.newLogger();
+  // var logsy = logger.newLogger();
   const c = await collector(args, logsy);
 
   const bs = await c.createSession();
@@ -94,7 +101,7 @@ test("collector can collect forms", async () => {
 
 test("collector can collect cookies", async () => {
   var args = StandardConfig("http://localhost");
-  var logsy = logger.newLogger();
+  //  var logsy = logger.newLogger();
   const c = await collector(args, logsy);
 
   const bs = await c.createSession();
@@ -111,7 +118,7 @@ test("collector can collect cookies", async () => {
 
 test("collector can collect localstorage", async () => {
   var args = StandardConfig("http://localhost");
-  var logsy = logger.newLogger();
+  // var logsy = logger.newLogger();
   const c = await collector(args, logsy);
 
   const bs = await c.createSession();

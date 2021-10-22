@@ -13,7 +13,7 @@ jest.setTimeout(50000);
 
 beforeAll(async () => {
   args = StandardConfig("http://localhost");
-  logsy = logger.newLogger();
+  logsy = logger.create({ console: { silent: true } });
   c = await collector(args, logsy);
   await c.createSession();
   var localPath = `${path.join(__dirname, "test_output", "testpage.html")}`;
@@ -32,11 +32,17 @@ test("inspector is instantiated correctly", async () => {
   expect(inspect.args).toBeDefined();
   expect(inspect.output).toBeDefined();
   expect(inspect.pageSession).toBeDefined();
-  expect(inspect.output).toBeEqual(c.output);
+  expect(inspect.output).toEqual(c.output);
 });
 
 test("inspector can inspect cookies", async () => {
   const inspect = await inspector(args, logsy, c.pageSession, c.output);
   await inspect.inspectCookies();
-  expect(c.output.cookies.length).toEqual(5);
+  expect(c.output.cookies.length).toEqual(6);
+});
+
+test("inspector can inspect hosts", async () => {
+  const inspect = await inspector(args, logsy, c.pageSession, c.output);
+  await inspect.inspectHosts();
+  expect(c.output.hosts.requests.thirdParty.length).toEqual(10);
 });

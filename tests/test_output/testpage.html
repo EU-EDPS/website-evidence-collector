@@ -144,17 +144,16 @@
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.1/dist/js.cookie.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.1/dist/js.cookie.min.js"></script>
     <script src='https://www.google-analytics.com/analytics.js'></script>
     <script src='https://connect.facebook.net/en_US/sdk.js'></script>
 
-
-    <!-- Set some cookies - should give us 2 cookies in tests-->
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.1/dist/js.cookie.min.js"></script>
     <script>
-      $( document ).ready(function() {
-        $.cookie("example1", "foo");
-        $.cookie("example2", "foo2");
-      });
+      Cookies.set('foo', 'bar')
+      Cookies.set('foo2', 'bar2')
     </script>
+
+    
   </body>
 </html>
