@@ -3,7 +3,7 @@ const PuppeteerHar = require("puppeteer-har");
 const path = require("path");
 const url = require("url");
 const escapeRegExp = require("lodash/escapeRegExp");
-const request = require("request-promise-native");
+const got = require("got");
 const sampleSize = require("lodash/sampleSize");
 
 const UserAgent =
@@ -184,9 +184,13 @@ async function createBrowserSession(browser_args, browser_logger) {
       for (const link of browsing_history.slice(1)) {
         try {
           // check mime-type and skip if not html
-          const head = await request({
+          const head = await got(link, {
             method: "HEAD",
-            uri: link,
+            // ignore Error: unable to verify the first certificate (https://stackoverflow.com/a/36194483)
+            // certificate errors should be checked in the context of the browsing and not during the mime-type check
+            https: {
+              rejectUnauthorized: false,
+            },
           });
 
           if (!head["content-type"].startsWith("text/html")) {
