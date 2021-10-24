@@ -12,7 +12,10 @@ jest.setTimeout(50000);
 var logsy;
 
 beforeEach(() => {
-  logsy = logger.create({ console: { silent: true }, file: { silent: true } });
+  logsy = logger.create({
+    console: { silent: true },
+    file: { enabled: false },
+  });
 });
 
 afterEach(() => {
