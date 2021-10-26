@@ -128,10 +128,13 @@ async function collector(args, logger) {
 
   c.endSession = function () {
     c.browserSession.end();
+    c.browserSession = null;
     c.output.end_time = new Date();
   };
 
-  c.endPageSession = function () {};
+  c.endPageSession = function () {
+    c.pageSession = null;
+  };
   return c;
 }
 

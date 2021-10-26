@@ -1,6 +1,6 @@
-const collector = require("./website-evidence-collector-lib");
-const argv = require("./lib/argv");
-const logger = require("./lib/logger");
+const collector = require("..");
+const argv = require("../lib/argv");
+const logger = require("../lib/logger");
 
 const UserAgent =
   "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3617.0 Safari/537.36";
