@@ -102,35 +102,6 @@ async function inspector(args, logger, pageSession, output) {
     c.output.cookies = c.output.cookies.sort(function (a, b) {
       return b.expires - a.expires;
     });
-
-    /*
-    c.output.cookies.forEach((cookie) => {
-      let matched_event = cookies_from_events.find((cookie_from_events) => {
-        return (
-          cookie.name == cookie_from_events.key &&
-          cookie.domain == cookie_from_events.domain &&
-          cookie.path == cookie_from_events.path
-        );
-      });
-
-      if (!!matched_event) {
-        cookie.log = matched_event.log;
-      }
-
-      if (
-        isFirstParty(
-          c.pageSession.refs_regexp,
-          `cookie://${cookie.domain}${cookie.path}`
-        )
-      ) {
-        cookie.firstPartyStorage = true;
-        c.pageSession.hosts.cookies.firstParty.add(cookie.domain);
-      } else {
-        cookie.firstPartyStorage = false;
-        c.pageSession.hosts.cookies.thirdParty.add(cookie.domain);
-      }
-    });
-*/
   };
 
   c.inspectLocalStorage = async function () {
