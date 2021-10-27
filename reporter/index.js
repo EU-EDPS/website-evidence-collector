@@ -11,8 +11,6 @@ function reporter(args) {
     args: args,
   };
 
-  console.log(c.args);
-
   c.saveJson = function (data, filename) {
     let json_dump = JSON.stringify(data, null, 2);
     fs.writeFileSync(path.join(c.args.output, filename), json_dump);
@@ -21,6 +19,12 @@ function reporter(args) {
   c.saveYaml = function (data, filename) {
     let yaml_dump = yaml.safeDump(data, { noRefs: true });
     fs.writeFileSync(path.join(c.args.output, filename), yaml_dump);
+  };
+
+  c.readYaml = function (filename) {
+    return yaml.load(
+      fs.readFileSync(path.join(c.args.output, filename), "utf8")
+    );
   };
 
   c.generateHtml = function (
