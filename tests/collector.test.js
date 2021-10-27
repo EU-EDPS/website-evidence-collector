@@ -1,8 +1,6 @@
 const StandardConfig = require("../config.js");
-//const collector = require("../website-evidence-collector-lib.js");
 const logger = require("../lib/logger");
 const collector = require("../collector/index");
-const inspector = require("../inspector/index");
 
 const fs = require("fs-extra");
 const path = require("path");
