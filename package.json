@@ -7,6 +7,9 @@
     "type": "git",
     "url": "https://github.com/EU-EDPS/website-evidence-collector.git"
   },
+  "engines": {
+    "node": ">=14.0"
+  },
   "dependencies": {
     "@cliqz/adblocker-puppeteer": "^1.22.2",
     "fs-extra": "^8.1.0",
