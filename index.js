@@ -92,7 +92,7 @@ async function run(args, logger) {
   report.generateHtml(collect.output);
 
   // store source on disk
-  report.saveSource(collect.output.source);
+  report.saveSource(collect.source);
 
   return collect.output;
 }
