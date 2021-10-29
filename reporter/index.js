@@ -1,3 +1,5 @@
+// jshint esversion: 8
+
 const fs = require("fs-extra");
 const yaml = require("js-yaml");
 const path = require("path");
