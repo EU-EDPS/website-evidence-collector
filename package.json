@@ -33,9 +33,9 @@
   },
   "scripts": {
     "start": "node ./website-evidence-collector.js https://www.test.com --overwrite --html --json --yaml --screenshots",
-    "test": "jest --detectOpenHandles --forceExit",
+    "test": "jest --detectOpenHandles",
     "pretty-print": "node node_modules/.bin/pino-pretty --timestampKey timestamp --messageKey type --ignore stack,raw,origin"
-  },
+  },  
   "bin": {
     "website-evidence-collector": "./bin/website-evidence-collector.js",
     "website-evidence-reporter": "./bin/website-evidence-reporter.js"
