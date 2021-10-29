@@ -63,7 +63,7 @@ async function collector(args, logger) {
 
     // log the destination uri after redirections
     c.output.uri_dest = c.pageSession.page.url();
-    c.output.source = await c.pageSession.page.content();
+    c.source = await c.pageSession.page.content();
 
     await c.pageSession.page.waitForTimeout(args.sleep); // in ms
 
@@ -128,8 +128,8 @@ async function collector(args, logger) {
     );
   };
 
-  c.endSession = function () {
-    c.browserSession.end();
+  c.endSession = async function () {
+    await c.browserSession.end();
     c.browserSession = null;
     c.output.end_time = new Date();
   };
