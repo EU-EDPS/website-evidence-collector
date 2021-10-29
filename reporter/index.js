@@ -43,8 +43,8 @@ function reporter(args) {
 
   c.generateHtml = function (
     data,
-    log = true,
     filename = "inspection.html",
+    log = true,
     template = "../assets/template.pug"
   ) {
     let html_template =
