@@ -1,3 +1,5 @@
+// jshint esversion: 8
+
 const uniqWith = require("lodash/uniqWith");
 const fs = require("fs-extra");
 const yaml = require("js-yaml");

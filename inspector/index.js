@@ -1,3 +1,5 @@
+// jshint esversion: 8
+
 const groupBy = require("lodash/groupBy");
 const flatten = require("lodash/flatten");
 const url = require("url");

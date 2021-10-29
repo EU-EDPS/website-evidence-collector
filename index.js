@@ -1,4 +1,3 @@
-#!/usr/bin/env node
 // jshint esversion: 8
 
 /**

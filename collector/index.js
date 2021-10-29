@@ -1,3 +1,5 @@
+// jshint esversion: 8
+
 const collector_io = require("./io");
 const output_lib = require("./output");
 const collector_connection = require("./connection");

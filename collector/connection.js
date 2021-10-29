@@ -1,3 +1,5 @@
+// jshint esversion: 8
+
 const url = require("url");
 const got = require("got");
 const fs = require("fs-extra");
