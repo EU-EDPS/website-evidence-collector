@@ -71,7 +71,9 @@ function reporter(args) {
   };
 
   c.saveSource = function (source, filename = "source.html") {
-    fs.writeFileSync(path.join(c.args.output, filename), source);
+    if (c.args.output) {
+      fs.writeFileSync(path.join(c.args.output, filename), source);
+    }
   };
 
   return c;
