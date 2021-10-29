@@ -11,14 +11,28 @@ function reporter(args) {
     args: args,
   };
 
-  c.saveJson = function (data, filename) {
+  c.saveJson = function (data, filename, log = true) {
     let json_dump = JSON.stringify(data, null, 2);
-    fs.writeFileSync(path.join(c.args.output, filename), json_dump);
+
+    if (c.args.output) {
+      fs.writeFileSync(path.join(c.args.output, filename), json_dump);
+    }
+
+    if (log && c.args.json) {
+      console.log(json_dump);
+    }
   };
 
-  c.saveYaml = function (data, filename) {
+  c.saveYaml = function (data, filename, log = true) {
     let yaml_dump = yaml.safeDump(data, { noRefs: true });
-    fs.writeFileSync(path.join(c.args.output, filename), yaml_dump);
+
+    if (c.args.output) {
+      fs.writeFileSync(path.join(c.args.output, filename), yaml_dump);
+    }
+
+    if (log && c.args.yaml) {
+      console.log(yaml_dump);
+    }
   };
 
   c.readYaml = function (filename) {
@@ -29,6 +43,7 @@ function reporter(args) {
 
   c.generateHtml = function (
     data,
+    log = true,
     filename = "inspection.html",
     template = "../assets/template.pug"
   ) {
@@ -46,7 +61,13 @@ function reporter(args) {
       })
     );
 
-    fs.writeFileSync(path.join(c.args.output, filename), html_dump);
+    if (c.args.output) {
+      fs.writeFileSync(path.join(c.args.output, filename), html_dump);
+    }
+
+    if (log && c.args.html) {
+      console.log(html_dump);
+    }
   };
 
   c.saveSource = function (source, filename = "source.html") {

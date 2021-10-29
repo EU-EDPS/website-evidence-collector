@@ -64,37 +64,36 @@ async function run(args, logger) {
   //  Reporting - this will process the output object into different formats, yaml, json, html
   // ########################################################
 
-  if (args.output) {
-    const report = reporter(args);
+  // args passed will determine what is stored on disk and what is sent to console
+  const report = reporter(args);
+  // args.output - determines if anything is stored on disk
+  // args.html - determines if html is sent to console
+  // args.json - determins if json is sent to console
+  // args.yaml - determins if yaml is sent to console
 
-    if (args.json) {
-      //websockets
-      report.saveJson(collect.output.websocketLog, "websockets-log.json");
+  //websockets
+  report.saveJson(collect.output.websocketLog, "websockets-log.json", false);
 
-      // all
-      report.saveJson(collect.output, "inspection.json");
-    }
+  // all
+  report.saveJson(collect.output, "inspection.json");
 
-    if (args.yaml) {
-      // cookies reporting
-      report.saveYaml(collect.output.cookies, "cookies.yml");
+  // cookies reporting
+  report.saveYaml(collect.output.cookies, "cookies.yml", false);
 
-      // local storage reporting
-      report.saveYaml(collect.output.localStorage, "local-storage.yml");
+  // local storage reporting
+  report.saveYaml(collect.output.localStorage, "local-storage.yml", false);
 
-      // beacons
-      report.saveYaml(collect.output.beacons, "beacons.yml");
+  // beacons
+  report.saveYaml(collect.output.beacons, "beacons.yml", false);
 
-      // all
-      report.saveYaml(collect.output, "inspection.yml");
-    }
+  // all
+  report.saveYaml(collect.output, "inspection.yml");
 
-    if (args.html) {
-      report.generateHtml(collect.output);
-    }
+  // store html on disk
+  report.generateHtml(collect.output);
 
-    report.saveSource(collect.output.source);
-  }
+  // store source on disk
+  report.saveSource(collect.output.source);
 
   return collect.output;
 }
