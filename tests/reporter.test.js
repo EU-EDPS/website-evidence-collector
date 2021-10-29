@@ -3,7 +3,7 @@ const reporter = require("../reporter/index");
 const fs = require("fs-extra");
 const path = require("path");
 
-var report, args, output;
+var report, args, output, source;
 const dir = "./tests/test_output/report";
 
 jest.setTimeout(50000);
@@ -11,8 +11,16 @@ jest.setTimeout(50000);
 beforeAll(async () => {
   args = StandardConfig("http://localhost");
   args.output = dir;
+
   output = fs.readJSONSync("./tests/test_output/output.json");
+  source = fs.readFileSync("./tests/test_output/testpage.html", "utf8");
   report = await reporter(args);
+
+  if (fs.existsSync(dir)) {
+    fs.emptyDirSync(dir);
+    fs.removeSync(dir);
+  }
+
   fs.mkdirSync(dir);
 });
 
@@ -52,9 +60,9 @@ test("report can save yaml reports", async () => {
 });
 
 test("report can save source", async () => {
-  report.saveSource(output.source);
+  report.saveSource(source);
   expect(fs.existsSync(path.join(dir, "source.html"))).toBe(true);
   let s = fs.readFileSync(path.join(dir, "source.html"), "utf8");
-  expect(s).toEqual(output.source);
+  expect(s).toEqual(source);
   //expect(c.output.cookies.length).toEqual(8);
 });

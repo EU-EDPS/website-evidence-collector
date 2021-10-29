@@ -10,6 +10,9 @@ jest.setTimeout(50000);
 
 beforeAll(async () => {
   args = StandardConfig("http://localhost");
+  args.overwrite = true;
+  args.pageTimeout = 3000;
+
   logsy = logger.create({ console: { silent: true } });
   c = await collector(args, logsy);
   await c.createSession();
