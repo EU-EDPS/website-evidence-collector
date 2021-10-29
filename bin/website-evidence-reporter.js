@@ -2,7 +2,7 @@
 // jshint esversion: 8
 
 /**
- * @file Collects evidence from websites on processed data in transit and at rest.
+ * @file Produces an html output documenting evidence from websites on processed data in transit and at rest.
  * @author Robert Riemann <robert.riemann@edps.europa.eu>
  * @copyright European Data Protection Supervisor (2019)
  * @license EUPL-1.2
