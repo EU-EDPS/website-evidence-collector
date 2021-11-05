@@ -40,7 +40,7 @@ test("WEC Argv is equal to standard config", () => {
 });
 
 test("WEC runs end to end and produces the correct default output", async () => {
-  await wec(args, logger.create());
+  await wec(args, logger.create({ console: { silent: true } }));
   expect(fs.existsSync(path.join(dir, "beacons.yml"))).toBe(true);
   expect(fs.existsSync(path.join(dir, "cookies.yml"))).toBe(true);
   expect(fs.existsSync(path.join(dir, "inspection.html"))).toBe(true);
