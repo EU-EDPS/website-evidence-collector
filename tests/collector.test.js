@@ -34,6 +34,8 @@ test("collector is correctly instantiated", async () => {
   // closer inspection of values
   expect(c.args).toBe(args);
   expect(c.output.uri_ins).toBe("https://github.com");
+
+  await c.endSession();
 });
 
 test("collector browser session is correctly instantiated", async () => {
@@ -45,7 +47,19 @@ test("collector browser session is correctly instantiated", async () => {
   expect(c.output.browser).toBeDefined();
   expect(c.browserSession).toBeDefined();
   expect(c.pageSession).toBeDefined();
+
   await c.endSession();
+});
+
+test("collector browser session is correctly discarded", async () => {
+  var args = StandardConfig("https://github.com");
+  args.overwrite = true;
+  const c = await collector(args, logsy);
+  await c.createSession();
+  await c.endSession();
+
+  expect(c.browserSession).toBeUndefined();
+  expect(c.pageSession).toBeUndefined();
 });
 
 test("collector can test https + ssl connection", async () => {
@@ -69,11 +83,10 @@ test("collector can load html locally", async () => {
 
   var localHtml = fs.readFileSync(localPath);
   var result = await c.getPage("file://" + localPath);
+  await c.endSession();
 
   expect(c.source).toBeDefined();
   expect(result).toBeDefined();
-
-  await c.endSession();
 });
 
 test("collector can collect links", async () => {
@@ -85,13 +98,12 @@ test("collector can collect links", async () => {
   var localPath = `${path.join(__dirname, "test_output", "testpage.html")}`;
   await c.getPage("file://" + localPath);
   await c.collectLinks();
+  await c.endSession();
 
   expect(c.output.links).toBeDefined();
   expect(c.output.links.firstParty.length).toEqual(2);
   expect(c.output.links.thirdParty.length).toEqual(3);
   expect(c.output.links.social.length).toEqual(2);
-
-  await c.endSession();
 });
 
 test("collector can collect forms", async () => {
@@ -104,8 +116,9 @@ test("collector can collect forms", async () => {
   var localPath = `${path.join(__dirname, "test_output", "testpage.html")}`;
   await c.getPage("file://" + localPath);
   await c.collectForms();
-  expect(c.output.unsafeForms.length).toEqual(1);
   await c.endSession();
+
+  expect(c.output.unsafeForms.length).toEqual(1);
 });
 
 test("collector can collect cookies", async () => {
@@ -118,6 +131,7 @@ test("collector can collect cookies", async () => {
   var localPath = `${path.join(__dirname, "test_output", "testpage.html")}`;
   await c.getPage("file://" + localPath);
   await c.collectCookies();
+  await c.endSession();
 
   // test html will set 2 JS cookies, but they will not appear here
   // as this is only cookies collected via http - which should be 3 youtube cookis
@@ -137,8 +151,9 @@ test("collector can collect localstorage", async () => {
   var localPath = `${path.join(__dirname, "test_output", "testpage.html")}`;
   await c.getPage("file://" + localPath);
   await c.collectLocalStorage();
-  expect(c.output.localStorage).toBeDefined();
   await c.endSession();
+
+  expect(c.output.localStorage).toBeDefined();
 });
 
 // todo: websockets tests
