@@ -90,7 +90,7 @@ async function testHttps(uri, output) {
 
   // test if server redirects http to https
   try {
-    let uri_ins_http = new url.URL(uri_ins);
+    let uri_ins_http = new url.URL(uri);
     uri_ins_http.protocol = "http:";
 
     let res = await got(uri_ins_http, {
