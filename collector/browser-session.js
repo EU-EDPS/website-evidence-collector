@@ -176,7 +176,7 @@ async function createBrowserSession(browser_args, browser_logger) {
       firstPartyLinks,
       userSet
     ) {
-      let browse_links = sampleSize(firstPartyLinks, args.max - userSet.length);
+      let browse_links = sampleSize(firstPartyLinks, args.max - userSet.length - 1);
 
       let browsing_history = [root_uri].concat(
         userSet,
