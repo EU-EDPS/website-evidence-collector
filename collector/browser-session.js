@@ -195,7 +195,7 @@ async function createBrowserSession(browser_args, browser_logger) {
             },
           });
 
-          if (!head["content-type"].startsWith("text/html")) {
+          if (!head.headers["content-type"].startsWith("text/html")) {
             logger.log(
               "info",
               `skipping now ${link} of mime-type ${head["content-type"]}`,
