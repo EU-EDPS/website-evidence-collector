@@ -30,7 +30,7 @@ RUN apk add --no-cache \
       ca-certificates \
       ttf-freefont \
       nodejs \
-      yarn~=1.22.10 \
+      yarn~=1.22 \
 # Packages linked to testssl.sh
       bash procps drill coreutils libidn curl \
 # Toolbox for advanced interactive use of WEC in container
