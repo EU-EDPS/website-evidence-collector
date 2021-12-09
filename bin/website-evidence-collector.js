@@ -22,5 +22,6 @@ const WindowSize = {
 };
 
 (async () => {
-  await collector(argv.parse(), logger.create());
+  let args = argv.parse();
+  await collector(args, logger.create({}, args));
 })();
