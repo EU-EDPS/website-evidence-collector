@@ -7,7 +7,7 @@ const os = require("os");
 const path = require("path");
 
 async function testSSL(uri, args, logger, output) {
-  if (args.testsslExecutable) {
+  if (args.testssl) {
     let uri_ins_https = new url.URL(uri);
     uri_ins_https.protocol = "https:";
 
