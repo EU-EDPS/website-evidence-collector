@@ -22,7 +22,6 @@ async function testSSL(uri, args, logger, output) {
       "--protocols", // checks TLS/SSL protocols (including SPDY/HTTP2)
       "--standard", // tests certain lists of cipher suites by strength
       "--server-defaults", // displays the server's default picks and certificate info
-      "--server-defaults", // displays the server's default picks and certificate info
       "--server-preference", // displays the server's picks: protocol+cipher
     ];
 
