@@ -58,8 +58,23 @@ test("collector browser session is correctly discarded", async () => {
   await c.createSession();
   await c.endSession();
 
-  expect(c.browserSession).toBeUndefined();
-  expect(c.pageSession).toBeUndefined();
+  expect(c.browserSession).toBe(null); 
+  expect(c.output.end_time).toBeDefined();
+  
+  // pageSession must remain defined as we will depend on this output, even after discarding the browser
+  expect(c.pageSession).toBeDefined();
+});
+
+test("collector page session is correctly discarded", async () => {
+  var args = StandardConfig("https://github.com");
+  args.overwrite = true;
+  const c = await collector(args, logsy);
+  await c.createSession();
+  await c.endSession();
+  await c.endPageSession();
+
+  expect(c.browserSession).toBe(null); 
+  expect(c.pageSession).toBe(null); 
 });
 
 test("collector can test https + ssl connection", async () => {
