@@ -65,7 +65,7 @@ Reference: <https://peter.sh/experiments/chromium-command-line-switches/#ignore-
 
 #### Integrate with testssl.sh
 
-**Note:** [Testssl.sh](https://testssl.sh/) v3.0 or higher must be already installed.
+**Note:** [Testssl.sh](https://testssl.sh/) v3.0 or higher must be already installed. The most recent and with WEC tested version is [v3.0.6](https://github.com/drwetter/testssl.sh/releases/tag/v3.0.6).
 
 With the option `--testssl`, the website evidence collector calls `testssl.sh`
 to gather information about the HTTPS/SSL connection.
@@ -77,7 +77,7 @@ website-evidence-collector -q --testssl https://example.com
 The tool assumes the executable `testssl.sh` can be found in the `PATH` variable. The option `--testssl-executable` allows to specify the location and implies the option `testssl`.
 
 ```sh
-website-evidence-collector -q --testssl-executable ../testssl.sh-3.0rc5/testssl.sh https://example.com
+website-evidence-collector -q --testssl-executable ../testssl.sh-3.0.6/testssl.sh https://example.com
 ```
 
 If `testssl.sh` is called separately, the JSON output file can be integrated subsequently with the option `--testssl-file`.
