@@ -1,5 +1,6 @@
 ## HEAD
 
+* update: update bundled filterlists easyprivacy.txt and fanboy-annoyance.txt to the most recent version as of 2022-01-06
 * update: update puppeteer version to v10.1.0
 * fix: fix crash due to non-compliant cookies and log non-compliant cookies (thanks to Hamburg DPA staff!)
 * update: migrate from depreciated NPM package *request* to *got*
