@@ -1,5 +1,7 @@
 ## HEAD
 
+* regression: temporary depreciation of `--quiet`, use on Linux/Mac `2> /dev/null` instead
+* refactor: use modularisation (thank you Per Ploug)
 * update: update bundled filterlists easyprivacy.txt and fanboy-annoyance.txt to the most recent version as of 2022-01-06
 * update: update puppeteer version to v10.1.0
 * fix: fix crash due to non-compliant cookies and log non-compliant cookies (thanks to Hamburg DPA staff!)
