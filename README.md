@@ -50,8 +50,10 @@ You can check your `PATH` with this command: `echo $PATH`.
 #### Simple Output on the Terminal only
 
 ```sh
-website-evidence-collector --no-output --quiet --yaml https://example.com
+website-evidence-collector --no-output --yaml https://example.com 2> /dev/null
 ```
+
+The last part `2> /dev/null` works on Mac/Linux and redirects the logging output from the screen into a device for disregarding the content.
 
 #### Ignore Certificate Errors during Collection
 
