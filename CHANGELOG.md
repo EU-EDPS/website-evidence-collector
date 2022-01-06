@@ -1,5 +1,6 @@
 ## HEAD
 
+* update: set UserAgent string to Chrome v93.0.4577.0
 * regression: temporary depreciation of `--quiet`, use on Linux/Mac `2> /dev/null` instead
 * refactor: use modularisation (thank you Per Ploug)
 * update: update bundled filterlists easyprivacy.txt and fanboy-annoyance.txt to the most recent version as of 2022-01-06
