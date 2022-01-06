@@ -46,7 +46,7 @@ RUN addgroup --system --gid 1001 collector \
 COPY . /opt/website-evidence-collector/
 
 # Install Testssl.sh
-RUN curl -SL https://github.com/drwetter/testssl.sh/archive/3.0.tar.gz | \
+RUN curl -SL https://github.com/drwetter/testssl.sh/archive/refs/tags/v3.0.6.tar.gz | \
       tar -xz --directory /opt
 
 # Run everything after as non-privileged user.
@@ -62,7 +62,7 @@ RUN yarn global add file:/opt/website-evidence-collector --prefix /home/collecto
 # Let Puppeteer use system Chromium
 ENV PUPPETEER_EXECUTABLE_PATH /usr/bin/chromium-browser
 
-ENV PATH="/home/collector/bin:/opt/testssl.sh-3.0:${PATH}"
+ENV PATH="/home/collector/bin:/opt/testssl.sh-3.0.6:${PATH}"
 # Let website evidence collector run chrome without sandbox
 # ENV WEC_BROWSER_OPTIONS="--no-sandbox"
 # Configure default command in Docker container
