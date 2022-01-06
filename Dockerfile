@@ -9,7 +9,7 @@
 # If you hit the Error: EACCES: permission denied,
 # then try "mkdir output && chown 1000 output"
 
-FROM alpine:edge
+FROM alpine:3.15.0
 
 LABEL maintainer="Robert Riemann <robert.riemann@edps.europa.eu>"
 
@@ -39,8 +39,7 @@ RUN apk add --no-cache \
 # Add user so we don't need --no-sandbox and match first linux uid 1000
 RUN addgroup --system --gid 1001 collector \
       && adduser --system --uid 1000 --ingroup collector --shell /bin/bash collector \
-      && mkdir -p /home/collector/Downloads /output \
-      && chown -R collector:collector /home/collector \
+      && mkdir -p /output \
       && chown -R collector:collector /output
 
 COPY . /opt/website-evidence-collector/
