@@ -26,7 +26,7 @@ function reporter(args) {
   };
 
   c.saveYaml = function (data, filename, log = true) {
-    let yaml_dump = yaml.safeDump(data, { noRefs: true });
+    let yaml_dump = yaml.dump(data, { noRefs: true });
 
     if (c.args.output) {
       fs.writeFileSync(path.join(c.args.output, filename), yaml_dump);

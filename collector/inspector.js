@@ -59,7 +59,7 @@ async function mapLinksToParties(links, hosts, refs_regexp) {
 async function filterSocialPlatforms(links) {
   // prepare regexp to match social media platforms
   let social_platforms = yaml
-    .safeLoad(
+    .load(
       fs.readFileSync(
         path.join(__dirname, "../assets/social-media-platforms.yml"),
         "utf8"
@@ -80,7 +80,7 @@ async function filterSocialPlatforms(links) {
 
 async function filterKeywords(links) {
   let keywords = yaml
-    .safeLoad(
+    .load(
       fs.readFileSync(path.join(__dirname, "../assets/keywords.yml"), "utf8")
     )
     .map((keyword) => {
