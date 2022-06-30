@@ -1,5 +1,7 @@
 ## HEAD
 
+## 2.0.0 / 2022-06-30
+
 * fix: use for Docker Alpine v3.15.0 and exclude output directory in `.dockerignore`
 * update: set UserAgent string to Chrome v93.0.4577.0
 * regression: temporary depreciation of `--quiet`, use on Linux/Mac `2> /dev/null` instead
