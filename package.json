@@ -14,7 +14,7 @@
     "@cliqz/adblocker-puppeteer": "^1.22.2",
     "fs-extra": "^10.1.0",
     "git-describe": "^4.0.4",
-    "github-markdown-css": "^3.0.1",
+    "github-markdown-css": "^5.1.0",
     "got": "^11.8.5",
     "js-yaml": "^4.1.0",
     "lodash": "^4.17.21",
@@ -28,7 +28,7 @@
     "yargs": "^17.0.1"
   },
   "devDependencies": {
-    "jest": "^27.0.1"
+    "jest": "^28.1.2"
   },
   "scripts": {
     "start": "node ./website-evidence-collector.js https://www.test.com --overwrite --html --json --yaml --screenshots",
