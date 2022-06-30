@@ -9,7 +9,6 @@
 * fix: fix crash due to non-compliant cookies and log non-compliant cookies (thanks to Hamburg DPA staff!)
 * update: migrate from depreciated NPM package *request* to *got*
 * fix: ignore `Error: unable to verify the first certificate` during mime-type test
-* update: update bundled filterlists easyprivacy.txt and fanboy-annoyance.txt to the most recent version as of 2021-04-19
 * fix: catch crash when `request.frame()` evaluates to `null` (some error pages).
 * dependency: require node version >= 14.2.0 (released April 2020)
 * update: puppeteer API calls: migrate away from `waitFor`, see https://github.com/puppeteer/puppeteer/issues/6214
@@ -19,6 +18,7 @@
 * move all console log output to STDERR
 * switch console log to Newline Delimited JSON if the content is piped, e.g. with `website-evidence-collector http://test.local | cat`
 * remove `pino-pretty` package for pretty-printing and related example in FAQ
+* update: update bundled filterlists easyprivacy.txt and fanboy-annoyance.txt to the most recent version as of 2022-06-30
 
 ## 1.0.0 / 2021-01-07
 
