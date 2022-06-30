@@ -28,13 +28,11 @@
     "yargs": "^17.0.1"
   },
   "devDependencies": {
-    "jest": "^27.0.1",
-    "pino-pretty": "^3.6.1"
+    "jest": "^27.0.1"
   },
   "scripts": {
     "start": "node ./website-evidence-collector.js https://www.test.com --overwrite --html --json --yaml --screenshots",
-    "test": "jest --detectOpenHandles",
-    "pretty-print": "node node_modules/.bin/pino-pretty --timestampKey timestamp --messageKey type --ignore stack,raw,origin"
+    "test": "jest --detectOpenHandles"
   },
   "bin": {
     "website-evidence-collector": "./bin/website-evidence-collector.js",

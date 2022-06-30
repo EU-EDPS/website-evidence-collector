@@ -88,18 +88,6 @@ If `testssl.sh` is called separately, the JSON output file can be integrated sub
 website-evidence-collector -q --testssl-file example-testssl.json https://example.com
 ```
 
-#### Use pretty-printed Live Logs
-
-First, install `pino-pretty` with `npm install -g pino-pretty`.
-
-On POSIX compliant systems such as Linux or Mac, the output can be filtered to get prettier output:
-
-```sh
-website-evidence-collector --output https://example.com | pino-pretty --timestampKey timestamp --messageKey type --ignore stack,raw,origin
-```
-
-The formatting and provided information for pretty printing is configured in the script section of the [package.json](./package.json).
-
 ## Frequently Asked Questions
 
 Please find a collection of frequently asked questions with answers in [FAQ.md](FAQ.md)

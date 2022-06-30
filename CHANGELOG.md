@@ -18,6 +18,7 @@
 * fix: improved support for Netscape cookie file format ([#53](https://github.com/EU-EDPS/website-evidence-collector/issues/53))
 * move all console log output to STDERR
 * switch console log to Newline Delimited JSON if the content is piped, e.g. with `website-evidence-collector http://test.local | cat`
+* remove `pino-pretty` package for pretty-printing and related example in FAQ
 
 ## 1.0.0 / 2021-01-07
 
