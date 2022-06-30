@@ -1,5 +1,7 @@
 ## HEAD
 
+* Fix for broken cookie support
+
 ## 2.0.0 / 2022-06-30
 
 * fix: use for Docker Alpine v3.15.0 and exclude output directory in `.dockerignore`

@@ -142,7 +142,7 @@ The following software extends WEC to cover further use cases. It is developed i
 ## Contributors
 
 - Robert Riemann (European Data Protection Supervisor, initial author)
-- Company BitnessWise <https://www.bitnesswise.com/> (code to preset cookies)
+- Company BitnessWise <https://www.bitnesswise.com/> (code to preset cookies, bug fixes)
 - Roland Schilling ([DPA Hamburg](https://datenschutz-hamburg.de/))
 - Company Avast <https://www.avast.com> (store page source code in output folder [#68](https://github.com/EU-EDPS/website-evidence-collector/pull/68))
 - Per Ploug (Zalando) <https://opensource.zalando.com/> (refactor code base for modularity)
