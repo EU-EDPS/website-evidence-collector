@@ -91,6 +91,9 @@ async function run(args, logger) {
   // store html on disk
   report.generateHtml(collect.output);
 
+  // convert html to pdf
+  await report.convertHtmlToPdf();
+
   // store source on disk
   report.saveSource(collect.source);
 

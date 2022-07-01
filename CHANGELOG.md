@@ -1,6 +1,7 @@
 ## HEAD
 
 * Fix for broken cookie support
+* If html report is generated, convert it automatically to pdf; can be disabled with `--no-pdf`
 
 ## 2.0.0 / 2022-06-30
 
