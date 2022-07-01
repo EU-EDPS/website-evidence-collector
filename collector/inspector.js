@@ -112,7 +112,7 @@ async function unsafeWebforms(page) {
 }
 async function collectCookies(page, start_time) {
   // example from https://stackoverflow.com/a/50290081/1407622
-  const cookies = (await page._client.send("Network.getAllCookies")).cookies
+  const cookies = (await page._client().send("Network.getAllCookies")).cookies
     .filter((cookie) => {
       // work-around: Chromium retains cookies with empty name and value
       // if web servers send empty HTTP Cookie Header, i.e. "Set-Cookie: "
