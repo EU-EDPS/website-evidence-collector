@@ -42,13 +42,13 @@ var argv = require("yargs") // TODO use rather option('o', hash) syntax and defi
 let output = JSON.parse(fs.readFileSync(argv._[0]));
 
 let html_template =
-  argv["html-template"] || path.join(__dirname, "assets/template.pug");
+  argv["html-template"] || path.join(__dirname, "../assets/template.pug");
 
 let html_dump = pug.renderFile(
   html_template,
   Object.assign({}, output, {
     pretty: true,
-    basedir: __dirname,
+    basedir: path.resolve(path.join(__dirname, '../assets')),
     groupBy: require("lodash/groupBy"),
     inlineCSS: fs.readFileSync(
       require.resolve("github-markdown-css/github-markdown.css")
@@ -56,7 +56,7 @@ let html_dump = pug.renderFile(
   })
 );
 
-if (argv.output) {
+if (argv.outputFile) {
   fs.writeFileSync(path.join(argv.outputFile), html_dump);
 } else {
   console.log(html_dump);
