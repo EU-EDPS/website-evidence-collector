@@ -44,11 +44,14 @@ let output = JSON.parse(fs.readFileSync(argv._[0]));
 let html_template =
   argv["html-template"] || path.join(__dirname, "../assets/template.pug");
 
+let jsondir = path.relative(argv.outputFile ? path.dirname(argv.outputFile) : process.cwd(), path.dirname(argv._[0])); // path of the inspection.json
+
 let html_dump = pug.renderFile(
   html_template,
   Object.assign({}, output, {
     pretty: true,
-    basedir: path.resolve(path.join(__dirname, '../assets')),
+    basedir: path.resolve(path.join(__dirname, '../assets')), // determines root director for pug
+    jsondir: jsondir || ".",
     groupBy: require("lodash/groupBy"),
     inlineCSS: fs.readFileSync(
       require.resolve("github-markdown-css/github-markdown.css")

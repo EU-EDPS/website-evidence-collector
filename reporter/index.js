@@ -57,6 +57,7 @@ function reporter(args) {
       Object.assign({}, data, {
         pretty: true,
         basedir: path.join(__dirname, "../assets"),
+        jsondir: ".", // images in the folder of the inspection.json
         groupBy: groupBy,
         inlineCSS: fs.readFileSync(
           require.resolve("github-markdown-css/github-markdown.css")

@@ -4,6 +4,7 @@
 * If html report is generated, convert it automatically to pdf; can be disabled with `--no-pdf`
 * dependency: update to puppeteer 15.2.0 (Chrome/93.0.4577.0 -> Chrome/104.0.5109.0)
 * fix: unresolvable paths in website-evidence-reporter
+* feature: website-evidence-reporter computes the relative path to screenshots if the output file is set (option `-o`)
 
 
 ## 2.0.0 / 2022-06-30
