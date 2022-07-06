@@ -316,7 +316,7 @@ html(xmlns='http://www.w3.org/1999/xhtml', xml:lang='en', lang='en')
       h4 Cookies linked to #{index} Hosts
     
       if cookieList.length > 0
-        table.cookies(width="100%")
+        table.cookies(style="width: 100%;")
           colgroup
             col(width="0%")
             col(width="0%")
@@ -350,7 +350,7 @@ html(xmlns='http://www.w3.org/1999/xhtml', xml:lang='en', lang='en')
     h4(id="sec:local-storage") Local Storage
     
     if Object.keys(localStorage).length > 0
-      table(width="100%").local-storage
+      table.local-storage(style="width: 100%;")
         colgroup
           col(width="0%")
           col(width="20%")
