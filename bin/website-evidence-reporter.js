@@ -28,6 +28,13 @@ var argv = require("yargs") // TODO use rather option('o', hash) syntax and defi
   .alias("html-template", "t")
   .string("html-template")
 
+
+
+  .describe("extra-file", "Loads another JSON file in the template variable 'extra'")
+  .nargs("extra-file", 1)
+  .alias("extra-file", "e")
+  .string("extra-file")
+
   .describe("output-file", "Write HTML output to file instead to the screen")
   .nargs("output-file", 1)
   .alias("output-file", "o")
@@ -56,6 +63,7 @@ let html_dump = pug.renderFile(
     inlineCSS: fs.readFileSync(
       require.resolve("github-markdown-css/github-markdown.css")
     ),
+    extra: argv.extraFile ? JSON.parse(fs.readFileSync(argv.extraFile)) : undefined
   })
 );
 
