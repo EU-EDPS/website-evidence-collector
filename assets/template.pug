@@ -29,6 +29,50 @@ html(xmlns='http://www.w3.org/1999/xhtml', xml:lang='en', lang='en')
       }
       
       /* custom */
+      
+      /* custom */
+      .markdown-body {  
+        counter-reset: h1counter; 
+      }      
+      
+      h1:before {
+        content: counter(h1counter) "\0000a0\0000a0";
+        counter-increment: h1counter;
+      }
+      h1 {
+        counter-reset: h2counter;
+      }
+      
+      h2:before {
+        content: counter(h1counter) "." counter(h2counter) "\0000a0\0000a0";
+        counter-increment: h2counter;
+      }
+      h2 {
+        counter-reset: h3counter;
+      }
+      
+      h3:before {
+        content: counter(h1counter) "." counter(h2counter) "." counter(h3counter) "\0000a0\0000a0";
+        counter-increment: h3counter;
+      }
+      
+      h1.nocount:before, h2.nocount:before, h3.nocount:before {
+          content: none;
+          counter-increment: none;
+      }
+      
+      /* annex */
+      h1[id^=app]:before {
+        content: none;
+      }
+      h1[id^=app] {
+        counter-reset: h2counter;
+      }
+      
+      h2[id^=app]:before {
+        content: counter(h2counter, upper-alpha) "\0000a0\0000a0";
+      }
+      
       #logo{
         width: 40%;
         float: right;
