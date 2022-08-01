@@ -6,6 +6,7 @@
 * fix: unresolvable paths in website-evidence-reporter
 * feature: allow to load extra JSON file in extra variable when generating reports with custom templates using the website-evidence-reporter
 * feature: website-evidence-reporter computes the relative path to screenshots if the output file is set (option `-o`)
+* fix: cookies in the event log don't have always a path attribute, so that the matching of cookies from Chrome storage and the event log failed sometimes
 
 
 ## 2.0.0 / 2022-06-30

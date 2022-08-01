@@ -76,7 +76,7 @@ async function inspector(args, logger, pageSession, output) {
         c.output.cookies.push({
           name: event_cookie.key,
           domain: event_cookie.domain,
-          path: event_cookie.path || '/',
+          path: event_cookie.path,
           log: event_cookie.log,
         });
       }
