@@ -13,6 +13,9 @@
 const fs = require("fs");
 const path = require("path");
 const pug = require("pug");
+const yaml = require("js-yaml");
+const unsafe = require('js-yaml-js-types').all;
+yaml.DEFAULT_SCHEMA = yaml.DEFAULT_SCHEMA.extend(unsafe);
 
 var argv = require("yargs") // TODO use rather option('o', hash) syntax and define default top-level command
   .scriptName("website-evidence-reporter")
@@ -30,10 +33,21 @@ var argv = require("yargs") // TODO use rather option('o', hash) syntax and defi
 
 
 
-  .describe("extra-file", "Loads another JSON file in the template variable 'extra'")
+  .describe("extra-file", "Loads other JSON/YAML files in the template array 'extra'")
   .nargs("extra-file", 1)
   .alias("extra-file", "e")
-  .string("extra-file")
+  .array("extra-file")
+  .coerce("extra-file", (files) => {
+    return files.map( (file) => {
+      if (file.toLowerCase().endsWith('.yaml') || file.toLowerCase().endsWith('.yml')) {
+        return yaml.load(
+          fs.readFileSync(file, "utf8")
+        );
+      } else {
+        return JSON.parse(fs.readFileSync(file, "utf8"));
+      }
+    });
+  })
 
   .describe("output-file", "Write HTML output to file instead to the screen")
   .nargs("output-file", 1)
@@ -59,11 +73,17 @@ let html_dump = pug.renderFile(
     pretty: true,
     basedir: path.resolve(path.join(__dirname, '../assets')), // determines root director for pug
     jsondir: jsondir || ".",
+    // expose some libraries to pug templates
     groupBy: require("lodash/groupBy"),
+    marked: require("marked"),
+    fs: fs,
+    yaml: yaml,
+    path: path,
     inlineCSS: fs.readFileSync(
       require.resolve("github-markdown-css/github-markdown.css")
     ),
-    extra: argv.extraFile ? JSON.parse(fs.readFileSync(argv.extraFile)) : undefined
+    inspection: output,
+    extra: argv.extraFile
   })
 );
 

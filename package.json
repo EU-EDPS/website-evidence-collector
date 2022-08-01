@@ -17,6 +17,8 @@
     "github-markdown-css": "^5.1.0",
     "got": "^11.8.5",
     "js-yaml": "^4.1.0",
+    "js-yaml-js-types": "^1.0.0",
+    "jstransformer-marked": "^1.2.0",
     "lodash": "^4.17.21",
     "pug": "^3.0.2",
     "puppeteer": "^15.2.0",
