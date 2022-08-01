@@ -8,6 +8,7 @@
 * feature: website-evidence-reporter computes the relative path to screenshots if the output file is set (option `-o`)
 * fix: cookies in the event log don't have always a path attribute, so that the matching of cookies from Chrome storage and the event log failed sometimes
 * feature: add Section numbers to the HTML/PDF output using CSS
+* fix: logger must be passed through as argument in lib/tools.js
 
 ## 2.0.0 / 2022-06-30
 

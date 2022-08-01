@@ -111,7 +111,7 @@ async function collector(args, logger) {
   };
 
   c.collectLocalStorage = async function () {
-    c.output.localStorage = await getLocalStorage(c.pageSession.page);
+    c.output.localStorage = await getLocalStorage(c.pageSession.page, c.logger);
   };
 
   c.collectWebsocketLog = async function () {

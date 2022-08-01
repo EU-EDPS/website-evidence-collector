@@ -216,7 +216,7 @@ async function createBrowserSession(browser_args, browser_logger) {
         }
 
         await page.waitForTimeout(args.sleep); // in ms
-        localStorage = await getLocalStorage(page, localStorage);
+        localStorage = await getLocalStorage(page, logger, localStorage);
       }
 
       return browsing_history;
