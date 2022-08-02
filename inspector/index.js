@@ -73,12 +73,22 @@ async function inspector(args, logger, pageSession, output) {
       if (matched_cookie) {
         matched_cookie.log = event_cookie.log;
       } else {
-        c.output.cookies.push({
+        let cookie = {
           name: event_cookie.key,
           domain: event_cookie.domain,
           path: event_cookie.path,
+          value: event_cookie.value,
+          expires: event_cookie.expires,
           log: event_cookie.log,
-        });
+        };
+        if(!event_cookie.expires) {
+          cookie.expires = -1;
+          cookie.session = true;
+        } else {
+          cookie.expiresDays = Math.round((new Date(event_cookie.expires).getTime() - new Date(event_cookie.creation).getTime()) / (10 * 60 * 60 * 24)) / 100;
+          cookie.session = false;
+        }
+        c.output.cookies.push(cookie);
       }
     });
 
