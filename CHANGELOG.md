@@ -6,7 +6,7 @@
 * fix: unresolvable paths in website-evidence-reporter
 * feature: allow to load extra JSON file in extra variable when generating reports with custom templates using the website-evidence-reporter
 * feature: website-evidence-reporter computes the relative path to screenshots if the output file is set (option `-o`)
-
+* feature: support dark mode via CSS `var(--color-canvas-default)`
 
 ## 2.0.0 / 2022-06-30
 
