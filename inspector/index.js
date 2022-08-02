@@ -56,7 +56,7 @@ async function inspector(args, logger, pageSession, output) {
           });
           return event.data;
         })
-    );
+    ).filter(cookie => cookie.value); // don't consider deletion events with no value defined
 
     cookies_from_events.forEach((event_cookie) => {
       // we compare the eventlog with what was collected
