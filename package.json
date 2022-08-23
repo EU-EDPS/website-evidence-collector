@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@cliqz/adblocker-puppeteer": "^1.22.2",
+    "@sparticuz/chrome-aws-lambda": "~15.5.0",
     "fs-extra": "^10.1.0",
     "git-describe": "^4.0.4",
     "github-markdown-css": "^5.1.0",
@@ -21,7 +22,7 @@
     "jstransformer-marked": "^1.2.0",
     "lodash": "^4.17.21",
     "pug": "^3.0.2",
-    "puppeteer": "^15.2.0",
+    "puppeteer-core": "^15.5.0",
     "puppeteer-har": "^1.1.2",
     "stacktrace-js": "^2.0.2",
     "tmp": "^0.2.1",
@@ -30,7 +31,8 @@
     "yargs": "^17.0.1"
   },
   "devDependencies": {
-    "jest": "^28.1.2"
+    "jest": "^28.1.2",
+    "puppeteer": "^15.5.0"
   },
   "scripts": {
     "start": "node ./website-evidence-collector.js https://www.test.com --overwrite --html --json --yaml --screenshots",

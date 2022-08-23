@@ -1,4 +1,4 @@
-const puppeteer = require("puppeteer");
+const chromium = require('@sparticuz/chrome-aws-lambda');
 const PuppeteerHar = require("puppeteer-har");
 const path = require("path");
 const url = require("url");
@@ -32,7 +32,7 @@ async function createBrowserSession(browser_args, browser_logger) {
   args = browser_args;
   logger = browser_logger;
 
-  const browser = await puppeteer.launch({
+  const browser = await chromium.puppeteer.launch({
     headless: args.headless,
     defaultViewport: {
       width: WindowSize.width,
