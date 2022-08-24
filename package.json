@@ -31,8 +31,7 @@
     "yargs": "^17.0.1"
   },
   "devDependencies": {
-    "jest": "^28.1.2",
-    "puppeteer": "^15.5.0"
+    "jest": "^28.1.2"
   },
   "scripts": {
     "start": "node ./website-evidence-collector.js https://www.test.com --overwrite --html --json --yaml --screenshots",
