@@ -4,7 +4,7 @@ const fs = require("fs-extra");
 const yaml = require("js-yaml");
 const path = require("path");
 const pug = require("pug");
-const puppeteer = require("puppeteer");
+const chromium = require('@sparticuz/chrome-aws-lambda');
 
 const groupBy = require("lodash/groupBy");
 const flatten = require("lodash/flatten");
@@ -76,7 +76,7 @@ function reporter(args) {
 
   c.convertHtmlToPdf = async function (htmlfilename = "inspection.html", pdffilename = "inspection.pdf") {
     if (c.args.pdf) {
-      const browser = await puppeteer.launch();
+      const browser = await chromium.puppeteer.launch();
       const pages = await browser.pages();
       await pages[0].goto("file://" + path.resolve(path.join(c.args.output, htmlfilename)), {waitUntil: 'networkidle0'});
       await pages[0].pdf({
