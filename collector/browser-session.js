@@ -9,8 +9,8 @@ const sampleSize = require("lodash/sampleSize");
 const UserAgent =
   "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/93.0.4577.0 Safari/537.36";
 const WindowSize = {
-  width: 1680,
-  height: 927, // arbitrary value close to 1050
+  width: 390,
+  height: 844, // arbitrary value close to 1050
 };
 
 const { setup_cookie_recording } = require("../lib/setup-cookie-recording");
