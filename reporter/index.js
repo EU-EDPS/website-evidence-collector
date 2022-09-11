@@ -62,6 +62,7 @@ function reporter(args) {
         inlineCSS: fs.readFileSync(
           require.resolve("github-markdown-css/github-markdown.css")
         ),
+        screenshots: c.args.screenshots,
       })
     );
 

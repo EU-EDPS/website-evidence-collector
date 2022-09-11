@@ -153,15 +153,19 @@ html(xmlns='http://www.w3.org/1999/xhtml', xml:lang='en', lang='en')
     
     h2(id="sec:webpage-visit") Webpage Visit
 
-    p On #{new Date(start_time).toLocaleString()}, the evidence collection tool navigated the browser to #[a(href=uri_ins)= uri_ins]. The final location after potential redirects was #[a(href=uri_dest)= uri_dest]. The evidence collection tool took two screenshots #[span.citation(data-cites="fig:screenshot-top") to cover the top of the webpage] and #[span.citation(data-cites="fig:screenshot-bottom") the bottom].
-    
-    figure
-      img(src=`${jsondir}/screenshot-top.png` alt="Webpage Top Screenshot" id="fig:screenshot-top" style="width:100.0%")
-      figcaption Webpage Top Screenshot
+    p
+      span On #{new Date(start_time).toLocaleString()}, the evidence collection tool navigated the browser to #[a(href=uri_ins)= uri_ins]. The final location after potential redirects was #[a(href=uri_dest)= uri_dest].
+        if screenshots
+          span  The evidence collection tool took two screenshots #[span.citation(data-cites="fig:screenshot-top") to cover the top of the webpage] and #[span.citation(data-cites="fig:screenshot-bottom") the bottom].
 
-    figure
-      img(src=`${jsondir}/screenshot-bottom.png` alt="Webpage Bottom Screenshot" id="fig:screenshot-bottom" style="width:100.0%")
-      figcaption Webpage Bottom Screenshot
+    if screenshots
+      figure
+        img(src=`${jsondir}/screenshot-top.png` alt="Webpage Top Screenshot" id="fig:screenshot-top" style="width:100.0%")
+        figcaption Webpage Top Screenshot
+
+      figure
+        img(src=`${jsondir}/screenshot-bottom.png` alt="Webpage Bottom Screenshot" id="fig:screenshot-bottom" style="width:100.0%")
+        figcaption Webpage Bottom Screenshot
 
     h2(id="sec:use-of-httpsssl") Use of HTTPS/SSL
 
