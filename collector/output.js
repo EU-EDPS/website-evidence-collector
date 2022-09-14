@@ -40,6 +40,7 @@ async function createOutput(args) {
         npm: require("../package.json").version,
         commit: null,
       },
+      config: pickBy(args, (_value, key) => key == '_' || (key.length > 1 && !key.includes('-'))),
       cmd_args: process.argv.slice(2).join(" "),
       environment: pickBy(process.env, (_value, key) => {
         return (
