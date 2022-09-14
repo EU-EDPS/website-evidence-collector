@@ -29,8 +29,6 @@ html(xmlns='http://www.w3.org/1999/xhtml', xml:lang='en', lang='en')
       }
       
       /* custom */
-      
-      /* custom */
       .markdown-body {  
         counter-reset: h1counter; 
       }      
@@ -218,10 +216,7 @@ html(xmlns='http://www.w3.org/1999/xhtml', xml:lang='en', lang='en')
         
       p The software TestSSL from #[a(href="https://testssl.sh") https://testssl.sh] inspected the HTTPS configuration of the web service host #{results.targetHost}. It classifies detected vulnerabilities by their level of severity #[em low], #[em medium], #[em high], or #[em critical]. The severity ratings are automatically computed by the TestSSL software without consideration of the specifics of the individual website. They do not reflect the opinions or views of the website evidence collector authors. Details on the findings are listed in #[span.citation(data-cites="app:testssl"): a(href="#app:testssl") the Annex].
       
-      table.testssl-summary(width="100%")
-        colgroup
-          col
-          col(style='width: 0%')
+      table.testssl-summary
         thead
           tr
             th HTTPS/SSL Vulnerabilities per Severity
@@ -230,24 +225,24 @@ html(xmlns='http://www.w3.org/1999/xhtml', xml:lang='en', lang='en')
           - var vulnerabilitiesBySeverity = groupBy(results.vulnerabilities,'severity');
           tr
             td Critical
-            td= vulnerabilitiesBySeverity['CRITCAL'] ? vulnerabilitiesBySeverity['CRITCAL'].length : 0
+            td.notrunc= vulnerabilitiesBySeverity['CRITCAL'] ? vulnerabilitiesBySeverity['CRITCAL'].length : 0
           tr
             td High
-            td= vulnerabilitiesBySeverity['HIGH'] ? vulnerabilitiesBySeverity['HIGH'].length : 0
+            td.notrunc= vulnerabilitiesBySeverity['HIGH'] ? vulnerabilitiesBySeverity['HIGH'].length : 0
           tr
             td Medium
-            td= vulnerabilitiesBySeverity['MEDIUM'] ? vulnerabilitiesBySeverity['MEDIUM'].length : 0
+            td.notrunc= vulnerabilitiesBySeverity['MEDIUM'] ? vulnerabilitiesBySeverity['MEDIUM'].length : 0
           tr
             td Low
-            td= vulnerabilitiesBySeverity['LOW'] ? vulnerabilitiesBySeverity['LOW'].length : 0
+            td.notrunc= vulnerabilitiesBySeverity['LOW'] ? vulnerabilitiesBySeverity['LOW'].length : 0
 
     h2(id="sec:use-of-social-media") Use of Social Media and Collaboration Platforms
     
     if links.social.length > 0    
-      table.use-of-social-media-and-collaboration-platforms
+      table.use-of-social-media-and-collaboration-platforms(style="width: 100%")
         colgroup
-          col(style='width: 50%')
-          col(style='width: 50%')
+          col(style='width: 100%')
+          col(style='width: 100%')
         thead
           tr
             th Link URL
@@ -255,8 +250,8 @@ html(xmlns='http://www.w3.org/1999/xhtml', xml:lang='en', lang='en')
         tbody
           each social in links.social
             tr
-              td: a(href=social.href)= social.href
-              td= social.inner_text
+              td.trunc: a(href=social.href)= social.href
+              td.notrunc= social.inner_text
     else
       p No corresponding links were found.
     
@@ -528,7 +523,7 @@ html(xmlns='http://www.w3.org/1999/xhtml', xml:lang='en', lang='en')
               
       h3 Cipher Categories
       
-      table(width="100%")
+      table(style='width: 100%')
         colgroup
           col(style='width: 0%')
           col(style='width: 100%') 
@@ -544,7 +539,7 @@ html(xmlns='http://www.w3.org/1999/xhtml', xml:lang='en', lang='en')
           each cipher in results.ciphers.sort(sortSeverity)
             tr
               td.notrunc= cipher.id
-              td.trunc= cipher.finding
+              td.notrunc= cipher.finding
               td.notrunc
                 if cipher.cwe
                   a(href=`https://cwe.mitre.org/cgi-bin/jumpmenu.cgi?id=${cipher.cwe.replace('CWE-','')}`)= cipher.cwe
@@ -552,7 +547,7 @@ html(xmlns='http://www.w3.org/1999/xhtml', xml:lang='en', lang='en')
       
       h3 HTTP Header Responses
 
-      table(width="100%")
+      table(style='width: 100%')
         colgroup
           col(style='width: 0%')
           col(style='width: 100%') 
