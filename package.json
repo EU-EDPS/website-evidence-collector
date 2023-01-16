@@ -11,7 +11,7 @@
     "node": ">=14.0"
   },
   "dependencies": {
-    "@cliqz/adblocker-puppeteer": "^1.22.2",
+    "@cliqz/adblocker-puppeteer": "^1.25.2",
     "fs-extra": "^10.1.0",
     "git-describe": "^4.0.4",
     "github-markdown-css": "^5.1.0",
@@ -21,7 +21,7 @@
     "jstransformer-marked": "^1.2.0",
     "lodash": "^4.17.21",
     "pug": "^3.0.2",
-    "puppeteer": "^15.2.0",
+    "puppeteer": "^19.5.0",
     "puppeteer-har": "^1.1.2",
     "stacktrace-js": "^2.0.2",
     "tmp": "^0.2.1",
