@@ -1,5 +1,6 @@
 ## HEAD
 
+* fix: location detection for HTTP Cookies was breaking the WEC when response.frame() is null.
 * update dependency: puppeteer with bundled Chrome v109.0.5412.0
 * update: set UserAgent string to Chrome v109.0.5412.0
 * fix: make recording of cookies more robust (fallback for frame url)
