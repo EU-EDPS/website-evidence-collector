@@ -15,7 +15,7 @@
     "fs-extra": "^10.1.0",
     "git-describe": "^4.0.4",
     "github-markdown-css": "^5.1.0",
-    "got": "^11.8.5",
+    "got": "^12.5.3",
     "js-yaml": "^4.1.0",
     "js-yaml-js-types": "^1.0.0",
     "jstransformer-marked": "^1.2.0",
