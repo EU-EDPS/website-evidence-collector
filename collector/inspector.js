@@ -19,7 +19,7 @@ async function collectLinks(page) {
     return [].map
       .call(Array.from(document.querySelectorAll("a[href]")), (a) => {
         return {
-          href: a.href.split("#")[0], // link without fragment
+          href: a.href.toString().split("#")[0], // link without fragment
           inner_text: a.innerText,
           inner_html: a.innerHTML.trim(),
         };
