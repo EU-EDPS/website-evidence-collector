@@ -4,7 +4,7 @@ const fs = require("fs-extra");
 const yaml = require("js-yaml");
 const path = require("path");
 const pug = require("pug");
-const chromium = require('@sparticuz/chrome-aws-lambda');
+const chromium = require('@sparticuz/chromium');
 
 const groupBy = require("lodash/groupBy");
 const flatten = require("lodash/flatten");

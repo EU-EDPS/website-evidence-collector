@@ -1,10 +1,11 @@
-const chromium = require('@sparticuz/chrome-aws-lambda');
+const chromium = require('@sparticuz/chromium');
 const PuppeteerHar = require("puppeteer-har");
 const path = require("path");
 const url = require("url");
 const escapeRegExp = require("lodash/escapeRegExp");
 const got = require("got");
 const sampleSize = require("lodash/sampleSize");
+const puppeteer = require("puppeteer-core");
 
 const UserAgent =
   "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/93.0.4577.0 Safari/537.36";
@@ -32,7 +33,9 @@ async function createBrowserSession(browser_args, browser_logger) {
   args = browser_args;
   logger = browser_logger;
 
-  const browser = await chromium.puppeteer.launch({
+  chromium.setHeadlessMode = args.headless;
+
+  const browser = await puppeteer.launch({
     executablePath: process.env.IS_OFFLINE ? undefined : await chromium.executablePath,
     headless: args.headless,
     defaultViewport: {
