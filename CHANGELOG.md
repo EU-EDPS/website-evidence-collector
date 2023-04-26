@@ -18,6 +18,7 @@
 * fix: non-compliant cookie headers such as ` ; sameSite=None` with no key are discarded from the logging and matching
 * feature: add clickable anchors to all sections in the html output with AnchorJS
 * feature: add config object to output
+* fix: improve CSS for tables (overwrite imported rules based on Github CSS) (#94)
 
 ## 2.0.0 / 2022-06-30
 
