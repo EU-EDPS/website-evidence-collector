@@ -13,14 +13,14 @@ const {
   safeJSONParse,
 } = require("../lib/tools");
 
-async function collectLinks(page) {
+async function collectLinks(page, logger) {
   // get all links from page
   const links_with_duplicates = await page.evaluate(() => {
     return [].map
       .call(Array.from(document.querySelectorAll("a[href]")), (a) => {
         const href = a.href.toString();
         if (href === '[object SVGAnimatedString]') {
-          console.warn('[WebsiteEvidenceCollector] SVG links are not supported');
+          logger.log('warn', 'Unsupported SVG link detected and discarded', a);
         }
         return {
           href: href.split("#")[0], // link without fragment
