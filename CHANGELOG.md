@@ -1,5 +1,6 @@
 ## HEAD
 
+* fix: location detection for HTTP Cookies was breaking the WEC when response.frame() is null.
 * update dependency: puppeteer with bundled Chrome v109.0.5412.0
 * update: set UserAgent string to Chrome v109.0.5412.0
 * fix: make recording of cookies more robust (fallback for frame url)
@@ -17,6 +18,7 @@
 * fix: non-compliant cookie headers such as ` ; sameSite=None` with no key are discarded from the logging and matching
 * feature: add clickable anchors to all sections in the html output with AnchorJS
 * feature: add config object to output
+* fix: improve CSS for tables (overwrite imported rules based on Github CSS) (#94)
 * fix: crash when websites employ links in SVGs (PR #91)
 
 ## 2.0.0 / 2022-06-30
