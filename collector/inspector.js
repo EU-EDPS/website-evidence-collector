@@ -18,8 +18,12 @@ async function collectLinks(page) {
   const links_with_duplicates = await page.evaluate(() => {
     return [].map
       .call(Array.from(document.querySelectorAll("a[href]")), (a) => {
+        const href = a.href.toString();
+        if (href === '[object SVGAnimatedString]') {
+          console.warn('[WebsiteEvidenceCollector] SVG links are not supported');
+        }
         return {
-          href: a.href.toString().split("#")[0], // link without fragment
+          href: href.split("#")[0], // link without fragment
           inner_text: a.innerText,
           inner_html: a.innerHTML.trim(),
         };
