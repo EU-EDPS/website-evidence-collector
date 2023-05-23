@@ -17,6 +17,7 @@
 * fix: non-compliant cookie headers such as ` ; sameSite=None` with no key are discarded from the logging and matching
 * feature: add clickable anchors to all sections in the html output with AnchorJS
 * feature: add config object to output
+* fix: crash when websites employ links in SVGs (PR #91)
 
 ## 2.0.0 / 2022-06-30
 

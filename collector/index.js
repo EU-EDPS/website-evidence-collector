@@ -77,7 +77,7 @@ async function collector(args, logger) {
 
   c.collectLinks = async function () {
     // get all links from page
-    const links = await collector_inspect.collectLinks(c.pageSession.page);
+    const links = await collector_inspect.collectLinks(c.pageSession.page, c.logger);
 
     var mappedLinks = await collector_inspect.mapLinksToParties(
       links,
