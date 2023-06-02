@@ -14,7 +14,7 @@ const {
 
 async function collectLinks(page, logger) {
   // get all links from page
-  const links_with_duplicates = await page.evaluate(() => {
+  const links_all_with_duplicates = await page.evaluate(() => {
     return Array.from(document.querySelectorAll("a[href]"), (a) => {
         return {
           href: a.href.toString().split("#").shift(), // link without fragment
@@ -24,14 +24,16 @@ async function collectLinks(page, logger) {
     });
   });
   
-  const links = links_with_duplicates.filter((link) => {
+  const links_http_with_duplicates = links_all_with_duplicates.filter((link) => {
     if (link.href === '[object SVGAnimatedString]') {
       logger.log('warn', 'Unsupported SVG link detected and discarded', link);
     }
     return link.href.startsWith("http");
   });
+  
+  const links_http_without_duplicates = Array.from(new Set(links_http_with_duplicates));
 
-  return links;
+  return links_http_without_duplicates;
 }
 
 async function mapLinksToParties(links, hosts, refs_regexp) {
