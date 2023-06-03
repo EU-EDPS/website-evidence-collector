@@ -19,6 +19,7 @@
 * feature: add clickable anchors to all sections in the html output with AnchorJS
 * feature: add config object to output
 * fix: improve CSS for tables (overwrite imported rules based on Github CSS) (#94)
+* fix: crash when websites employ links in SVGs (PR #91)
 
 ## 2.0.0 / 2022-06-30
 

@@ -1,6 +1,5 @@
 // jshint esversion: 8
 
-const uniqWith = require("lodash/uniqWith");
 const fs = require("fs-extra");
 const yaml = require("js-yaml");
 const path = require("path");
@@ -13,29 +12,28 @@ const {
   safeJSONParse,
 } = require("../lib/tools");
 
-async function collectLinks(page) {
+async function collectLinks(page, logger) {
   // get all links from page
-  const links_with_duplicates = await page.evaluate(() => {
-    return [].map
-      .call(Array.from(document.querySelectorAll("a[href]")), (a) => {
+  const links_all_with_duplicates = await page.evaluate(() => {
+    return Array.from(document.querySelectorAll("a[href]"), (a) => {
         return {
-          href: a.href.split("#")[0], // link without fragment
+          href: a.href.toString().split("#").shift(), // link without fragment
           inner_text: a.innerText,
           inner_html: a.innerHTML.trim(),
-        };
-      })
-      .filter((link) => {
-        return link.href.startsWith("http");
-      });
+        }
+    });
   });
-
-  // https://lodash.com/docs/4.17.15#uniqWith
-  const links = uniqWith(links_with_duplicates, (l1, l2) => {
-    // consider URLs equal if only fragment (part after #) differs.
-    return l1.href.split("#").shift() === l2.href.split("#").shift();
+  
+  const links_http_with_duplicates = links_all_with_duplicates.filter((link) => {
+    if (link.href === '[object SVGAnimatedString]') {
+      logger.log('warn', 'Unsupported SVG link detected and discarded', link);
+    }
+    return link.href.startsWith("http");
   });
+  
+  const links_http_without_duplicates = Array.from(new Set(links_http_with_duplicates));
 
-  return links;
+  return links_http_without_duplicates;
 }
 
 async function mapLinksToParties(links, hosts, refs_regexp) {
