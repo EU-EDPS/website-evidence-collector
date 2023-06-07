@@ -22,6 +22,7 @@
 * fix: crash when websites employ links in SVGs (PR #91)
 * dependency: update the inline anchor.js library in the default HTML template
 * feature: improve markdown to html conversion in the default HTML template and custom HTML templates (involves marked-smartypants, marked-custom-heading-id)
+* dependency: update amongst other tough-cookie lib
 
 ## 2.0.0 / 2022-06-30
 
