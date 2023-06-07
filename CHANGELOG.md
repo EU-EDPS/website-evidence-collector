@@ -20,6 +20,7 @@
 * feature: add config object to output
 * fix: improve CSS for tables (overwrite imported rules based on Github CSS) (#94)
 * fix: crash when websites employ links in SVGs (PR #91)
+* dependency: update the inline anchor.js library in the default HTML template
 
 ## 2.0.0 / 2022-06-30
 
