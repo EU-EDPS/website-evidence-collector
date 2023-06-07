@@ -20,6 +20,7 @@
     "js-yaml-js-types": "^1.0.0",
     "jstransformer-marked": "^1.2.0",
     "lodash": "^4.17.21",
+    "marked-smartypants": "^1.0.2",
     "pug": "^3.0.2",
     "puppeteer": "^19.5.0",
     "puppeteer-har": "^1.1.2",

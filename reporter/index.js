@@ -6,8 +6,22 @@ const path = require("path");
 const pug = require("pug");
 const puppeteer = require("puppeteer");
 
-const groupBy = require("lodash/groupBy");
-const flatten = require("lodash/flatten");
+const marked = require('marked');
+// it is surprising that https://github.com/jstransformers/jstransformer-marked picks up this object (undocumented API)
+// source of this call: https://github.com/markedjs/marked-custom-heading-id/blob/main/src/index.js (MIT License, Copyright (c) 2021 @markedjs)
+marked.use({renderer: {
+      heading(text, level, raw, slugger) {
+        // WEC patch: add \:
+        const headingIdRegex = /(?: +|^)\{#([a-z][\:\w-]*)\}(?: +|$)/i;
+        const hasId = text.match(headingIdRegex);
+        if (!hasId) {
+          // fallback to original heading renderer
+          return false;
+        }
+        return `<h${level} id="${hasId[1]}">${text.replace(headingIdRegex, '')}</h${level}>\n`;
+      }
+}});
+marked.use(require('marked-smartypants').markedSmartypants());
 
 function reporter(args) {
   const c = {
@@ -58,10 +72,15 @@ function reporter(args) {
         pretty: true,
         basedir: path.join(__dirname, "../assets"),
         jsondir: ".", // images in the folder of the inspection.json
-        groupBy: groupBy,
+        groupBy: require("lodash/groupBy"),
+        marked: marked, // we need to pass the markdown engine to template for access at render-time (as opposed to comile time), see https://github.com/pugjs/pug/issues/1171
+        fs: fs,
+        yaml: yaml,
+        path: path,
         inlineCSS: fs.readFileSync(
           require.resolve("github-markdown-css/github-markdown.css")
         ),
+        filterOptions: {marked: {}},
       })
     );
 

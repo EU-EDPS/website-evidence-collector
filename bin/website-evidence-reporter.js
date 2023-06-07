@@ -67,6 +67,23 @@ let html_template =
 
 let jsondir = path.relative(argv.outputFile ? path.dirname(argv.outputFile) : process.cwd(), path.dirname(argv._[0])); // path of the inspection.json
 
+const marked = require('marked');
+// it is surprising that https://github.com/jstransformers/jstransformer-marked picks up this object (undocumented API)
+// source of this call: https://github.com/markedjs/marked-custom-heading-id/blob/main/src/index.js (MIT License, Copyright (c) 2021 @markedjs)
+marked.use({renderer: {
+      heading(text, level, raw, slugger) {
+        // WEC patch: add \:
+        const headingIdRegex = /(?: +|^)\{#([a-z][\:\w-]*)\}(?: +|$)/i;
+        const hasId = text.match(headingIdRegex);
+        if (!hasId) {
+          // fallback to original heading renderer
+          return false;
+        }
+        return `<h${level} id="${hasId[1]}">${text.replace(headingIdRegex, '')}</h${level}>\n`;
+      }
+}});
+marked.use(require('marked-smartypants').markedSmartypants());
+
 let html_dump = pug.renderFile(
   html_template,
   Object.assign({}, output, {
@@ -75,7 +92,7 @@ let html_dump = pug.renderFile(
     jsondir: jsondir || ".",
     // expose some libraries to pug templates
     groupBy: require("lodash/groupBy"),
-    marked: require("marked"),
+    marked: marked, // we need to pass the markdown engine to template for access at render-time (as opposed to comile time), see https://github.com/pugjs/pug/issues/1171
     fs: fs,
     yaml: yaml,
     path: path,
@@ -83,7 +100,8 @@ let html_dump = pug.renderFile(
       require.resolve("github-markdown-css/github-markdown.css")
     ),
     inspection: output,
-    extra: argv.extraFile
+    extra: argv.extraFile,
+    filterOptions: {marked: {}},
   })
 );
 
