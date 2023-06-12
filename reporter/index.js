@@ -94,7 +94,7 @@ function reporter(args) {
   };
 
   c.convertHtmlToPdf = async function (htmlfilename = "inspection.html", pdffilename = "inspection.pdf") {
-    if (c.args.pdf) {
+    if (c.args.pdf && c.args.output) {
       const browser = await puppeteer.launch();
       const pages = await browser.pages();
       await pages[0].goto("file://" + path.resolve(path.join(c.args.output, htmlfilename)), {waitUntil: 'networkidle0'});
