@@ -206,6 +206,8 @@ The tool [jq](https://stedolan.github.io/jq/) for Linux, OS X and Windows allows
 4. extract cookies with an expiration of one day or more
 
        jq '.cookies[] | select(.expiresDays >= 1)'  output/inspection.json
+       # or
+       jq '.cookies | map(select(.expiresDays >= 1)) | map({domain,name,value})' output/inspection.json
 
 5. list cookies with name, domain, web page and source
 
