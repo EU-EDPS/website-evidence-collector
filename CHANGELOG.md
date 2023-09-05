@@ -1,5 +1,7 @@
 ## HEAD
 
+* update: add www.tiktok.com to social-media-platforms.yml to increase detection rate
+* update: update bundled filterlists easyprivacy.txt and fanboy-annoyance.txt to the most recent version as of 2023-09-05
 * fix: location detection for HTTP Cookies was breaking the WEC when response.frame() is null.
 * update dependency: puppeteer with bundled Chrome v109.0.5412.0
 * update: set UserAgent string to Chrome v109.0.5412.0
