@@ -4,6 +4,8 @@ const fs = require("fs-extra");
 const yaml = require("js-yaml");
 const path = require("path");
 const pug = require("pug");
+const HTMLtoDOCX = require("html-to-docx");
+const { spawnSync } = require('node:child_process');
 const puppeteer = require("puppeteer");
 
 const marked = require('marked');
@@ -119,6 +121,67 @@ function reporter(args) {
         margin: { top: '1.5cm', bottom: '1cm' },
       })
       await browser.close();
+    }
+  };
+  
+  c.generateOfficeDoc = async function (
+    data,
+    filename = "inspection.docx",
+    log = true,
+    template = "../assets/template-office.pug"
+  ) {
+    if (c.args.output) {
+      let office_template =
+        c.args["office-template"] || path.join(__dirname, template);
+      let html_dump = pug.renderFile(
+        office_template,
+        Object.assign({}, data, {
+          pretty: true,
+          basedir: path.join(__dirname, "../assets"),
+          jsondir: ".", // images in the folder of the inspection.json
+          groupBy: require("lodash/groupBy"),
+          marked: marked, // we need to pass the markdown engine to template for access at render-time (as opposed to comile time), see https://github.com/pugjs/pug/issues/1171
+          fs: fs,
+          yaml: yaml,
+          path: path,
+          inlineCSS: fs.readFileSync(
+            require.resolve("github-markdown-css/github-markdown.css")
+          ),
+          filterOptions: {marked: {}},
+        })
+      );
+
+      if(c.args.usePandoc) {
+        // console.warn("Using pandoc to generate", filename);
+        let ret = spawnSync('pandoc', ['-f', 'html', '--output', filename], {
+          cwd: c.args.output,
+          input: html_dump,
+          encoding: 'utf8',
+        });
+        if(ret[2]) {
+          console.log(ret[2]);
+        }
+      } else {
+        if(filename.endsWith(".odt")) {
+          console.error("To generate .odt, you must have pandoc installed and specify --use-pandoc.");
+          process.exit(1);
+        }
+        
+        // console.warn("Using NPM html-to-docx to generate", filename);
+        const documentOptions = {
+          // decodeUnicode: true,
+          orientation: "portrait",
+          pageSize: {width: "21.0cm", height: "29.7cm"},
+          pageNumber: true,
+          // lineNumber: true,
+          // lineNumberOptions: {countBy: 5},
+          title: data.title,
+          lang: "en-UK",
+          creator: `EDPS Website Evidence Collector v${data.script.version.npm} using NPM html-to-docx`,
+        };
+        const fileBuffer = await HTMLtoDOCX(html_dump, null, documentOptions, null);
+        fs.writeFileSync(path.join(c.args.output, filename), fileBuffer);
+      }
     }
   };
 

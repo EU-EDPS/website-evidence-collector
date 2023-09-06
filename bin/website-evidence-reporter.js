@@ -13,13 +13,15 @@
 const fs = require("fs");
 const path = require("path");
 const pug = require("pug");
+const HTMLtoDOCX = require("html-to-docx");
+const { spawnSync } = require('node:child_process');
 const yaml = require("js-yaml");
 const unsafe = require('js-yaml-js-types').all;
 yaml.DEFAULT_SCHEMA = yaml.DEFAULT_SCHEMA.extend(unsafe);
 
 var argv = require("yargs") // TODO use rather option('o', hash) syntax and define default top-level command
   .scriptName("website-evidence-reporter")
-  .usage("Usage: $0 <JSON file> [options]")
+  .usage("Usage: $0 [options] <JSON file>")
   .example("$0 /home/user/inspection.json")
   // allow for shell variables such as WEC_HTML_TEMPLATE=/path/to/template.pug
   .env("WEC")
@@ -31,8 +33,14 @@ var argv = require("yargs") // TODO use rather option('o', hash) syntax and defi
   .alias("html-template", "t")
   .string("html-template")
 
-
-
+  .describe("office-template", "Custom pug template to generate DOCX with NPM html-to-docx or DOCX/ODT with pandoc")
+  .nargs("office-template", 1)
+  .string("office-template")
+  
+  .describe("use-pandoc", "Conversion to DOCX/ODT with pandoc instead of NPM")
+  .boolean("use-pandoc")
+  .default("use-pandoc", false)
+  
   .describe("extra-file", "Loads other JSON/YAML files in the template array 'extra'")
   .nargs("extra-file", 1)
   .alias("extra-file", "e")
@@ -64,6 +72,8 @@ let output = JSON.parse(fs.readFileSync(argv._[0]));
 
 let html_template =
   argv["html-template"] || path.join(__dirname, "../assets/template.pug");
+let office_template =
+  argv["office-template"] || path.join(__dirname, "../assets/template-office.pug");
 
 let jsondir = path.relative(argv.outputFile ? path.dirname(argv.outputFile) : process.cwd(), path.dirname(argv._[0])); // path of the inspection.json
 
@@ -84,8 +94,11 @@ marked.use({renderer: {
 }});
 marked.use(require('marked-smartypants').markedSmartypants());
 
+const make_office = argv.outputFile && (argv.outputFile.endsWith(".docx") || argv.outputFile.endsWith(".odt"));
+
+
 let html_dump = pug.renderFile(
-  html_template,
+  make_office ? office_template : html_template,
   Object.assign({}, output, {
     pretty: true,
     basedir: path.resolve(path.join(__dirname, '../assets')), // determines root director for pug
@@ -106,7 +119,43 @@ let html_dump = pug.renderFile(
 );
 
 if (argv.outputFile) {
-  fs.writeFileSync(path.join(argv.outputFile), html_dump);
+  if(make_office) {
+    if(argv.usePandoc) {
+      // console.warn("Using pandoc to generate", argv.outputFile);
+      // pandoc infers the output format from the output file name
+      let ret = spawnSync('pandoc', ['-f', 'html', '--output', argv.outputFile], {
+        // cwd: '.',
+        input: html_dump,
+        encoding: 'utf8',
+      });
+      if(ret[2]) {
+        console.log(ret[2]);
+      }
+    } else {
+      if(argv.outputFile.endsWith(".odt")) {
+        console.error("To generate .odt, you must have pandoc installed and specify --use-pandoc.");
+        process.exit(1);
+      }
+      
+      // console.warn("Using NPM html-to-docx to generate", argv.outputFile);
+      const documentOptions = {
+        // decodeUnicode: true,
+        orientation: "portrait",
+        pageSize: {width: "21.0cm", height: "29.7cm"},
+        pageNumber: true,
+        // lineNumber: true,
+        // lineNumberOptions: {countBy: 5},
+        title: data.title,
+        lang: "en-UK",
+        creator: `EDPS Website Evidence Collector v${data.script.version.npm} using NPM html-to-docx`,
+      };
+      HTMLtoDOCX(html_dump, null, documentOptions, null).then(fileBuffer => {
+        fs.writeFileSync(path.join(argv.outputFile), fileBuffer);
+      }).catch(err => {console.error(err);});
+    }
+  } else {
+    fs.writeFileSync(path.join(argv.outputFile), html_dump);
+  }
 } else {
   console.log(html_dump);
 }

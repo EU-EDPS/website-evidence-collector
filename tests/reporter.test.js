@@ -38,6 +38,11 @@ test("report can save html report", async () => {
   expect(fs.existsSync(path.join(dir, "inspection.html"))).toBe(true);
 });
 
+test("report can save docx report", async () => {
+  await report.generateOfficeDoc(output);
+  expect(fs.existsSync(path.join(dir, "inspection.docx"))).toBe(true);
+});
+
 test("report can save yaml reports", async () => {
   // cookies reporting
   report.saveYaml(output.cookies, "cookies.yml");

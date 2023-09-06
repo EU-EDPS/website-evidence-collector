@@ -1,5 +1,7 @@
 ## HEAD
 
+## 2.1.0 / 2023-09-06
+
 * fix: location detection for HTTP Cookies was breaking the WEC when response.frame() is null.
 * update dependency: puppeteer with bundled Chrome v109.0.5412.0
 * update: set UserAgent string to Chrome v109.0.5412.0
@@ -27,6 +29,8 @@
 * dependency: update to puppeteer 21.1.1 (Chrome/104.0.5109.0 -> Chrome/116.0.5845.96)
 * update: add www.tiktok.com to social-media-platforms.yml to increase detection rate
 * update: update bundled filterlists easyprivacy.txt and fanboy-annoyance.txt to the most recent version as of 2023-09-05
+* feature: also add support for docx output to `website-evidence-reporter` (includes support for `--office-template` and `--use-pandoc`). With pandoc, also odt output is supported. The output format is infered from the file ending of the output file (either html, docx, or odt).
+* feature: generate automatically inspection.docx in output folder. Use `--office-template [file]` to change the respective pug template. Use `--use-pandoc` to generate the docx with [pandoc](https://pandoc.org/) (needs to be installed separately) instead of [html-to-docx](https://github.com/privateOmega/html-to-docx).
 
 ## 2.0.0 / 2022-06-30
 

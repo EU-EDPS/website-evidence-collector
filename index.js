@@ -90,6 +90,9 @@ async function run(args, logger) {
 
   // store html on disk
   report.generateHtml(collect.output);
+  
+  // store docx on disk
+  await report.generateOfficeDoc(collect.output);
 
   // convert html to pdf
   await report.convertHtmlToPdf();

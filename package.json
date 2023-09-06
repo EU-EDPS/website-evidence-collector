@@ -16,6 +16,7 @@
     "git-describe": "^4.0.4",
     "github-markdown-css": "^5.2.0",
     "got": "^11.8.5",
+    "html-to-docx": "^1.8.0",
     "js-yaml": "^4.1.0",
     "js-yaml-js-types": "^1.0.0",
     "jstransformer-marked": "^1.2.0",

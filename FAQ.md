@@ -152,8 +152,10 @@ The website evidence collector stores a number of files in an output directory u
 ├── beacons.yml
 ├── browser-profile (directory)
 ├── cookies.yml
+├── inspection.docx
 ├── inspection.html
 ├── inspection.json
+├── inspection.pdf
 ├── inspection-log.ndjson
 ├── inspection.yml
 ├── local-storage.yml
@@ -173,6 +175,8 @@ The website evidence collector stores a number of files in an output directory u
   - hosts.
 - The `inspection.json` has the same content as `inspection.yml`, but in JSON format.
 - The `inspection.html` can be open in the browser to print a report or safe a PDF version it with the most relevant information from `inspection.yml`. The option `--html-template` allows to switch to a custom [pug template](https://pugjs.org). Please ensure that the screenshot images are the same folder as the HTML file.
+- The `inspection.pdf` is generated from the HTML file using the browser’s print function.
+- The `inspection.docx` is generated from HTML with [html-to-docx](https://github.com/privateOmega/html-to-docx) or if `--use-pandoc` is given, then with [pandoc](https://pandoc.org/). You need to install `pandoc` separately. The option `--office-template` allows to switch to a custom [pug template](https://pugjs.org).
 - The `source.html` contains the html source code of the first webpage visited. It is extracted with the pupeteer [`text()`](https://pptr.dev/#?product=Puppeteer&version=v8.0.0&show=api-httpresponsetext) method that delivers the "text representation of [the] response body".
 - The `beacons.yml` contains the subset on beacons from `inspection.yml`.
 - The `cookies.yml` contains the subset on cookies from `inspection.yml`.
