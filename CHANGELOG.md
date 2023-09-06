@@ -1,7 +1,5 @@
 ## HEAD
 
-* update: add www.tiktok.com to social-media-platforms.yml to increase detection rate
-* update: update bundled filterlists easyprivacy.txt and fanboy-annoyance.txt to the most recent version as of 2023-09-05
 * fix: location detection for HTTP Cookies was breaking the WEC when response.frame() is null.
 * update dependency: puppeteer with bundled Chrome v109.0.5412.0
 * update: set UserAgent string to Chrome v109.0.5412.0
@@ -25,6 +23,10 @@
 * dependency: update the inline anchor.js library in the default HTML template
 * feature: improve markdown to html conversion in the default HTML template and custom HTML templates (involves marked-smartypants, marked-custom-heading-id)
 * dependency: update amongst other tough-cookie lib
+* update: switch to new Headless Chrome mode (see <https://developer.chrome.com/articles/new-headless/>)
+* dependency: update to puppeteer 21.1.1 (Chrome/104.0.5109.0 -> Chrome/116.0.5845.96)
+* update: add www.tiktok.com to social-media-platforms.yml to increase detection rate
+* update: update bundled filterlists easyprivacy.txt and fanboy-annoyance.txt to the most recent version as of 2023-09-05
 
 ## 2.0.0 / 2022-06-30
 

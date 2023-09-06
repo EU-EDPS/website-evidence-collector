@@ -7,7 +7,8 @@ const got = require("got");
 const sampleSize = require("lodash/sampleSize");
 
 const UserAgent =
-  "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.5412.0 Safari/537.36";
+  "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.5845.96 Safari/537.36";
+
 const WindowSize = {
   width: 1680,
   height: 927, // arbitrary value close to 1050
@@ -33,7 +34,8 @@ async function createBrowserSession(browser_args, browser_logger) {
   logger = browser_logger;
 
   const browser = await puppeteer.launch({
-    headless: args.headless,
+    // https://developer.chrome.com/articles/new-headless/.
+    headless: args.headless ? 'new' : false,
     defaultViewport: {
       width: WindowSize.width,
       height: WindowSize.height,

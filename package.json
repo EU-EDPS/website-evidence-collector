@@ -22,7 +22,7 @@
     "lodash": "^4.17.21",
     "marked-smartypants": "^1.0.2",
     "pug": "^3.0.2",
-    "puppeteer": "^19.5.0",
+    "puppeteer": "^21.1.1",
     "puppeteer-har": "^1.1.2",
     "stacktrace-js": "^2.0.2",
     "tmp": "^0.2.1",

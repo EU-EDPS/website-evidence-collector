@@ -133,12 +133,6 @@ The following software extends WEC to cover further use cases. It is developed i
 - stacktrace.js documentation: <https://www.stacktracejs.com/#!/docs/stacktrace-js>
 - Chrome DevTools Protocol Documentation: <https://chromedevtools.github.io/devtools-protocol/>
 
-**Use of Hooks for Restructuring Source Code:**
-
-- https://www.npmjs.com/package/before-after-hook
-- https://www.npmjs.com/package/promised-hooks
-- https://www.npmjs.com/package/grappling-hook
-
 ## Contributors
 
 - Robert Riemann (European Data Protection Supervisor, initial author)
