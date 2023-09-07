@@ -145,9 +145,9 @@ if (argv.outputFile) {
         pageNumber: true,
         // lineNumber: true,
         // lineNumberOptions: {countBy: 5},
-        title: data.title,
+        title: output.title,
         lang: "en-UK",
-        creator: `EDPS Website Evidence Collector v${data.script.version.npm} using NPM html-to-docx`,
+        creator: `EDPS Website Evidence Collector v${output.script.version.npm} using NPM html-to-docx`,
       };
       HTMLtoDOCX(html_dump, null, documentOptions, null).then(fileBuffer => {
         fs.writeFileSync(path.join(argv.outputFile), fileBuffer);

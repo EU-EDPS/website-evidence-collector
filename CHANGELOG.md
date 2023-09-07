@@ -1,5 +1,7 @@
 ## HEAD
 
+* fix: undefined variable bug when generating docx with `website-evidence-reporter` using html-to-docx
+
 ## 2.1.0 / 2023-09-06
 
 * fix: location detection for HTTP Cookies was breaking the WEC when response.frame() is null.
