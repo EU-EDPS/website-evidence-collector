@@ -1,6 +1,7 @@
 ## HEAD
 
 * fix: undefined variable bug when generating docx with `website-evidence-reporter` using html-to-docx
+* feature: enable section numbering and table of contents in pandoc output
 
 ## 2.1.0 / 2023-09-06
 

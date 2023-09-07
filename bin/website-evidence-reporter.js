@@ -96,7 +96,6 @@ marked.use(require('marked-smartypants').markedSmartypants());
 
 const make_office = argv.outputFile && (argv.outputFile.endsWith(".docx") || argv.outputFile.endsWith(".odt"));
 
-
 let html_dump = pug.renderFile(
   make_office ? office_template : html_template,
   Object.assign({}, output, {
@@ -123,7 +122,7 @@ if (argv.outputFile) {
     if(argv.usePandoc) {
       // console.warn("Using pandoc to generate", argv.outputFile);
       // pandoc infers the output format from the output file name
-      let ret = spawnSync('pandoc', ['-f', 'html', '--output', argv.outputFile], {
+      let ret = spawnSync('pandoc', ['-f', 'html', '--number-sections', '--toc', '--output', argv.outputFile], {
         // cwd: '.',
         input: html_dump,
         encoding: 'utf8',

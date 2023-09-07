@@ -153,7 +153,7 @@ function reporter(args) {
 
       if(c.args.usePandoc) {
         // console.warn("Using pandoc to generate", filename);
-        let ret = spawnSync('pandoc', ['-f', 'html', '--output', filename], {
+        let ret = spawnSync('pandoc', ['-f', 'html', '--number-sections', '--toc', '--output', filename], {
           cwd: c.args.output,
           input: html_dump,
           encoding: 'utf8',
