@@ -1,7 +1,8 @@
 ## HEAD
 
 * fix: undefined variable bug when generating docx with `website-evidence-reporter` using html-to-docx
-* feature: enable section numbering and table of contents in pandoc output
+* feature: enable section numbering and table of contents in pandoc docx/odt output
+* dependencies: require now node version 16 or higher (previously 14)
 
 ## 2.1.0 / 2023-09-06
 

@@ -8,7 +8,7 @@
     "url": "https://github.com/EU-EDPS/website-evidence-collector.git"
   },
   "engines": {
-    "node": ">=14.0"
+    "node": ">=16.0"
   },
   "dependencies": {
     "@cliqz/adblocker-puppeteer": "^1.25.2",
