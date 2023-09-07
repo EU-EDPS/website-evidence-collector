@@ -19,7 +19,7 @@
     "html-to-docx": "^1.8.0",
     "js-yaml": "^4.1.0",
     "js-yaml-js-types": "^1.0.0",
-    "jstransformer-marked": "^1.2.0",
+    "jstransformer-marked": "1.4.0",
     "lodash": "^4.17.21",
     "marked-smartypants": "^1.0.2",
     "pug": "^3.0.2",
@@ -33,6 +33,9 @@
   },
   "devDependencies": {
     "jest": "^29.5.0"
+  },
+  "overrides": {
+    "marked": "8.0.1"
   },
   "scripts": {
     "start": "node ./website-evidence-collector.js https://www.test.com --overwrite --html --json --yaml --screenshots",

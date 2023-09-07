@@ -3,6 +3,7 @@
 * fix: undefined variable bug when generating docx with `website-evidence-reporter` using html-to-docx
 * feature: enable section numbering and table of contents in pandoc docx/odt output
 * dependencies: require now node version 16 or higher (previously 14)
+* fix: override marked version in package.json to 8.0.1 (instead of 4.3.0 imposed by jstransformer-marked@1.4.0) to fix custom header IDs in custom templates (workaround)
 
 ## 2.1.0 / 2023-09-06
 
