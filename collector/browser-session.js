@@ -24,7 +24,6 @@ const { set_cookies } = require("../lib/set-cookies");
 const {
   isFirstParty,
   getLocalStorage,
-  safeJSONParse,
 } = require("../lib/tools");
 
 async function createBrowserSession(browser_args, browser_logger) {
@@ -125,7 +124,7 @@ async function createBrowserSession(browser_args, browser_logger) {
     };
 
     // record all requested hosts
-    await page.on("request", (request) => {
+    page.on("request", (request) => {
       const l = url.parse(request.url());
       // note that hosts may appear as first and third party depending on the path
       if (isFirstParty(refs_regexp, l)) {
