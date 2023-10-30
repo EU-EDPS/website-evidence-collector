@@ -106,6 +106,7 @@ function reporter(args) {
       await pages[0].pdf({
         path: path.resolve(path.join(c.args.output, pdffilename)),
         format: 'A4',
+        printBackground: true,
         displayHeaderFooter: true,
         headerTemplate: `
           <div style="width: 100%; font-size: 11px; padding: 5px 5px 0; position: relative;">
