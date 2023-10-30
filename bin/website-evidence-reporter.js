@@ -14,6 +14,7 @@ const fs = require("fs");
 const path = require("path");
 const pug = require("pug");
 const HTMLtoDOCX = require("html-to-docx");
+const puppeteer = require("puppeteer");
 const { spawnSync } = require('node:child_process');
 const yaml = require("js-yaml");
 const unsafe = require('js-yaml-js-types').all;
@@ -57,7 +58,7 @@ var argv = require("yargs") // TODO use rather option('o', hash) syntax and defi
     });
   })
 
-  .describe("output-file", "Write HTML output to file instead to the screen")
+  .describe("output-file", "Write HTML/PDF/DOCX/ODT output to file according to file extension")
   .nargs("output-file", 1)
   .alias("output-file", "o")
   .string("output-file")
@@ -95,6 +96,7 @@ marked.use({renderer: {
 marked.use(require('marked-smartypants').markedSmartypants());
 
 const make_office = argv.outputFile && (argv.outputFile.endsWith(".docx") || argv.outputFile.endsWith(".odt"));
+const make_pdf = argv.outputFile && argv.outputFile.endsWith(".pdf");
 
 let html_dump = pug.renderFile(
   make_office ? office_template : html_template,
@@ -153,7 +155,36 @@ if (argv.outputFile) {
       }).catch(err => {console.error(err);});
     }
   } else {
-    fs.writeFileSync(path.join(argv.outputFile), html_dump);
+    if(make_pdf) {
+      (async () => {
+        const browser = await puppeteer.launch({
+          // https://developer.chrome.com/articles/new-headless/.
+          headless: 'new',
+        });
+        const pages = await browser.pages();
+        await pages[0].setContent(html_dump);
+        await pages[0].pdf({
+          path: path.resolve(path.join(argv.outputFile)),
+          format: 'A4',
+          displayHeaderFooter: true,
+          headerTemplate: `
+            <div class="page-footer" style="width: 100%; font-size: 11px; padding: 5px 5px 0; position: relative;">
+                <div style="bottom: 5px; text-align: center;"><span class="title"></span></div>
+            </div>
+          `,
+          footerTemplate: `
+            <div class="page-header" style="width: 100%; font-size: 11px; padding: 5px 5px 0; position: relative;">
+                <div style="top: 5px; text-align: center;"><span class="pageNumber"></span>/<span class="totalPages"></span></div>
+            </div>
+          `,
+          // this is needed to prevent content from being placed over the footer
+          margin: { top: '1.5cm', bottom: '1cm' },
+        })
+        await browser.close();
+      })();
+    } else {
+      fs.writeFileSync(path.join(argv.outputFile), html_dump);
+    }
   }
 } else {
   console.log(html_dump);

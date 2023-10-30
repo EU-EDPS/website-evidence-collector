@@ -1,5 +1,7 @@
 ## HEAD
 
+* feature: support PDF output with `website-evidence-reporter` using chromium (brings the benefit of adding page title and page numbers)
+
 ## 2.1.1 / 2023-09-20
 
 * fix: undefined variable bug when generating docx with `website-evidence-reporter` using html-to-docx
