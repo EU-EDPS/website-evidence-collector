@@ -38,7 +38,7 @@
     "marked": "8.0.1"
   },
   "scripts": {
-    "start": "node ./website-evidence-collector.js https://www.test.com --overwrite --html --json --yaml --screenshots",
+    "start": "node ./website-evidence-collector.js https://www.example.com --overwrite --html --json --yaml --screenshots",
     "test": "jest --detectOpenHandles"
   },
   "bin": {
