@@ -1,6 +1,7 @@
 ## HEAD
 
 * feature: support PDF output with `website-evidence-reporter` using chromium (brings the benefit of adding page title and page numbers)
+* dependencies: update dependencies (`npm update`)
 
 ## 2.1.1 / 2023-09-20
 
