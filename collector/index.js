@@ -53,6 +53,17 @@ async function collector(args, logger) {
 
     const response = await c.pageSession.gotoPage(url);
 
+    const {LOGIN_SELECTOR, PASSWORD_SELECTOR, LOGIN_USERNAME, LOGIN_PASSWORD} = process.env;
+
+    // log into web app if all required parameters are given
+    if(LOGIN_SELECTOR && PASSWORD_SELECTOR && LOGIN_USERNAME && LOGIN_PASSWORD){
+      await c.pageSession.page.type(LOGIN_SELECTOR, LOGIN_USERNAME);
+      await c.pageSession.page.type(PASSWORD_SELECTOR, LOGIN_PASSWORD);
+      await c.pageSession.page.keyboard.press('Enter');
+      // 5 seconds should be enough for data retrieval after loading authenticated area
+      await c.pageSession.page.waitForTimeout(5000);
+    }
+
     // log redirects
     c.output.uri_redirects = response
       .request()
