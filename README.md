@@ -88,6 +88,12 @@ If `testssl.sh` is called separately, the JSON output file can be integrated sub
 website-evidence-collector -q --testssl-file example-testssl.json https://example.com
 ```
 
+#### Log In mechanism
+
+**Note:** The effectiveness of this process is constrained by captchas and other login procedures that do not rely solely on the combination of username and password.
+
+By configuring the environmental variables LOGIN_SELECTOR, PASSWORD_SELECTOR, LOGIN_USERNAME, and LOGIN_PASSWORD, the tool incorporates the provided credentials to execute a log in flow. 
+
 ## Frequently Asked Questions
 
 Please find a collection of frequently asked questions with answers in [FAQ.md](FAQ.md)
