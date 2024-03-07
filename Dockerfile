@@ -66,5 +66,5 @@ ENV PATH="/home/collector/bin:/opt/testssl.sh-3.0.6:${PATH}"
 # ENV WEC_BROWSER_OPTIONS="--no-sandbox"
 # Configure default command in Docker container
 ENTRYPOINT ["/home/collector/bin/website-evidence-collector"]
-WORKDIR /
+WORKDIR /output
 VOLUME /output
