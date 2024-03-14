@@ -63,7 +63,7 @@ async function createBrowserSession(browser_args, browser_logger) {
       );
     });
 
-    var refs_regexp = new RegExp(`^(${uri_refs_stripped.join("|")})\\b`, "i");
+    var refs_regexp = new RegExp(`^(${uri_refs_stripped.join("|")})$`, "i");
 
     // load the page to traverse
     page = (await browser.pages())[0];
