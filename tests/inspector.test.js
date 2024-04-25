@@ -10,6 +10,7 @@ jest.setTimeout(50000);
 
 beforeAll(async () => {
   args = StandardConfig("http://localhost");
+  args.browserOptions.push('--allow-file-access-from-files');
   args.overwrite = true;
   args.pageTimeout = 3000;
 

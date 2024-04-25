@@ -1,5 +1,7 @@
 ## HEAD
 
+## 2.1.2 / 2024-04-25
+
 * feature: support PDF output with `website-evidence-reporter` using chromium (brings the benefit of adding page title and page numbers)
 * dependencies: update dependencies (`npm update`)
 * fix: fix `WORKDIR` in Dockerfile (fixes #106)
