@@ -15,12 +15,12 @@ const {
 async function collectLinks(page, logger) {
   // get all links from page
   const links_all_with_duplicates = await page.evaluate(() => {
-    return Array.from(document.querySelectorAll("a[href]"), (a) => {
-        return {
-          href: a.href.toString().split("#").shift(), // link without fragment
-          inner_text: a.innerText,
-          inner_html: a.innerHTML.trim(),
-        }
+    return Array.from(document.querySelectorAll("a[href]")).map( (a) => {
+      return {
+        href: a.href.toString().split("#").shift(), // link without fragment
+        inner_text: a.innerText,
+        inner_html: a.innerHTML.trim(),
+      }
     });
   });
   

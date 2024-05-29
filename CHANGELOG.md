@@ -1,5 +1,7 @@
 ## HEAD
 
+* fix: WEC failed to extract links from some websites, error: Cannot read properties of undefined (reading 'startsWith')
+
 ## 2.1.2 / 2024-04-25
 
 * feature: support PDF output with `website-evidence-reporter` using chromium (brings the benefit of adding page title and page numbers)
