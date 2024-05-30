@@ -1,0 +1,541 @@
+{
+  "title": "Website Evidence Collection",
+  "task_description": null,
+  "uri_ins": "http://localhost:8000/testpage.html",
+  "uri_refs": [
+    "http://localhost:8000/testpage.html"
+  ],
+  "uri_dest": "http://localhost:8000/testpage.html",
+  "uri_redirects": [],
+  "secure_connection": {
+    "https_redirect": false,
+    "redirects": [],
+    "https_support": false,
+    "https_error": "RequestError: write EPROTO 40E8D47C957F0000:error:0A0000C6:SSL routines:tls_get_more_records:packet length too long:ssl/record/methods/tls_common.c:654:\n",
+    "http_error": null
+  },
+  "testSSLError": null,
+  "testSSLErrorOutput": null,
+  "testSSLErrorCode": null,
+  "testSSL": null,
+  "host": "localhost",
+  "script": {
+    "host": "toolbox",
+    "version": {
+      "npm": "2.1.1",
+      "commit": "v2.1.2-3-g2befb74"
+    },
+    "config": {
+      "_": [
+        "http://localhost:8000/testpage.html"
+      ],
+      "overwrite": true,
+      "max": 0,
+      "sleep": 3000,
+      "firstPartyUri": [],
+      "headless": true,
+      "screenshots": true,
+      "dnt": false,
+      "dntJs": false,
+      "output": "./output",
+      "yaml": false,
+      "json": false,
+      "html": false,
+      "usePandoc": false,
+      "pdf": true,
+      "taskDescription": null,
+      "quiet": false,
+      "browserOptions": [],
+      "lang": "en",
+      "pageTimeout": 0,
+      "$0": "website-evidence-collector",
+      "url": "http://localhost:8000/testpage.html"
+    },
+    "cmd_args": "http://localhost:8000/testpage.html --overwrite",
+    "environment": {},
+    "node_version": "v20.12.2"
+  },
+  "localStorage": {},
+  "cookies": [
+    {
+      "name": "VISITOR_PRIVACY_METADATA",
+      "value": "CgJCRRIbEhcSFRMLFBUWFwwYGRobHB0eHw4PIBAREiBj",
+      "domain": "youtube.com",
+      "path": "/",
+      "expires": 1732625625.1476,
+      "size": 68,
+      "httpOnly": true,
+      "secure": true,
+      "session": false,
+      "sameSite": "None",
+      "priority": "Medium",
+      "sameParty": false,
+      "sourceScheme": "Secure",
+      "sourcePort": 443,
+      "partitionKey": "http://localhost",
+      "expiresUTC": "2024-11-26T12:53:45.147Z",
+      "expiresDays": 180,
+      "log": {
+        "stack": [
+          {
+            "fileName": "https://www.youtube.com/embed/doEqUhFiQS4",
+            "source": "set in Set-Cookie HTTP response header for https://www.youtube.com/embed/doEqUhFiQS4"
+          }
+        ],
+        "type": "Cookie.HTTP",
+        "timestamp": "2024-05-30T12:53:45.153Z",
+        "location": "http://localhost:8000/testpage.html"
+      },
+      "firstPartyStorage": false
+    },
+    {
+      "name": "VISITOR_INFO1_LIVE",
+      "value": "gvyZ7ibO8co",
+      "domain": "youtube.com",
+      "path": "/",
+      "expires": 1732625625.147502,
+      "size": 29,
+      "httpOnly": true,
+      "secure": true,
+      "session": false,
+      "sameSite": "None",
+      "priority": "Medium",
+      "sameParty": false,
+      "sourceScheme": "Secure",
+      "sourcePort": 443,
+      "partitionKey": "http://localhost",
+      "expiresUTC": "2024-11-26T12:53:45.147Z",
+      "expiresDays": 180,
+      "log": {
+        "stack": [
+          {
+            "fileName": "https://www.youtube.com/embed/doEqUhFiQS4",
+            "source": "set in Set-Cookie HTTP response header for https://www.youtube.com/embed/doEqUhFiQS4"
+          }
+        ],
+        "type": "Cookie.HTTP",
+        "timestamp": "2024-05-30T12:53:45.153Z",
+        "location": "http://localhost:8000/testpage.html"
+      },
+      "firstPartyStorage": false
+    },
+    {
+      "name": "foo",
+      "value": "bar",
+      "domain": "localhost",
+      "path": "/",
+      "expires": -1,
+      "size": 6,
+      "httpOnly": false,
+      "secure": false,
+      "session": true,
+      "priority": "Medium",
+      "sameParty": false,
+      "sourceScheme": "NonSecure",
+      "sourcePort": 8000,
+      "log": {
+        "stack": [
+          {
+            "columnNumber": 785,
+            "fileName": "https://cdn.jsdelivr.net/npm/js-cookie@3.0.1/dist/js.cookie.min.js",
+            "functionName": "Object.r [as set]",
+            "lineNumber": 2,
+            "source": "    at Object.r [as set] (https://cdn.jsdelivr.net/npm/js-cookie@3.0.1/dist/js.cookie.min.js:2:785)"
+          },
+          {
+            "columnNumber": 15,
+            "fileName": "http://localhost:8000/testpage.html",
+            "lineNumber": 153,
+            "source": "    at http://localhost:8000/testpage.html:153:15"
+          }
+        ],
+        "type": "Cookie.JS",
+        "timestamp": "2024-05-30T12:53:45.116Z",
+        "location": "http://localhost:8000/testpage.html"
+      },
+      "firstPartyStorage": false
+    },
+    {
+      "name": "foo2",
+      "value": "bar2",
+      "domain": "localhost",
+      "path": "/",
+      "expires": -1,
+      "size": 8,
+      "httpOnly": false,
+      "secure": false,
+      "session": true,
+      "priority": "Medium",
+      "sameParty": false,
+      "sourceScheme": "NonSecure",
+      "sourcePort": 8000,
+      "log": {
+        "stack": [
+          {
+            "columnNumber": 785,
+            "fileName": "https://cdn.jsdelivr.net/npm/js-cookie@3.0.1/dist/js.cookie.min.js",
+            "functionName": "Object.r [as set]",
+            "lineNumber": 2,
+            "source": "    at Object.r [as set] (https://cdn.jsdelivr.net/npm/js-cookie@3.0.1/dist/js.cookie.min.js:2:785)"
+          },
+          {
+            "columnNumber": 15,
+            "fileName": "http://localhost:8000/testpage.html",
+            "lineNumber": 154,
+            "source": "    at http://localhost:8000/testpage.html:154:15"
+          }
+        ],
+        "type": "Cookie.JS",
+        "timestamp": "2024-05-30T12:53:45.118Z",
+        "location": "http://localhost:8000/testpage.html"
+      },
+      "firstPartyStorage": false
+    },
+    {
+      "name": "YSC",
+      "value": "uXQjNBCd5X0",
+      "domain": "youtube.com",
+      "path": "/",
+      "expires": -1,
+      "size": 14,
+      "httpOnly": true,
+      "secure": true,
+      "session": true,
+      "sameSite": "None",
+      "priority": "Medium",
+      "sameParty": false,
+      "sourceScheme": "Secure",
+      "sourcePort": 443,
+      "partitionKey": "http://localhost",
+      "log": {
+        "stack": [
+          {
+            "fileName": "https://www.youtube.com/embed/doEqUhFiQS4",
+            "source": "set in Set-Cookie HTTP response header for https://www.youtube.com/embed/doEqUhFiQS4"
+          }
+        ],
+        "type": "Cookie.HTTP",
+        "timestamp": "2024-05-30T12:53:45.153Z",
+        "location": "http://localhost:8000/testpage.html"
+      },
+      "firstPartyStorage": false
+    },
+    {
+      "name": "PREF",
+      "domain": "youtube.com",
+      "path": "/",
+      "value": "f7=4000",
+      "expires": "2025-01-29T00:46:45.000Z",
+      "log": {
+        "stack": [
+          {
+            "fileName": "https://www.youtube.com/embed/doEqUhFiQS4",
+            "source": "set in Set-Cookie HTTP response header for https://www.youtube.com/embed/doEqUhFiQS4"
+          }
+        ],
+        "type": "Cookie.HTTP",
+        "timestamp": "2024-05-30T12:53:45.153Z",
+        "location": "http://localhost:8000/testpage.html"
+      },
+      "expiresDays": 243.5,
+      "session": false,
+      "firstPartyStorage": false
+    }
+  ],
+  "beacons": [
+    {
+      "filter": "/v1/log_event",
+      "listName": "easyprivacy.txt",
+      "query": {
+        "alt": "json",
+        "key": "AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8"
+      },
+      "url": "https://www.youtube.com/youtubei/v1/log_event?alt=json&key=AIzaSyAO_FJ2SlqU8Q4STEHLGCilw_Y9_11qcW8",
+      "log": {
+        "stack": [
+          {
+            "fileName": "https://www.youtube.com/embed/doEqUhFiQS4",
+            "source": "requested from https://www.youtube.com/embed/doEqUhFiQS4 and matched with easyprivacy.txt filter /v1/log_event"
+          }
+        ],
+        "timestamp": "2024-05-30T12:53:48.101Z"
+      },
+      "occurrances": 1
+    },
+    {
+      "filter": "||play.google.com/log",
+      "listName": "easyprivacy.txt",
+      "query": {
+        "authuser": 0,
+        "format": "json",
+        "hasfast": true
+      },
+      "url": "https://play.google.com/log?format=json&hasfast=true&authuser=0",
+      "log": {
+        "stack": [
+          {
+            "fileName": "https://www.youtube.com/embed/doEqUhFiQS4",
+            "source": "requested from https://www.youtube.com/embed/doEqUhFiQS4 and matched with easyprivacy.txt filter ||play.google.com/log"
+          }
+        ],
+        "timestamp": "2024-05-30T12:53:46.059Z"
+      },
+      "occurrances": 5
+    },
+    {
+      "filter": "/generate_204?$image",
+      "listName": "easyprivacy.txt",
+      "query": {
+        "FO7BrQ": null
+      },
+      "url": "https://www.youtube.com/generate_204?FO7BrQ",
+      "log": {
+        "stack": [
+          {
+            "fileName": "https://www.youtube.com/embed/doEqUhFiQS4",
+            "source": "requested from https://www.youtube.com/embed/doEqUhFiQS4 and matched with easyprivacy.txt filter /generate_204?$image"
+          }
+        ],
+        "timestamp": "2024-05-30T12:53:46.056Z"
+      },
+      "occurrances": 1
+    },
+    {
+      "filter": "||google-analytics.com^$third-party",
+      "listName": "easyprivacy.txt",
+      "query": null,
+      "url": "https://www.google-analytics.com/analytics.js",
+      "log": {
+        "stack": [
+          {
+            "fileName": "http://localhost:8000/testpage.html",
+            "source": "requested from http://localhost:8000/testpage.html and matched with easyprivacy.txt filter ||google-analytics.com^$third-party"
+          }
+        ],
+        "timestamp": "2024-05-30T12:53:44.978Z"
+      },
+      "occurrances": 1
+    }
+  ],
+  "links": {
+    "firstParty": [
+      {
+        "href": "http://localhost:8000/testpage.html",
+        "inner_text": "Features",
+        "inner_html": "Features"
+      },
+      {
+        "href": "http://localhost:8000/testpage.html",
+        "inner_text": "Enterprise",
+        "inner_html": "Enterprise"
+      },
+      {
+        "href": "http://localhost:8000/testpage.html",
+        "inner_text": "Support",
+        "inner_html": "Support"
+      },
+      {
+        "href": "http://localhost:8000/testpage.html",
+        "inner_text": "Pricing",
+        "inner_html": "Pricing"
+      },
+      {
+        "href": "http://localhost:8000/testpage.html",
+        "inner_text": "Sign up",
+        "inner_html": "Sign up"
+      },
+      {
+        "href": "http://localhost:8000/testpage.html",
+        "inner_text": "Cool stuff",
+        "inner_html": "Cool stuff"
+      },
+      {
+        "href": "http://localhost:8000/testpage.html",
+        "inner_text": "Random feature",
+        "inner_html": "Random feature"
+      },
+      {
+        "href": "http://localhost:8000/testpage.html",
+        "inner_text": "Team feature",
+        "inner_html": "Team feature"
+      },
+      {
+        "href": "http://localhost:8000/testpage.html",
+        "inner_text": "Stuff for developers",
+        "inner_html": "Stuff for developers"
+      },
+      {
+        "href": "http://localhost:8000/testpage.html",
+        "inner_text": "Another one",
+        "inner_html": "Another one"
+      },
+      {
+        "href": "http://localhost:8000/testpage.html",
+        "inner_text": "Last time",
+        "inner_html": "Last time"
+      },
+      {
+        "href": "http://localhost:8000/testpage.html",
+        "inner_text": "Another resource",
+        "inner_html": "Another resource"
+      },
+      {
+        "href": "http://localhost:8000/testpage.html",
+        "inner_text": "Final resource",
+        "inner_html": "Final resource"
+      },
+      {
+        "href": "http://localhost:8000/testpage.html",
+        "inner_text": "Team",
+        "inner_html": "Team"
+      },
+      {
+        "href": "http://localhost:8000/testpage.html",
+        "inner_text": "Locations",
+        "inner_html": "Locations"
+      },
+      {
+        "href": "http://localhost:8000/testpage.html",
+        "inner_text": "Privacy",
+        "inner_html": "Privacy"
+      },
+      {
+        "href": "http://localhost:8000/testpage.html",
+        "inner_text": "Terms",
+        "inner_html": "Terms"
+      }
+    ],
+    "thirdParty": [
+      {
+        "href": "https://localhost/resources",
+        "inner_text": "Resource",
+        "inner_html": "Resource"
+      },
+      {
+        "href": "https://localhost/another",
+        "inner_text": "Resource name",
+        "inner_html": "Resource name"
+      },
+      {
+        "href": "https://facebook.com/",
+        "inner_text": "Resource name",
+        "inner_html": "Resource name"
+      },
+      {
+        "href": "https://google.com/",
+        "inner_text": "Resource name",
+        "inner_html": "Resource name"
+      },
+      {
+        "href": "https://instagram.com/",
+        "inner_text": "Resource name",
+        "inner_html": "Resource name"
+      }
+    ],
+    "social": [
+      {
+        "href": "https://facebook.com/",
+        "inner_text": "Resource name",
+        "inner_html": "Resource name"
+      },
+      {
+        "href": "https://instagram.com/",
+        "inner_text": "Resource name",
+        "inner_html": "Resource name"
+      }
+    ],
+    "keywords": [
+      {
+        "href": "http://localhost:8000/testpage.html",
+        "inner_text": "Privacy",
+        "inner_html": "Privacy"
+      }
+    ]
+  },
+  "unsafeForms": [
+    {
+      "id": "",
+      "action": "http://localhost/unsafe",
+      "method": "get"
+    }
+  ],
+  "browser": {
+    "name": "Chromium",
+    "version": "Chrome/121.0.6167.85",
+    "user_agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.5845.96 Safari/537.36",
+    "platform": {
+      "name": "Linux",
+      "version": "6.8.10-300.fc40.x86_64"
+    },
+    "extra_headers": {
+      "dnt": 0
+    },
+    "preset_cookies": {}
+  },
+  "browsing_history": [
+    "http://localhost:8000/testpage.html"
+  ],
+  "hosts": {
+    "requests": {
+      "firstParty": [
+        "localhost"
+      ],
+      "thirdParty": [
+        "getbootstrap.com",
+        "code.jquery.com",
+        "cdn.jsdelivr.net",
+        "www.google-analytics.com",
+        "connect.facebook.net",
+        "www.youtube.com",
+        "fonts.gstatic.com",
+        "googleads.g.doubleclick.net",
+        "static.doubleclick.net",
+        "jnn-pa.googleapis.com",
+        "www.google.com",
+        "i.ytimg.com",
+        "yt3.ggpht.com",
+        "play.google.com",
+        "www.gstatic.com",
+        "localhost"
+      ]
+    },
+    "beacons": {
+      "firstParty": [],
+      "thirdParty": [
+        "www.youtube.com",
+        "play.google.com",
+        "www.google-analytics.com"
+      ]
+    },
+    "cookies": {
+      "firstParty": [],
+      "thirdParty": [
+        "localhost",
+        "youtube.com"
+      ]
+    },
+    "localStorage": {
+      "firstParty": [],
+      "thirdParty": []
+    },
+    "links": {
+      "firstParty": [
+        "localhost"
+      ],
+      "thirdParty": [
+        "localhost",
+        "facebook.com",
+        "google.com",
+        "instagram.com"
+      ]
+    },
+    "contentSecurityPolicy": {
+      "firstParty": [],
+      "thirdParty": []
+    }
+  },
+  "websockets": {},
+  "start_time": "2024-05-30T12:53:44.473Z",
+  "end_time": "2024-05-30T12:53:51.071Z",
+  "websocketLog": {}
+}

@@ -12,7 +12,7 @@ beforeAll(async () => {
   args = StandardConfig("http://localhost");
   args.output = dir;
 
-  output = fs.readJSONSync("./tests/test_output/output.json");
+  output = fs.readJSONSync("./tests/test_output/inspection.json");
   source = fs.readFileSync("./tests/test_output/testpage.html", "utf8");
   report = await reporter(args);
 
