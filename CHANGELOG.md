@@ -1,6 +1,7 @@
 ## HEAD
 
 * fix: WEC failed to extract links from some websites, error: Cannot read properties of undefined (reading 'startsWith')
+* dependencies: overwrite the dependency of `puppeteer-har` to address `npm audit` warnings
 
 ## 2.1.2 / 2024-04-25
 

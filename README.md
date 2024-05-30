@@ -113,6 +113,7 @@ Please find a collection of frequently asked questions with answers in [FAQ.md](
 - client-side redirects using e.g. `<meta http-equiv="refresh" content="1;URL='https://example.com'"/>` are followed, but not mentioned in the output
 - in releases after v1.0.0, the option `--quiet` has no effect any longer – instead debug output is printed to STDERR and can only be disregarded with `2> /dev/null`
 - the library `got` does not support the `require()` syntax anylonger since version 12; it seems all use of `require()` must be migrated to `import` for all packages
+- the library `puppeteer-har` is basically unmaintained and should be replaced by a fork. https://github.com/auteon/puppeteer-har/ provides a good starting point, but yields an install error as drop-in-replacement
 
 ## Third-Party Software
 

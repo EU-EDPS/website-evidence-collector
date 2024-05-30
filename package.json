@@ -35,7 +35,10 @@
     "jest": "^29.5.0"
   },
   "overrides": {
-    "marked": "8.0.1"
+    "marked": "8.0.1",
+    "puppeteer-har": {
+      "chrome-har": "^0.13.1"
+    }
   },
   "scripts": {
     "start": "node ./website-evidence-collector.js https://www.example.com --overwrite --html --json --yaml --screenshots",
