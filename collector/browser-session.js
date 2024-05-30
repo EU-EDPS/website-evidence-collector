@@ -5,6 +5,7 @@ const url = require("url");
 const escapeRegExp = require("lodash/escapeRegExp");
 const got = require("got");
 const sampleSize = require("lodash/sampleSize");
+const parseContentSecurityPolicy = require("content-security-policy-parser").default;
 
 const UserAgent =
   "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.5845.96 Safari/537.36";
@@ -121,6 +122,10 @@ async function createBrowserSession(browser_args, browser_logger) {
         firstParty: new Set(),
         thirdParty: new Set(),
       },
+      contentSecurityPolicy: {
+        firstParty: new Set(),
+        thirdParty: new Set(),
+      }
     };
 
     // record all requested hosts
@@ -132,6 +137,31 @@ async function createBrowserSession(browser_args, browser_logger) {
       } else {
         if (l.protocol != "data:") {
           hosts.requests.thirdParty.add(l.hostname);
+        }
+      }
+    });
+    
+    page.on("response", (response) => {
+      const l = url.parse(response.url());
+      // WEC only records CSPs from first-party responses
+      if (isFirstParty(refs_regexp, l)) {
+        const csp = response.headers()['content-security-policy'];
+        if(csp) {
+          parseContentSecurityPolicy(csp)
+          .forEach((hostnames) => {
+            hostnames.forEach((hostname) => {
+              let match = hostname.match(/[^:\/']+$/) // strip possible schemas and exclude quoted words
+              if (match == null || match.length == 0 || match[0].match(refs_regexp)) {
+                if(hostname.startsWith('\'nonce-')) {
+                  hosts.contentSecurityPolicy.firstParty.add('\'nonce-...\'');
+                } else {
+                  hosts.contentSecurityPolicy.firstParty.add(hostname);
+                }
+              } else {
+                hosts.contentSecurityPolicy.thirdParty.add(hostname);
+              }
+            });
+          });
         }
       }
     });

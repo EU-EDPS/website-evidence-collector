@@ -240,6 +240,24 @@ html(xmlns='http://www.w3.org/1999/xhtml', xml:lang='en', lang='en')
             td Low
             td.notrunc= vulnerabilitiesBySeverity['LOW'] ? vulnerabilitiesBySeverity['LOW'].length : 0
 
+
+    h2(id="sec:use-of-csp") Use of Content Security Policies (CSPs)
+
+    p Upon browser request of a web page, websites can indicate in the #[a(href="https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP") Content Security Policy] (CSP) meta data sent along with the requested web page a whitelist of mechanisms, domains and subdomains that browsers must respect when embedding components, such as styles, fonts, beacons, videos, maps, etc.
+
+    if hosts.contentSecurityPolicy.firstParty.length > 0
+      ol
+        each host in hosts.contentSecurityPolicy.firstParty
+          // check if host looks like a host (instead of e.g blob: data: etc.)
+          if host.match(/[^\.]+\.[^\.]+/)
+            li: a(href=`http://${host}`)= host
+          else
+            li= host
+
+      p The website has whitelisted #{hosts.contentSecurityPolicy.firstParty.length} first-party domains and mechanisms.
+    else
+      p No CSP meta data was found. Consequently, no restrictions apply.
+
     h2(id="sec:use-of-social-media") Use of Social Media and Collaboration Platforms
     
     if links.social.length > 0    
@@ -324,6 +342,21 @@ html(xmlns='http://www.w3.org/1999/xhtml', xml:lang='en', lang='en')
       p Potential third-party web beacons were sent to #{hosts.beacons.thirdParty.length} distinct hosts. Corresponding HTTP requests for first- and third-parties are listed in #[span.citation(data-cites="app:annex-beacons"): a(href="#app:annex-beacons") the Annex].
     else
       p No third-party web beacons were found.
+
+    if hosts.contentSecurityPolicy.firstParty.length > 0
+
+      h4 Third-Party Content Security Policy Hosts
+
+      p Upon browser request of a web page, websites can indicate in the #[a(href="https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP") Content Security Policy] (CSP) meta data sent along with the requested web page a whitelist of mechanisms, domains and subdomains that browsers must respect when embedding components, such as styles, fonts, beacons, videos, maps, etc.
+
+      ol
+        each host in hosts.contentSecurityPolicy.thirdParty
+          li: a(href=`http://${host}`)= host
+
+      if hosts.contentSecurityPolicy.thirdParty.length > 0
+        p The website has whitelisted #{hosts.contentSecurityPolicy.thirdParty.length} distinct third-party hosts.
+      else
+        p No third-party content security policy hosts were whitelisted.
 
     h4(id="sec:unsecure-forms") Web Forms with non-encrypted Transmission
     

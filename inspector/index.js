@@ -223,6 +223,7 @@ async function inspector(args, logger, pageSession, output) {
       cookies: arrayFromParties(c.pageSession.hosts.cookies),
       localStorage: arrayFromParties(c.pageSession.hosts.localStorage),
       links: arrayFromParties(c.pageSession.hosts.links),
+      contentSecurityPolicy: arrayFromParties(c.pageSession.hosts.contentSecurityPolicy),
     };
   };
 

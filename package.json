@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@cliqz/adblocker-puppeteer": "^1.25.2",
+    "content-security-policy-parser": "^0.6.0",
     "fs-extra": "^11.1.0",
     "git-describe": "^4.0.4",
     "github-markdown-css": "^5.2.0",
