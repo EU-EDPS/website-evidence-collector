@@ -186,8 +186,6 @@ async function createBrowserSession(browser_args, browser_logger) {
           waitUntil: "networkidle2",
         });
 
-        await page.waitForNetworkIdle();
-
         if (page_response === null) {
           // see: https://github.com/puppeteer/puppeteer/issues/2479#issuecomment-408263504
           page_response = await page.waitForResponse(() => true);
