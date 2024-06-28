@@ -1,3 +1,7 @@
+# Repository Migration
+
+**The EDPS has migrated the project to the code repository of the European Union at <https://code.europa.eu/EDPS/website-evidence-collector>**.
+
 ![Website Evidence Collector Logo](assets/wec_logo.svg)
 
 # Website Evidence Collector
